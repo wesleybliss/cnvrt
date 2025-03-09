@@ -73,22 +73,25 @@ class CurrencyTextField extends StatelessWidget {
 
     final decoration = defaultInputDecoration.copyWith(hintText: "0.00", prefix: prefix, label: label);
 
-    return TextField(
-      controller: controller,
-      decoration: decoration,
-      textAlign: TextAlign.end,
-      style: const TextStyle(fontFamily: 'monospace'),
-      keyboardType: TextInputType.number,
-      inputFormatters: [
-        // FilteringTextInputFormatter.digitsOnly,
-        // DecimalTextInputFormatter(),
-        CurrencyTextInputFormatter(currencyCode: item.symbol),
-        // CurrencyInputFormatter(item.symbol),
-      ],
-      onChanged: (text) {
-        onTextChanged(item.symbol, text);
-        // log.d('@todo Handle change ${item.symbol} - $text');
-      },
+    return GestureDetector(
+      onTap: () => controller?.clear(), // Clear text when tapped
+      child: TextField(
+        controller: controller,
+        decoration: decoration,
+        textAlign: TextAlign.end,
+        style: const TextStyle(fontFamily: 'monospace'),
+        keyboardType: TextInputType.number,
+        inputFormatters: [
+          // FilteringTextInputFormatter.digitsOnly,
+          // DecimalTextInputFormatter(),
+          CurrencyTextInputFormatter(currencyCode: item.symbol),
+          // CurrencyInputFormatter(item.symbol),
+        ],
+        onChanged: (text) {
+          onTextChanged(item.symbol, text);
+          // log.d('@todo Handle change ${item.symbol} - $text');
+        },
+      ),
     );
   }
 }
