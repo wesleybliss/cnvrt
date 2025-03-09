@@ -18,11 +18,11 @@ A simple currency conversion app.
 
 ### Settings
 
-1. Show "drag to reorder" handles
-2. Show copy to clipboard buttons
-3. Show full currency name label
-4. Position of inputs (top, middle, bottom)
-5. Show currency rate (all, selected, none)
+* [x] Show "drag to reorder" handles
+* [x] Show copy to clipboard buttons
+* [x] Show full currency name label
+* [x] Position of inputs (top, middle, bottom)
+* [ ] Show currency rate (all, selected, none)
 
 ### Converters
 

@@ -1,13 +1,14 @@
+import 'package:cnvrt/utils/logger.dart';
 import 'package:currency_formatter/currency_formatter.dart';
 import 'package:flutter/services.dart';
 import 'package:sealed_currencies/sealed_currencies.dart';
-import 'package:cnvrt/utils/logger.dart';
 
+// Note: OLD1
 class CurrencyInputFormatter extends TextInputFormatter {
   final log = Logger('CurrencyInputFormatter');
   final String symbol;
   late final Currency _currency;
-  
+
   CurrencyInputFormatter(this.symbol) {
     try {
       _currency = FiatCurrency.fromCode(symbol.toUpperCase());
@@ -16,8 +17,10 @@ class CurrencyInputFormatter extends TextInputFormatter {
       log.w('CurrencyInputFormatter: currency not found: $symbol');
       _currency = FiatCurrency.fromCode('USD');
     }
-    
-    log.d('CurrencyInputFormatter: ${symbol} thousandSeparator: ${_currency.thousandsSeparator}, decimalSeparator: ${_currency.decimalMark}');
+
+    log.d(
+      'CurrencyInputFormatter: ${symbol} thousandSeparator: ${_currency.thousandsSeparator}, decimalSeparator: ${_currency.decimalMark}',
+    );
   }
 
   @override
@@ -31,7 +34,7 @@ class CurrencyInputFormatter extends TextInputFormatter {
 
     // Convert the digits to a double
     final double value = double.tryParse(digitsOnly) ?? 0.0;
-  
+
     // Format the value as currency
     final CurrencyFormat settings = CurrencyFormat(
       code: symbol,
@@ -44,10 +47,7 @@ class CurrencyInputFormatter extends TextInputFormatter {
     final String formattedValue = CurrencyFormatter.format(value, settings);
 
     log.d('CurrencyInputFormatter: $symbol / formattedValue: $value -> $formattedValue');
-    
-    return newValue.copyWith(
-      text: formattedValue,
-      selection: TextSelection.collapsed(offset: formattedValue.length),
-    );
+
+    return newValue.copyWith(text: formattedValue, selection: TextSelection.collapsed(offset: formattedValue.length));
   }
 }

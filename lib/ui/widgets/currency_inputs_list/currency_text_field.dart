@@ -1,8 +1,9 @@
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:cnvrt/domain/models/currency.dart';
 import 'package:cnvrt/theme.dart';
+import 'package:cnvrt/utils/currency_text_input_formatter.dart';
 import 'package:cnvrt/utils/logger.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class DecimalTextInputFormatter extends TextInputFormatter {
   @override
@@ -42,29 +43,35 @@ class CurrencyTextField extends StatelessWidget {
     final log = Logger('CurrencyTextField');
 
     final prefix = Padding(
-        padding: const EdgeInsets.only(right: 12.0), // Add space to the right of the prefix
-        child: Text(item.symbol,
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: Theme.of(context).colorScheme.onSurface.withAlpha(90), // Dimmer text
-                )));
-
-    final label = showFullCurrencyNameLabel
-        ? Align(
-            alignment: Alignment.centerRight,
-            child: Column(children: [
-              Align(
-                  alignment: Alignment.centerRight,
-                  child: Text(item.name,
-                      textAlign: TextAlign.end, style: const TextStyle(fontSize: 12, color: Colors.grey))),
-            ]),
-          )
-        : null;
-
-    final decoration = defaultInputDecoration.copyWith(
-      hintText: "0.00",
-      prefix: prefix,
-      label: label,
+      padding: const EdgeInsets.only(right: 12.0), // Add space to the right of the prefix
+      child: Text(
+        item.symbol,
+        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+          color: Theme.of(context).colorScheme.onSurface.withAlpha(90), // Dimmer text
+        ),
+      ),
     );
+
+    final label =
+        showFullCurrencyNameLabel
+            ? Align(
+              alignment: Alignment.centerRight,
+              child: Column(
+                children: [
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: Text(
+                      item.name,
+                      textAlign: TextAlign.end,
+                      style: const TextStyle(fontSize: 12, color: Colors.grey),
+                    ),
+                  ),
+                ],
+              ),
+            )
+            : null;
+
+    final decoration = defaultInputDecoration.copyWith(hintText: "0.00", prefix: prefix, label: label);
 
     return TextField(
       controller: controller,
@@ -74,7 +81,8 @@ class CurrencyTextField extends StatelessWidget {
       keyboardType: TextInputType.number,
       inputFormatters: [
         // FilteringTextInputFormatter.digitsOnly,
-        DecimalTextInputFormatter(),
+        // DecimalTextInputFormatter(),
+        CurrencyTextInputFormatter(currencyCode: item.symbol),
         // CurrencyInputFormatter(item.symbol),
       ],
       onChanged: (text) {

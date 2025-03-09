@@ -4,7 +4,6 @@ import 'package:cnvrt/config/application.dart';
 import 'app.dart';
 
 void main() async {
-
   WidgetsFlutterBinding.ensureInitialized();
 
   // Load environment variables

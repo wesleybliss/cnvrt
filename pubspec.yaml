@@ -68,8 +68,10 @@ dependencies:
   sealed_currencies: ^1.5.1
   currency_formatter: ^2.2.1
   
-  # User avatars
+  # Graphics, user avatars, etc.
   avatars: ^3.0.2
+  flutter_svg: ^2.0.17
+  vector_graphics_compiler: ^1.1.16
   
   pattern_formatter: ^4.0.0
 
@@ -103,9 +105,10 @@ flutter:
   uses-material-design: true
 
   # To add assets to your application, add an assets section, like this:
-  # assets:
+  assets:
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
+     - assets/images/no-wifi-2-svgrepo-com.svg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
