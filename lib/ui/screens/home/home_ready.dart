@@ -1,4 +1,5 @@
 import 'package:cnvrt/config/application.dart';
+import 'package:cnvrt/config/routing/routes.dart';
 import 'package:cnvrt/domain/di/providers/settings_provider.dart';
 import 'package:cnvrt/domain/di/providers/state/currencies_provider.dart';
 import 'package:cnvrt/domain/di/providers/state/currency_values_provider.dart';
@@ -39,7 +40,7 @@ class HomeReady extends ConsumerWidget {
           ),
           const SizedBox(height: 24.0),
           TextButton(
-            onPressed: () => Application.router.navigateTo(context, '/currencies'),
+            onPressed: () => Application.router.navigateTo(context, Routes.currencies),
             child: const Text('Manage Currencies'),
           ),
         ],

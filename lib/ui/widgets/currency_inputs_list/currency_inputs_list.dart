@@ -1,5 +1,3 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cnvrt/domain/di/providers/settings_provider.dart';
 import 'package:cnvrt/domain/di/providers/sorted_currencies_provider.dart';
 import 'package:cnvrt/domain/di/providers/state/currencies_provider.dart';
@@ -7,6 +5,8 @@ import 'package:cnvrt/domain/di/providers/state/currency_values_provider.dart';
 import 'package:cnvrt/domain/models/currency.dart';
 import 'package:cnvrt/ui/widgets/currency_inputs_list/currency_inputs_list_row.dart';
 import 'package:cnvrt/utils/logger.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class CurrenciesInputsList extends ConsumerStatefulWidget {
   final List<Currency> currencies;
@@ -111,14 +111,16 @@ class _CurrenciesInputsListState extends ConsumerState<CurrenciesInputsList> {
     }
 
     return settingsAsyncValue.when(
-        loading: () => const CircularProgressIndicator(),
-        error: (error, stackTrace) => Text('Error: $error'),
-        data: (settings) {
-          return ReorderableListView(
-            shrinkWrap: true,
-            onReorder: onReorderCurrency,
-            children: sortedCurrencies
-                .map((e) => ListTile(
+      loading: () => const CircularProgressIndicator(),
+      error: (error, stackTrace) => Text('Error: $error'),
+      data: (settings) {
+        return ReorderableListView(
+          shrinkWrap: true,
+          onReorder: onReorderCurrency,
+          children:
+              sortedCurrencies
+                  .map(
+                    (e) => ListTile(
                       key: ValueKey(e.symbol),
                       leading: settings.showDragReorderHandles ? const Icon(Icons.drag_handle) : null,
                       title: CurrencyInputsListRow(
@@ -126,12 +128,15 @@ class _CurrenciesInputsListState extends ConsumerState<CurrenciesInputsList> {
                         controller: _controllers[e.symbol],
                         onFocusChanged: onFocusChanged,
                         onTextChanged: onTextChanged,
+                        useLargeInputs: settings.useLargeInputs,
                         showCopyToClipboardButtons: settings.showCopyToClipboardButtons,
                         showFullCurrencyNameLabel: settings.showFullCurrencyNameLabel,
                       ),
-                    ))
-                .toList(),
-          );
-        });
+                    ),
+                  )
+                  .toList(),
+        );
+      },
+    );
   }
 }

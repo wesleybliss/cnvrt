@@ -28,6 +28,7 @@ class CurrencyTextField extends StatelessWidget {
   final Currency item;
   final TextEditingController? controller;
   final void Function(String, String) onTextChanged;
+  final bool useLargeInputs;
   final bool showFullCurrencyNameLabel;
 
   const CurrencyTextField({
@@ -35,6 +36,7 @@ class CurrencyTextField extends StatelessWidget {
     required this.item,
     required this.controller,
     required this.onTextChanged,
+    this.useLargeInputs = false,
     this.showFullCurrencyNameLabel = true,
   });
 
@@ -42,12 +44,15 @@ class CurrencyTextField extends StatelessWidget {
   Widget build(BuildContext context) {
     final log = Logger('CurrencyTextField');
 
+    final labelFontSize = useLargeInputs ? 16.0 : 12.0;
+    final inputFontSize = useLargeInputs ? 20.0 : 12.0;
     final prefix = Padding(
       padding: const EdgeInsets.only(right: 12.0), // Add space to the right of the prefix
       child: Text(
         item.symbol,
         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
           color: Theme.of(context).colorScheme.onSurface.withAlpha(90), // Dimmer text
+          fontSize: labelFontSize,
         ),
       ),
     );
@@ -63,7 +68,7 @@ class CurrencyTextField extends StatelessWidget {
                     child: Text(
                       item.name,
                       textAlign: TextAlign.end,
-                      style: const TextStyle(fontSize: 12, color: Colors.grey),
+                      style: TextStyle(fontSize: labelFontSize, color: Colors.grey),
                     ),
                   ),
                 ],
@@ -71,7 +76,12 @@ class CurrencyTextField extends StatelessWidget {
             )
             : null;
 
-    final decoration = defaultInputDecoration.copyWith(hintText: "0.00", prefix: prefix, label: label);
+    final decoration = defaultInputDecoration.copyWith(
+      hintText: "0.00",
+      prefix: prefix,
+      label: label,
+      labelStyle: TextStyle(fontSize: labelFontSize),
+    );
 
     return GestureDetector(
       onTap: () => controller?.clear(), // Clear text when tapped
@@ -79,7 +89,7 @@ class CurrencyTextField extends StatelessWidget {
         controller: controller,
         decoration: decoration,
         textAlign: TextAlign.end,
-        style: const TextStyle(fontFamily: 'monospace'),
+        style: TextStyle(fontFamily: 'monospace', fontSize: inputFontSize),
         keyboardType: TextInputType.number,
         inputFormatters: [
           // FilteringTextInputFormatter.digitsOnly,

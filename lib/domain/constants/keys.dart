@@ -7,6 +7,7 @@ class ConstantsKeysSettings {
   final lastUpdated = 'lastUpdated';
   final updateFrequencyInHours = 'updateFrequencyInHours';
   final roundingDecimals = 'roundingDecimals';
+  final useLargeInputs = "useLargeInputs";
   final showDragReorderHandles = "showDragReorderHandles";
   final showCopyToClipboardButtons = "showCopyToClipboardButtons";
   final showFullCurrencyNameLabel = "showFullCurrencyNameLabel";

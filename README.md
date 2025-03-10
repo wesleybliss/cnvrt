@@ -2,6 +2,7 @@
 
 A simple currency conversion app.
 
+
 ## Getting Started
 
 1. Clone the repository
@@ -14,7 +15,9 @@ A simple currency conversion app.
 
 ## TODO
 
-1. Remember theme preference for subsequent launches
+* [x] Remember theme preference for subsequent launches
+* [ ] Show flag next to currency symbol on inputs
+
 
 ### Settings
 
@@ -22,7 +25,7 @@ A simple currency conversion app.
 * [x] Show copy to clipboard buttons
 * [x] Show full currency name label
 * [x] Position of inputs (top, middle, bottom)
-* [ ] Show currency rate (all, selected, none)
+* [x] Show currency rate (all, selected, none)
 
 ### Converters
 

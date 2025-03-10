@@ -5,6 +5,7 @@ abstract class ISettings {
   abstract DateTime? lastUpdated;
   abstract int updateFrequencyInHours;
   abstract int roundingDecimals;
+  abstract bool useLargeInputs;
   abstract bool showDragReorderHandles;
   abstract bool showCopyToClipboardButtons;
   abstract bool showFullCurrencyNameLabel;
@@ -16,6 +17,7 @@ abstract class ISettings {
     DateTime? lastUpdated,
     int? updateFrequencyInHours,
     int? roundingDecimals,
+    bool? useLargeInputs,
     bool? showDragReorderHandles,
     bool? showCopyToClipboardButtons,
     bool? showFullCurrencyNameLabel,

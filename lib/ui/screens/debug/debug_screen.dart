@@ -1,3 +1,4 @@
+import 'package:cnvrt/config/routing/routes.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -98,7 +99,7 @@ class _DebugScreenState extends ConsumerState<DebugScreen> {
               trailing: Text(settings.showCurrencyRate.toString()),
             ),
             TextButton(
-              onPressed: () => Application.router.navigateTo(context, '/currencies'),
+              onPressed: () => Application.router.navigateTo(context, Routes.currencies),
               child: const Text('Manage Currencies'),
             ),
             TextButton(
