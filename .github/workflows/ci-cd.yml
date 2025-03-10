@@ -41,7 +41,7 @@ jobs:
           fi
 
       # Upload artifact after build
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: app-${{ github.ref_name }}  # app-master or app-develop
           path: |
