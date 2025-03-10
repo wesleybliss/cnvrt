@@ -1,12 +1,12 @@
-import 'package:collection/collection.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cnvrt/config/application.dart';
 import 'package:cnvrt/domain/di/providers/settings_provider.dart';
 import 'package:cnvrt/domain/di/providers/state/currencies_provider.dart';
 import 'package:cnvrt/domain/di/providers/state/currency_values_provider.dart';
 import 'package:cnvrt/ui/widgets/currency_inputs_list/currency_inputs_list.dart';
 import 'package:cnvrt/utils/logger.dart';
+import 'package:collection/collection.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'widgets/current_exchange_rates_info.dart';
 
@@ -30,43 +30,49 @@ class HomeReady extends ConsumerWidget {
 
     if (selectedCurrencies.isEmpty == true) {
       return Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            if (state.error != null) Text(state.error!),
-            const Center(
-                child: Text('You don\'t have any currencies selected yet. \nAdd some by clicking the button below.')),
-            const SizedBox(height: 24.0),
-            TextButton(
-              onPressed: () => Application.router.navigateTo(context, '/currencies'),
-              child: const Text('Manage Currencies'),
-            ),
-          ]);
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          if (state.error != null) Text(state.error!),
+          const Center(
+            child: Text('You don\'t have any currencies selected yet. \nAdd some by clicking the button below.'),
+          ),
+          const SizedBox(height: 24.0),
+          TextButton(
+            onPressed: () => Application.router.navigateTo(context, '/currencies'),
+            child: const Text('Manage Currencies'),
+          ),
+        ],
+      );
     }
 
     return settingsAsyncValue.when(
-        loading: () => const CircularProgressIndicator(),
-        error: (error, stackTrace) => Text('Error: $error'),
-        data: (settings) {
-          return Column(children: [
-            CurrentExchangeRatesInfo(
-              focusedCurrency: focusedCurrency,
-              focusedCurrencyInputSymbol: focusedCurrencyInputSymbol,
-              currencyValues: currencyValues,
-              showCurrencyRate: settings.showCurrencyRate,
-            ),
-            // Text(currencyValues.entries.map((e) => '${e.key}: ${e.value}').join('\n')),
-            Expanded(
-              child: Container(
-                  alignment: settings.inputsPosition == "top"
-                      ? Alignment.topCenter
-                      : settings.inputsPosition == "bottom"
-                          ? Alignment.bottomCenter
-                          : Alignment.center,
-                  child: CurrenciesInputsList(currencies: selectedCurrencies)),
+      loading: () => const CircularProgressIndicator(),
+      error: (error, stackTrace) => Text('Error: $error'),
+      data: (settings) {
+        return Column(
+          mainAxisAlignment:
+              settings.inputsPosition == "top"
+                  ? MainAxisAlignment.start
+                  : settings.inputsPosition == "bottom"
+                  ? MainAxisAlignment.end
+                  : MainAxisAlignment.center,
+          children: [
+            CurrenciesInputsList(currencies: selectedCurrencies),
+
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
+              child: CurrentExchangeRatesInfo(
+                focusedCurrency: focusedCurrency,
+                focusedCurrencyInputSymbol: focusedCurrencyInputSymbol,
+                selectedCurrencies: selectedCurrencies,
+                showCurrencyRate: settings.showCurrencyRate,
+              ),
             ),
             // const NumericKeyboardGrid(),
-          ]);
-        });
+          ],
+        );
+      },
+    );
   }
 }
