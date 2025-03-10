@@ -1,0 +1,39 @@
+name: Flutter CI/CD
+on:
+  push:
+    branches: [master, develop]  # Add 'develop' here
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.29.0'
+
+      # Cache dependencies before fetching them
+      - uses: actions/cache@v3
+        with:
+          path: ~/.pub-cache
+          key: ${{ runner.os }}-pub-${{ hashFiles('**/pubspec.lock') }}
+      - run: flutter pub get
+      - run: flutter test
+
+      # Set up signing
+      - name: Decode Keystore
+        run: |
+          echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > android/app/my-release-key.jks
+      - name: Create key.properties
+        run: |
+          echo "storePassword=${{ secrets.STORE_PASSWORD }}" > android/key.properties
+          echo "keyPassword=${{ secrets.STORE_PASSWORD }}" >> android/key.properties
+          echo "keyAlias=${{ secrets.KEY_ALIAS }}" >> android/key.properties
+          echo "storeFile=$(pwd)/android/app/my-release-key.jks" >> android/key.properties
+
+      - run: flutter build apk --release # For Android
+
+      # Upload artifact after build
+      - uses: actions/upload-artifact@v3
+        with:
+          name: app-release-${{ github.ref_name }}  # Unique name per branch
+          path: build/app/outputs/flutter-apk/app-release.apk
