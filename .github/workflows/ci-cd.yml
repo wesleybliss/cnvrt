@@ -22,18 +22,28 @@ jobs:
       # Set up signing
       - name: Decode Keystore
         run: |
-          echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > android/app/my-release-key.jks
+          echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > keystore/release-key.jks
       - name: Create key.properties
         run: |
           echo "storePassword=${{ secrets.STORE_PASSWORD }}" > android/key.properties
           echo "keyPassword=${{ secrets.STORE_PASSWORD }}" >> android/key.properties
           echo "keyAlias=${{ secrets.KEY_ALIAS }}" >> android/key.properties
-          echo "storeFile=$(pwd)/android/app/my-release-key.jks" >> android/key.properties
+          echo "storeFile=$(pwd)/keystore/release-key.jks" >> android/key.properties
 
-      - run: flutter build apk --release # For Android
+      # Conditional build based on branch
+      - name: Build APK
+        run: |
+          if [ "${{ github.ref_name }}" = "master" ]; then
+            flutter build apk --release
+          else
+            flutter build apk --release
+            mv build/app/outputs/flutter-apk/app-release.apk build/app/outputs/flutter-apk/app-develop.apk
+          fi
 
       # Upload artifact after build
       - uses: actions/upload-artifact@v3
         with:
-          name: app-release-${{ github.ref_name }}  # Unique name per branch
-          path: build/app/outputs/flutter-apk/app-release.apk
+          name: app-${{ github.ref_name }}  # app-master or app-develop
+          path: |
+            build/app/outputs/flutter-apk/app-release.apk  # For master
+            build/app/outputs/flutter-apk/app-develop.apk  # For develop
