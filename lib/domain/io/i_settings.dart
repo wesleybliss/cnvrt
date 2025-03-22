@@ -11,6 +11,8 @@ abstract class ISettings {
   abstract bool showFullCurrencyNameLabel;
   abstract String inputsPosition;
   abstract String showCurrencyRate;
+  abstract bool showCountryFlags;
+  abstract bool accountForInflation;
 
   ISettings copyWith({
     String? theme,
@@ -23,6 +25,8 @@ abstract class ISettings {
     bool? showFullCurrencyNameLabel,
     String? inputsPosition,
     String? showCurrencyRate,
+    bool? accountForInflation,
+    bool? showCountryFlags,
   });
 
   Future<void> saveToPreferences(SharedPreferences prefs);

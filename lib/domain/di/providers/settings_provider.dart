@@ -85,7 +85,20 @@ class SettingsNotifier extends _$SettingsNotifier {
     await updateSettings(newSettings);
   }
 
+  Future<void> setAccountForInflation(bool value) async {
+    final currentSettings = await future;
+    final newSettings = currentSettings.copyWith(accountForInflation: !currentSettings.accountForInflation);
+    await updateSettings(newSettings);
+  }
+
+  Future<void> setShowCountryFlags(bool value) async {
+    final currentSettings = await future;
+    final newSettings = currentSettings.copyWith(showCountryFlags: !currentSettings.showCountryFlags);
+    await updateSettings(newSettings);
+  }
+
   //region Utilities
+
   void setThemeMode(ThemeMode newThemeMode) {
     setTheme(
       newThemeMode == ThemeMode.system

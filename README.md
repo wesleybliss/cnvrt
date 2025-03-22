@@ -16,7 +16,9 @@ A simple currency conversion app.
 ## TODO
 
 * [x] Remember theme preference for subsequent launches
-* [ ] Show flag next to currency symbol on inputs
+* [x] Show flag next to currency symbol on inputs
+* [ ] Translations
+* [ ] Common denominations screen? (e.g. 50k COP = $usd, 100k, etc)
 
 
 ### Settings

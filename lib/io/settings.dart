@@ -10,7 +10,7 @@ class Settings implements ISettings {
   @override
   int updateFrequencyInHours = 12;
   @override
-  int roundingDecimals = 4;
+  int roundingDecimals = 2;
   @override
   bool useLargeInputs = false;
   @override
@@ -23,18 +23,24 @@ class Settings implements ISettings {
   String inputsPosition = "center";
   @override
   String showCurrencyRate = "selected";
+  @override
+  bool accountForInflation = true;
+  @override
+  bool showCountryFlags = true;
 
   Settings({
     this.theme = "system",
     this.lastUpdated,
     this.updateFrequencyInHours = 12,
-    this.roundingDecimals = 4,
+    this.roundingDecimals = 2,
     this.useLargeInputs = false,
     this.showDragReorderHandles = true,
     this.showCopyToClipboardButtons = true,
     this.showFullCurrencyNameLabel = true,
     this.inputsPosition = "center",
     this.showCurrencyRate = "selected",
+    this.accountForInflation = true,
+    this.showCountryFlags = true,
   });
 
   @override
@@ -49,6 +55,8 @@ class Settings implements ISettings {
     bool? showFullCurrencyNameLabel,
     String? inputsPosition,
     String? showCurrencyRate,
+    bool? accountForInflation,
+    bool? showCountryFlags,
   }) => Settings(
     theme: theme ?? this.theme,
     lastUpdated: lastUpdated ?? this.lastUpdated,
@@ -60,6 +68,8 @@ class Settings implements ISettings {
     showFullCurrencyNameLabel: showFullCurrencyNameLabel ?? this.showFullCurrencyNameLabel,
     inputsPosition: inputsPosition ?? this.inputsPosition,
     showCurrencyRate: showCurrencyRate ?? this.showCurrencyRate,
+    accountForInflation: accountForInflation ?? this.accountForInflation,
+    showCountryFlags: showCountryFlags ?? this.showCountryFlags,
   );
 
   // Factory method to create a Settings object from SharedPreferences
@@ -78,6 +88,8 @@ class Settings implements ISettings {
       showFullCurrencyNameLabel: prefs.getInt(keys.showFullCurrencyNameLabel) == 1,
       inputsPosition: prefs.getString(keys.inputsPosition) ?? "center",
       showCurrencyRate: prefs.getString(keys.showCurrencyRate) ?? "selected",
+      accountForInflation: prefs.getBool(keys.accountForInflation) ?? true,
+      showCountryFlags: prefs.getBool(keys.showCountryFlags) ?? true,
     );
   }
 
@@ -100,5 +112,7 @@ class Settings implements ISettings {
     await prefs.setInt(keys.showFullCurrencyNameLabel, showFullCurrencyNameLabel ? 1 : 0);
     await prefs.setString(keys.inputsPosition, inputsPosition);
     await prefs.setString(keys.showCurrencyRate, showCurrencyRate);
+    await prefs.setBool(keys.accountForInflation, accountForInflation);
+    await prefs.setBool(keys.showCountryFlags, showCountryFlags);
   }
 }

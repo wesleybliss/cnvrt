@@ -1,14 +1,14 @@
-import 'package:cnvrt/config/routing/routes.dart';
-import 'package:collection/collection.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cnvrt/config/application.dart';
+import 'package:cnvrt/config/routing/routes.dart';
 import 'package:cnvrt/domain/di/providers/settings_provider.dart';
 import 'package:cnvrt/domain/di/providers/state/currencies_provider.dart';
 import 'package:cnvrt/domain/models/currency.dart';
 import 'package:cnvrt/io/settings.dart';
 import 'package:cnvrt/store/SimpleCurrencyStore.dart';
 import 'package:cnvrt/utils/logger.dart';
+import 'package:collection/collection.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class DebugScreen extends ConsumerStatefulWidget {
   const DebugScreen({super.key});
@@ -55,6 +55,10 @@ class _DebugScreenState extends ConsumerState<DebugScreen> {
       log.d('HomeReady: ${selectedCurrencies.length} selected');
     }
 
+    void debugDumpAllCurrencies() {
+      log.d('\n' + state.currencies.map((it) => '${it.symbol}, ${it.name}').join('\n') + '\n');
+    }
+
     void onFetchCurrenciesClick() {
       ref.read(currenciesProvider.notifier).fetchCurrencies();
     }
@@ -69,67 +73,56 @@ class _DebugScreenState extends ConsumerState<DebugScreen> {
     );
 
     Widget renderBody(Settings settings) {
-      return Center(
+      return SingleChildScrollView(
+        child: Center(
           child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-            ListTile(
-              title: const Text('theme'),
-              trailing: Text(settings.theme),
-            ),
-            ListTile(
-              title: const Text('showDragReorderHandles'),
-              trailing: Text(settings.showDragReorderHandles.toString()),
-            ),
-            ListTile(
-              title: const Text('showCopyToClipboardButtons'),
-              trailing: Text(settings.showCopyToClipboardButtons.toString()),
-            ),
-            ListTile(
-              title: const Text('showFullCurrencyNameLabel'),
-              trailing: Text(settings.showFullCurrencyNameLabel.toString()),
-            ),
-            ListTile(
-              title: const Text('inputsPosition'),
-              trailing: Text(settings.inputsPosition.toString()),
-            ),
-            ListTile(
-              title: const Text('showCurrencyRate'),
-              trailing: Text(settings.showCurrencyRate.toString()),
-            ),
-            TextButton(
-              onPressed: () => Application.router.navigateTo(context, Routes.currencies),
-              child: const Text('Manage Currencies'),
-            ),
-            TextButton(
-              onPressed: onFetchCurrenciesClick,
-              child: const Text('Fetch Currencies'),
-            ),
-            ElevatedButton(
-              onPressed: debugCheckStorage,
-              child: Text('Debug Check Storage: ${state.currencies.length}'),
-            ),
-            ElevatedButton(
-              onPressed: onClearCurrenciesClick,
-              child: const Text('Clear Currencies'),
-            ),
-            ElevatedButton(
-              onPressed: debugAutoSelectDefaults,
-              child: const Text('Debug auto select defaults'),
-            ),
-            ElevatedButton(
-              onPressed: debugReportStatus,
-              child: const Text('Debug report status'),
-            ),
-          ]));
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              TextButton(
+                onPressed: () => Application.router.navigateTo(context, Routes.debugConvert),
+                child: const Text('Convert Debug'),
+              ),
+              ListTile(title: const Text('theme'), trailing: Text(settings.theme)),
+              ListTile(
+                title: const Text('showDragReorderHandles'),
+                trailing: Text(settings.showDragReorderHandles.toString()),
+              ),
+              ListTile(
+                title: const Text('showCopyToClipboardButtons'),
+                trailing: Text(settings.showCopyToClipboardButtons.toString()),
+              ),
+              ListTile(
+                title: const Text('showFullCurrencyNameLabel'),
+                trailing: Text(settings.showFullCurrencyNameLabel.toString()),
+              ),
+              ListTile(title: const Text('inputsPosition'), trailing: Text(settings.inputsPosition.toString())),
+              ListTile(title: const Text('showCurrencyRate'), trailing: Text(settings.showCurrencyRate.toString())),
+              TextButton(
+                onPressed: () => Application.router.navigateTo(context, Routes.currencies),
+                child: const Text('Manage Currencies'),
+              ),
+              TextButton(onPressed: onFetchCurrenciesClick, child: const Text('Fetch Currencies')),
+              ElevatedButton(
+                onPressed: debugCheckStorage,
+                child: Text('Debug Check Storage: ${state.currencies.length}'),
+              ),
+              ElevatedButton(onPressed: onClearCurrenciesClick, child: const Text('Clear Currencies')),
+              ElevatedButton(onPressed: debugAutoSelectDefaults, child: const Text('Debug auto select defaults')),
+              ElevatedButton(onPressed: debugReportStatus, child: const Text('Debug report status')),
+              ElevatedButton(onPressed: debugDumpAllCurrencies, child: const Text("Dump all currencies")),
+            ],
+          ),
+        ),
+      );
     }
 
     return settingsAsyncValue.when(
-        loading: () => const CircularProgressIndicator(),
-        error: (error, stackTrace) => Text('Error: $error'),
-        data: (settings) {
-          return renderBody(settings);
-        });
+      loading: () => const CircularProgressIndicator(),
+      error: (error, stackTrace) => Text('Error: $error'),
+      data: (settings) {
+        return renderBody(settings);
+      },
+    );
   }
 }

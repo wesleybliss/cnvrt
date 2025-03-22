@@ -13,4 +13,6 @@ class ConstantsKeysSettings {
   final showFullCurrencyNameLabel = "showFullCurrencyNameLabel";
   final inputsPosition = "inputsPosition";
   final showCurrencyRate = "showCurrencyRate";
+  final accountForInflation = "accountForInflation";
+  final showCountryFlags = "showCountryFlags";
 }

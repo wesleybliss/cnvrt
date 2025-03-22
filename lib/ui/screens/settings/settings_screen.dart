@@ -2,6 +2,8 @@ import 'package:cnvrt/config/application.dart';
 import 'package:cnvrt/config/routing/routes.dart';
 import 'package:cnvrt/domain/di/providers/settings_provider.dart';
 import 'package:cnvrt/io/settings.dart';
+import 'package:cnvrt/ui/screens/settings/widgets/ShowCountryFlagsSwitch.dart';
+import 'package:cnvrt/ui/screens/settings/widgets/account_for_inflation_switch.dart';
 import 'package:cnvrt/ui/screens/settings/widgets/use_large_inputs_switch.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -40,33 +42,37 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     }
 
     Widget renderBody(Settings settings) {
-      return Column(
-        children: [
-          ThemeDropdown(value: settings.theme),
-          RoundDecimalsToInput(controller: controllers["roundingDecimalsController"]),
-          UpdateFrequencyInHoursDropdown(value: settings.updateFrequencyInHours),
-          UseLargeInputsSwitch(value: settings.useLargeInputs),
-          ShowDragReorderHandlesSwitch(value: settings.showDragReorderHandles),
-          ShowCopyToClipboardButtonsSwitch(value: settings.showCopyToClipboardButtons),
-          ShowFullCurrencyNameLabelSwitch(value: settings.showFullCurrencyNameLabel),
-          InputsPositionDropdown(value: settings.inputsPosition),
-          ShowCurrencyRateDropdown(value: settings.showCurrencyRate),
-          ElevatedButton(
-            onPressed: () {
-              // Handle settings action
-              print('Settings pressed');
-              Application.router.navigateTo(context, Routes.currencies);
-            },
-            child: const Text('Currencies'),
-          ),
-          IconButton(
-            icon: const Icon(Icons.bug_report), // Heart icon for favorites
-            tooltip: 'Debug',
-            onPressed: () {
-              Application.router.navigateTo(context, Routes.debug);
-            },
-          ),
-        ],
+      return SingleChildScrollView(
+        child: Column(
+          children: [
+            ThemeDropdown(value: settings.theme),
+            RoundDecimalsToInput(controller: controllers["roundingDecimalsController"]),
+            UpdateFrequencyInHoursDropdown(value: settings.updateFrequencyInHours),
+            UseLargeInputsSwitch(value: settings.useLargeInputs),
+            ShowDragReorderHandlesSwitch(value: settings.showDragReorderHandles),
+            ShowCopyToClipboardButtonsSwitch(value: settings.showCopyToClipboardButtons),
+            ShowFullCurrencyNameLabelSwitch(value: settings.showFullCurrencyNameLabel),
+            InputsPositionDropdown(value: settings.inputsPosition),
+            ShowCurrencyRateDropdown(value: settings.showCurrencyRate),
+            AccountForInflationSwitch(value: settings.accountForInflation),
+            ShowCountryFlagsSwitch(value: settings.showCountryFlags),
+            ElevatedButton(
+              onPressed: () {
+                // Handle settings action
+                print('Settings pressed');
+                Application.router.navigateTo(context, Routes.currencies);
+              },
+              child: const Text('Currencies'),
+            ),
+            IconButton(
+              icon: const Icon(Icons.bug_report), // Heart icon for favorites
+              tooltip: 'Debug',
+              onPressed: () {
+                Application.router.navigateTo(context, Routes.debug);
+              },
+            ),
+          ],
+        ),
       );
     }
 

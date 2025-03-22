@@ -11,6 +11,7 @@ class CurrencyInputsListRow extends StatelessWidget {
   final bool useLargeInputs;
   final bool showCopyToClipboardButtons;
   final bool showFullCurrencyNameLabel;
+  final bool showCountryFlags;
 
   const CurrencyInputsListRow({
     super.key,
@@ -22,6 +23,7 @@ class CurrencyInputsListRow extends StatelessWidget {
     this.useLargeInputs = false,
     this.showCopyToClipboardButtons = true,
     this.showFullCurrencyNameLabel = true,
+    this.showCountryFlags = true,
   });
 
   @override
@@ -41,6 +43,7 @@ class CurrencyInputsListRow extends StatelessWidget {
               onTextChanged: onTextChanged,
               useLargeInputs: useLargeInputs,
               showFullCurrencyNameLabel: showFullCurrencyNameLabel,
+              showCountryFlags: showCountryFlags,
             ),
           ),
         ),

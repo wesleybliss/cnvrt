@@ -23,12 +23,13 @@ class CurrencyValuesNotifier extends StateNotifier<Map<String, double>> {
 
   // Update the value for a specific currency
   Map<String, double> setValue(String symbol, String text, {updateSelf = true}) {
-    final double value = double.tryParse(text) ?? 0.0;
+    final raw = removeAllButLastDecimal(text);
+    final double value = double.tryParse(raw) ?? 0.0;
     final sortedCurrencies = ref.read(sortedCurrenciesProvider);
 
-    log.d('DEBUG DEBUG: convertCurrencies: ${sortedCurrencies.join(', ')}');
+    // log.d('convertCurrencies: RAW: $text -> $raw -> ${sortedCurrencies.join(', ')}');
 
-    // Get the updated currency values
+    // Get the updated currency values)
     state = convertCurrencies(symbol, value, sortedCurrencies);
 
     return state;
