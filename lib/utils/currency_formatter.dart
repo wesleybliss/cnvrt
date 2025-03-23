@@ -1,11 +1,13 @@
-import 'package:cnvrt/utils/currency_locales.dart';
+import 'dart:math';
+
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 
-class WholeNumberCurrencyFormatter extends TextInputFormatter {
+class CurrencyFormatter extends TextInputFormatter {
   final String currencySymbol;
+  final int decimalDigits;
 
-  WholeNumberCurrencyFormatter({required this.currencySymbol});
+  CurrencyFormatter({required this.currencySymbol, this.decimalDigits = 2});
 
   @override
   TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
@@ -19,14 +21,17 @@ class WholeNumberCurrencyFormatter extends TextInputFormatter {
       return newValue;
     }
 
-    // Format as whole number with currency symbol
+    // Convert to decimal value
+    double value = double.parse(newText) / pow(10, decimalDigits);
+
+    // Format with appropriate decimal places
     final formatter = NumberFormat.currency(
-      locale: currencyLocales[currencySymbol] ?? 'en_US',
-      symbol: '', // '\$',
-      decimalDigits: 0, // Set to 0 for whole numbers
+      locale: /*currencyLocales[currencySymbol] ??*/ 'en_US',
+      symbol: '',
+      decimalDigits: decimalDigits,
     );
 
-    String formattedValue = formatter.format(int.parse(newText)).trim();
+    String formattedValue = formatter.format(value).trim();
 
     return TextEditingValue(text: formattedValue, selection: TextSelection.collapsed(offset: formattedValue.length));
   }

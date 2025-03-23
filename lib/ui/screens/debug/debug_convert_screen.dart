@@ -1,6 +1,6 @@
 import 'package:cnvrt/theme.dart';
+import 'package:cnvrt/utils/currency_formatter.dart';
 import 'package:cnvrt/utils/logger.dart';
-import 'package:cnvrt/utils/whole_number_currency_formatter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -84,7 +84,7 @@ class _DebugConvertScreenState extends ConsumerState<DebugConvertScreen> {
 
                 // CurrencyTextInputFormatter(currencyCode: item.symbol),
                 FilteringTextInputFormatter.digitsOnly,
-                WholeNumberCurrencyFormatter(currencySymbol: "USD"),
+                CurrencyFormatter(currencySymbol: "USD"),
               ],
               onChanged: (text) {
                 outputController.text = (double.parse(text) * 100.0).toString();
@@ -104,7 +104,7 @@ class _DebugConvertScreenState extends ConsumerState<DebugConvertScreen> {
 
                 // CurrencyTextInputFormatter(currencyCode: item.symbol),
                 FilteringTextInputFormatter.digitsOnly,
-                WholeNumberCurrencyFormatter(currencySymbol: "COP"),
+                CurrencyFormatter(currencySymbol: "COP"),
               ],
               onChanged: (text) {
                 // log.d('@todo Handle change ${item.symbol} - $text');

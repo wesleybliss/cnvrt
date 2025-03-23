@@ -2,7 +2,7 @@ import 'package:cnvrt/domain/models/currency.dart';
 import 'package:cnvrt/theme.dart';
 import 'package:cnvrt/utils/currency_flags.dart';
 import 'package:cnvrt/utils/logger.dart';
-import 'package:cnvrt/utils/whole_number_currency_formatter.dart';
+import 'package:cnvrt/utils/currency_formatter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
@@ -124,8 +124,7 @@ class CurrencyTextField extends StatelessWidget {
 
           // CurrencyTextInputFormatter(currencyCode: item.symbol),
           FilteringTextInputFormatter.digitsOnly,
-          // CurrencyInputFormatter2(),
-          WholeNumberCurrencyFormatter(currencySymbol: item.symbol),
+          CurrencyFormatter(currencySymbol: item.symbol),
         ],
         onTap: () {
           controller?.clear();
