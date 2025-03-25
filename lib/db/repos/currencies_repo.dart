@@ -103,33 +103,6 @@ class CurrenciesRepo extends ICurrenciesRepo {
   @override
   Future<List<Currency>> upsertMany(List<Currency> currencies) async {
     return await upsertManyCompanions(currencies.map((e) => e.toCompanion(false)).toList());
-    /*return await db.transaction(() async {
-      final List<Currency> upsertedRows = [];
-
-      for (final currency in currencies) {
-        log.d("upsertMany: inserting ${currency.symbol}");
-
-        // Use InsertMode.insertOrReplace for upsert behavior
-        final insertedId = await db
-            .into(db.currencies)
-            .insert(currency.toCompanion(false), mode: InsertMode.insertOrReplace);
-
-        log.d("upsertMany: insertedId: $insertedId");
-
-        // Fetch the row (whether it was inserted or replaced)
-        final Currency? upsertedRow =
-            await (db.select(db.currencies)
-              ..where((tbl) => tbl.id.equals(insertedId ?? currency.id))).getSingleOrNull();
-
-        log.d("upsertMany: upsertedRow: ${upsertedRow?.symbol}: ${upsertedRow?.id}");
-
-        if (upsertedRow != null) {
-          upsertedRows.add(upsertedRow);
-        }
-      }
-
-      return upsertedRows;
-    });*/
   }
 
   @override

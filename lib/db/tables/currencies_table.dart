@@ -9,23 +9,3 @@ class Currencies extends Table {
   BoolColumn get selected => boolean().clientDefault(() => false)();
   IntColumn get order => integer()();
 }
-
-/*class Currency {
-  final int id;
-  final String createdAt;
-  final String symbol;
-  final String name;
-  final String rate;
-  final String selected;
-  final String order;
-
-  Currency({
-    required this.id,
-    required this.createdAt,
-    required this.symbol,
-    required this.name,
-    required this.rate,
-    required this.selected,
-    required this.order,
-  });
-}*/

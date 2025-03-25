@@ -32,20 +32,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       onRefresh: () async {
         ref.read(currenciesProvider.notifier).fetchCurrencies();
       },
-      child: SingleChildScrollView(
-        physics: const AlwaysScrollableScrollPhysics(), // Ensures the scroll area is always scrollable
-        child: SizedBox(
-          height: MediaQuery.of(context).size.height, // Makes the child take up the full screen height
-          child:
-              state.loading
+      child: state.loading
                   ? state.currencies.isNotEmpty
                       ? const HomeReady()
                       : HomeLoading(isFetching: state.isFetching)
                   : state.error != null
                   ? const HomeError()
                   : const HomeReady(),
-        ),
-      ),
-    );
+        );
   }
 }
