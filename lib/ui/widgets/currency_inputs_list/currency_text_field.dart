@@ -5,29 +5,6 @@ import 'package:cnvrt/utils/currency_formatter.dart';
 import 'package:cnvrt/utils/logger.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:intl/intl.dart';
-
-class CurrencyInputFormatter2 extends TextInputFormatter {
-  @override
-  TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
-    if (newValue.text.isEmpty) {
-      return newValue;
-    }
-
-    // Remove all non-digit characters
-    String newText = newValue.text.replaceAll(RegExp(r'[^0-9]'), '');
-    if (newText.isEmpty) {
-      return newValue;
-    }
-
-    // Convert to double and format as currency
-    double value = double.parse(newText) / 100;
-    final formatter = NumberFormat.currency(locale: 'en_US', symbol: '');
-    String formattedValue = formatter.format(value);
-
-    return TextEditingValue(text: formattedValue, selection: TextSelection.collapsed(offset: formattedValue.length));
-  }
-}
 
 class DecimalTextInputFormatter extends TextInputFormatter {
   @override

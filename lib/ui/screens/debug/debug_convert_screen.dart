@@ -4,29 +4,6 @@ import 'package:cnvrt/utils/logger.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:intl/intl.dart';
-
-class CurrencyInputFormatter2 extends TextInputFormatter {
-  @override
-  TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
-    if (newValue.text.isEmpty) {
-      return newValue;
-    }
-
-    // Remove all non-digit characters
-    String newText = newValue.text.replaceAll(RegExp(r'[^0-9]'), '');
-    if (newText.isEmpty) {
-      return newValue;
-    }
-
-    // Convert to double and format as currency
-    int value = int.parse(newText); // / 100;
-    final formatter = NumberFormat.currency(locale: 'en_US', symbol: '');
-    String formattedValue = formatter.format(value);
-
-    return TextEditingValue(text: formattedValue, selection: TextSelection.collapsed(offset: formattedValue.length));
-  }
-}
 
 class DebugConvertScreen extends ConsumerStatefulWidget {
   const DebugConvertScreen({super.key});
@@ -78,11 +55,6 @@ class _DebugConvertScreenState extends ConsumerState<DebugConvertScreen> {
               style: TextStyle(fontFamily: 'monospace', fontSize: 12),
               keyboardType: TextInputType.number,
               inputFormatters: [
-                // FilteringTextInputFormatter.digitsOnly,
-                // DecimalTextInputFormatter(),
-                // CurrencyInputFormatter(item.symbol),
-
-                // CurrencyTextInputFormatter(currencyCode: item.symbol),
                 FilteringTextInputFormatter.digitsOnly,
                 CurrencyFormatter(currencySymbol: "USD"),
               ],
@@ -98,11 +70,6 @@ class _DebugConvertScreenState extends ConsumerState<DebugConvertScreen> {
               style: TextStyle(fontFamily: 'monospace', fontSize: 12),
               keyboardType: TextInputType.number,
               inputFormatters: [
-                // FilteringTextInputFormatter.digitsOnly,
-                // DecimalTextInputFormatter(),
-                // CurrencyInputFormatter(item.symbol),
-
-                // CurrencyTextInputFormatter(currencyCode: item.symbol),
                 FilteringTextInputFormatter.digitsOnly,
                 CurrencyFormatter(currencySymbol: "COP"),
               ],

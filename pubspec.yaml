@@ -48,7 +48,7 @@ dependencies:
   riverpod_annotation: ^2.3.6
 
   # Data
-  copy_with_extension: ^6.0.0 #^5.0.4
+  copy_with_extension: ^6.0.0
 
   # Networking
   dio: ^5.7.0
@@ -66,14 +66,11 @@ dependencies:
 
   locale_names: ^1.1.1
   sealed_currencies: ^1.5.1
-  currency_formatter: ^2.2.1
   
   # Graphics, user avatars, etc.
   avatars: ^3.0.2
   flutter_svg: ^2.0.17
   vector_graphics_compiler: ^1.1.16
-  
-  pattern_formatter: ^4.0.0
 
 dev_dependencies:
   flutter_test:

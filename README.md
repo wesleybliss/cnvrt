@@ -11,15 +11,16 @@ A simple currency conversion app.
 4. Run the API server
 5. Bridge ADB ports via `adb reverse tcp:3002 tcp:3002`
 6. Run the build server via `dart run build_runner watch`
-6. Run the app
+7. Run the app
 
 
 ## TODO
 
 * [x] Remember theme preference for subsequent launches
 * [x] Show flag next to currency symbol on inputs
-* [ ] Translations
 * [ ] Common denominations screen? (e.g. 50k COP = $usd, 100k, etc)
+* [ ] Ability to perform basic math operations
+* [ ] Translations
 
 
 ### Settings
