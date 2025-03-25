@@ -1,5 +1,5 @@
+import 'package:cnvrt/db/database.dart';
 import 'package:cnvrt/domain/extensions/extensions.dart';
-import 'package:cnvrt/domain/models/currency.dart';
 import 'package:cnvrt/ui/widgets/currency_inputs_list/currency_text_field.dart';
 import 'package:flutter/material.dart';
 

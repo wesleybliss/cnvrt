@@ -1,8 +1,8 @@
-import 'package:cnvrt/domain/models/currency.dart';
+import 'package:cnvrt/db/database.dart';
 import 'package:cnvrt/theme.dart';
 import 'package:cnvrt/utils/currency_flags.dart';
-import 'package:cnvrt/utils/logger.dart';
 import 'package:cnvrt/utils/currency_formatter.dart';
+import 'package:cnvrt/utils/logger.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
@@ -112,27 +112,27 @@ class CurrencyTextField extends StatelessWidget {
     );
 
     return TextField(
-        controller: controller,
-        decoration: decoration,
-        textAlign: TextAlign.end,
-        style: TextStyle(fontFamily: 'monospace', fontSize: inputFontSize),
-        keyboardType: TextInputType.number,
-        inputFormatters: [
-          // FilteringTextInputFormatter.digitsOnly,
-          // DecimalTextInputFormatter(),
-          // CurrencyInputFormatter(item.symbol),
+      controller: controller,
+      decoration: decoration,
+      textAlign: TextAlign.end,
+      style: TextStyle(fontFamily: 'monospace', fontSize: inputFontSize),
+      keyboardType: TextInputType.number,
+      inputFormatters: [
+        // FilteringTextInputFormatter.digitsOnly,
+        // DecimalTextInputFormatter(),
+        // CurrencyInputFormatter(item.symbol),
 
-          // CurrencyTextInputFormatter(currencyCode: item.symbol),
-          FilteringTextInputFormatter.digitsOnly,
-          CurrencyFormatter(currencySymbol: item.symbol),
-        ],
-        onTap: () {
-          controller?.clear();
-        },
-        onChanged: (text) {
-          onTextChanged(item.symbol, text);
-          // log.d('@todo Handle change ${item.symbol} - $text');
-        },
-      );
+        // CurrencyTextInputFormatter(currencyCode: item.symbol),
+        FilteringTextInputFormatter.digitsOnly,
+        CurrencyFormatter(currencySymbol: item.symbol),
+      ],
+      onTap: () {
+        controller?.clear();
+      },
+      onChanged: (text) {
+        onTextChanged(item.symbol, text);
+        // log.d('@todo Handle change ${item.symbol} - $text');
+      },
+    );
   }
 }

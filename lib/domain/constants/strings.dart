@@ -9,7 +9,7 @@ class ConstantsStrings {
     if (isProduction) {
       return 'https://simple-currency-cron.vercel.app/api';
     } else {
-      return 'http://localhost:3001/api';
+      return 'http://localhost:3002/api';
     }
   }
 }

@@ -1,6 +1,7 @@
 import 'package:cnvrt/domain/constants/constants.dart';
 import 'package:cnvrt/ui/screens/currencies/currencies_screen.dart';
 import 'package:cnvrt/ui/screens/debug/debug_convert_screen.dart';
+import 'package:cnvrt/ui/screens/debug/debug_sql_test_screen.dart';
 import 'package:cnvrt/ui/screens/debug/debug_screen.dart';
 import 'package:cnvrt/ui/screens/error/ErrorScreen.dart';
 import 'package:cnvrt/ui/screens/home/home_screen.dart';
@@ -44,6 +45,7 @@ final errorHandler = handlerFor(const ErrorScreen(message: '@todo Error'), Const
 
 final debugHandler = handlerFor(const DebugScreen(), "Debug");
 final debugConvertHandler = handlerFor(const DebugConvertScreen(), "Debug Convert");
+final debugSqlTestHandler = handlerFor(const DebugSqlTestScreen(), "Debug Sql Test");
 
 final homeHandler = handlerFor(const HomeScreen(), Constants.strings.appName);
 final settingsHandler = handlerFor(const SettingsScreen(), "Settings");

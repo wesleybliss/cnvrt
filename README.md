@@ -9,7 +9,8 @@ A simple currency conversion app.
 2. Make sure Flutter is up to date (`flutter clean`, `flutter pub get`, etc.)
 3. Make sure AGP is up to date
 4. Run the API server
-5. Bridge ADB ports via `adb reverse tcp:3001 tcp:3001`
+5. Bridge ADB ports via `adb reverse tcp:3002 tcp:3002`
+6. Run the build server via `dart run build_runner watch`
 6. Run the app
 
 

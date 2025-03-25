@@ -19,6 +19,6 @@
 - **Error Handling**: Dedicated error screens/widgets for specific scenarios
 - **Types**: Use strong typing with required parameters
 - **Project Structure**: Feature-based organization with domain/io/ui layers
-- **Dependencies**: Use Riverpod for state, ObjectBox for storage, Fluro for routing, Dio for networking
+- **Dependencies**: Use Riverpod for state, Drift for storage, Fluro for routing, Dio for networking
 
 Refer to analysis_options.yaml for linting rules (flutter_lints package + riverpod_lint).

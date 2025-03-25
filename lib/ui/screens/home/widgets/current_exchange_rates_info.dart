@@ -1,4 +1,4 @@
-import 'package:cnvrt/domain/models/currency.dart';
+import 'package:cnvrt/db/database.dart';
 import 'package:cnvrt/utils/conditionally_visible.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -24,8 +24,11 @@ class CurrentExchangeRatesInfo extends StatelessWidget {
     final Widget child;
 
     if (showCurrencyRate == "all") {
-      child = Text(selectedCurrencies.map((e) => '${e.symbol}: ${nf.format(e.rate)}').join('\n'), textAlign: TextAlign.center,
-          style: TextStyle(fontSize: 17, fontFamily: 'monospace', color: Theme.of(context).colorScheme.surfaceTint));
+      child = Text(
+        selectedCurrencies.map((e) => '${e.symbol}: ${nf.format(e.rate)}').join('\n'),
+        textAlign: TextAlign.center,
+        style: TextStyle(fontSize: 17, fontFamily: 'monospace', color: Theme.of(context).colorScheme.surfaceTint),
+      );
     } else {
       final currentExchangeRate =
           focusedCurrency == null ? '' : '\$1 = ${nf.format(focusedCurrency?.rate)} $focusedCurrencyInputSymbol';

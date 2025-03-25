@@ -9,6 +9,7 @@ class Routes {
 
   static const String debug = '/debug';
   static const String debugConvert = '/debug-convert';
+  static const String debugSqlTest = '/debug-sql-test';
 
   static const String home = '/';
   static const String settings = '/settings';
@@ -38,6 +39,7 @@ class Routes {
 
     define(debug, debugHandler, TransitionType.fadeIn);
     define(debugConvert, debugConvertHandler, TransitionType.fadeIn);
+    define(debugSqlTest, debugSqlTestHandler, TransitionType.fadeIn);
 
     define(home, homeHandler, TransitionType.fadeIn);
     define(settings, settingsHandler, TransitionType.fadeIn);

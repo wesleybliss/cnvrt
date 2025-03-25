@@ -1,8 +1,8 @@
+import 'package:cnvrt/db/database.dart';
 import 'package:cnvrt/domain/di/providers/settings_provider.dart';
 import 'package:cnvrt/domain/di/providers/sorted_currencies_provider.dart';
 import 'package:cnvrt/domain/di/providers/state/currencies_provider.dart';
 import 'package:cnvrt/domain/di/providers/state/currency_values_provider.dart';
-import 'package:cnvrt/domain/models/currency.dart';
 import 'package:cnvrt/ui/widgets/currency_inputs_list/currency_inputs_list_row.dart';
 import 'package:cnvrt/utils/currency_locales.dart';
 import 'package:cnvrt/utils/logger.dart';
@@ -119,7 +119,7 @@ class _CurrenciesInputsListState extends ConsumerState<CurrenciesInputsList> {
 
         // Update the order property and save to ObjectBox
         for (int i = 0; i < sortedCurrencies.length; i++) {
-          sortedCurrencies[i].order = i;
+          sortedCurrencies[i] = sortedCurrencies[i].copyWith(order: i);
           ref.read(currenciesProvider.notifier).setCurrency(sortedCurrencies[i]);
         }
       });

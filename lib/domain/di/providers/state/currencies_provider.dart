@@ -1,14 +1,12 @@
-import 'package:collection/collection.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:cnvrt/db/database.dart';
 import 'package:cnvrt/domain/constants/constants.dart';
 import 'package:cnvrt/domain/di/spot.dart';
 import 'package:cnvrt/domain/io/repos/i_currencies_repo.dart';
-import 'package:cnvrt/domain/models/currency.dart';
+import 'package:cnvrt/domain/io/services/i_currencies_service.dart';
 import 'package:cnvrt/domain/models/currency_response.dart';
-import 'package:cnvrt/objectbox.g.dart';
-import 'package:cnvrt/store/SimpleCurrencyStore.dart';
 import 'package:cnvrt/utils/logger.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class CurrenciesState {
   final List<Currency> currencies;
@@ -16,29 +14,25 @@ class CurrenciesState {
   final String? error;
   final bool isFetching;
 
-  CurrenciesState({
-    List<Currency>? currencies,
-    this.loading = false,
-    this.error,
-    this.isFetching = false,
-  }) : currencies = currencies ?? List.empty();
+  CurrenciesState({List<Currency>? currencies, this.loading = false, this.error, this.isFetching = false})
+    : currencies = currencies ?? List.empty();
 }
 
 class CurrenciesNotifier extends StateNotifier<CurrenciesState> {
   final log = Logger('CurrenciesNotifier');
-  final currencyBox = store.box<Currency>();
-  final ICurrenciesRepo currenciesRepo;
+  final currenciesRepo = spot<ICurrenciesRepo>();
+  final currenciesService = spot<ICurrenciesService>();
 
-  CurrenciesNotifier(this.currenciesRepo) : super(CurrenciesState());
+  CurrenciesNotifier() : super(CurrenciesState());
 
   void setCurrency(Currency currency) {
     final next = state.currencies.map((e) => e.id == currency.id ? currency : e).toList();
     state = CurrenciesState(currencies: next);
-    currencyBox.put(currency);
+    currenciesRepo.create(currency);
   }
 
   Future<void> clearCurrencies() async {
-    await currencyBox.removeAllAsync();
+    await currenciesRepo.deleteAll();
     state = CurrenciesState(currencies: [], loading: false);
   }
 
@@ -47,8 +41,7 @@ class CurrenciesNotifier extends StateNotifier<CurrenciesState> {
       state = CurrenciesState(loading: true);
     }
 
-    // final items = await currencyBox.getAllAsync();
-    final items = await currencyBox.query().order(Currency_.order).build().findAsync();
+    final items = await currenciesRepo.findAllOrderedByOrder();
 
     state = CurrenciesState(currencies: items, loading: false);
 
@@ -62,29 +55,18 @@ class CurrenciesNotifier extends StateNotifier<CurrenciesState> {
     state = CurrenciesState(loading: true, isFetching: true, currencies: state.currencies);
 
     try {
-      final CurrencyResponse? res = await currenciesRepo.fetchCurrencies();
+      final CurrencyResponse? res = await currenciesService.fetchCurrencies();
 
       final data = res?.data.currencies ?? [];
-      final prev = await currencyBox.getAllAsync();
+
+      log.d("fetchCurrencies: upserting $data");
 
       // Update currencies without destroying locally saved data, like selected state
-      store.runInTransaction(TxMode.write, () {
-        for (var i = 0; i < data.length; i++) {
-          final it = data[i];
-          final existing = prev.firstWhereOrNull((e) => e.symbol == it.symbol);
+      final savedCurrencies = await currenciesRepo.upsertManyCompanions(data);
 
-          if (existing != null) {
-            // log.d('DEBUG: Updating currency: ${it.symbol} (selected: ${existing.selected})');
-            data[i] = it.copyWith(selected: existing.selected);
-          }
-
-          currencyBox.put(it);
-        }
-      });
-
-      state = CurrenciesState(loading: false, isFetching: false, currencies: data);
+      state = CurrenciesState(loading: false, isFetching: false, currencies: savedCurrencies);
     } catch (e) {
-      log.e('CurrenciesNotifier error', e);
+      log.e('error', e);
       state = CurrenciesState(loading: false, isFetching: false, error: e.toString());
     }
   }
@@ -110,8 +92,7 @@ class CurrenciesNotifier extends StateNotifier<CurrenciesState> {
 }
 
 final currenciesProvider = StateNotifierProvider<CurrenciesNotifier, CurrenciesState>((ref) {
-  final currenciesRepo = spot<ICurrenciesRepo>();
-  return CurrenciesNotifier(currenciesRepo);
+  return CurrenciesNotifier();
 });
 
 final selectedCurrenciesProvider = Provider<List<Currency>>((ref) {
@@ -131,5 +112,6 @@ class FocusedCurrencyInputSymbolNotifier extends Notifier<String?> {
 }
 
 // Provider to track the currently selected input's currency symbol
-final focusedCurrencyInputSymbolProvider =
-    NotifierProvider<FocusedCurrencyInputSymbolNotifier, String?>(FocusedCurrencyInputSymbolNotifier.new);
+final focusedCurrencyInputSymbolProvider = NotifierProvider<FocusedCurrencyInputSymbolNotifier, String?>(
+  FocusedCurrencyInputSymbolNotifier.new,
+);

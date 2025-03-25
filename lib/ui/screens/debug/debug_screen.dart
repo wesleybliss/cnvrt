@@ -2,9 +2,9 @@ import 'package:cnvrt/config/application.dart';
 import 'package:cnvrt/config/routing/routes.dart';
 import 'package:cnvrt/domain/di/providers/settings_provider.dart';
 import 'package:cnvrt/domain/di/providers/state/currencies_provider.dart';
-import 'package:cnvrt/domain/models/currency.dart';
+import 'package:cnvrt/domain/di/spot.dart';
+import 'package:cnvrt/domain/io/repos/i_currencies_repo.dart';
 import 'package:cnvrt/io/settings.dart';
-import 'package:cnvrt/store/SimpleCurrencyStore.dart';
 import 'package:cnvrt/utils/logger.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
@@ -27,21 +27,21 @@ class _DebugScreenState extends ConsumerState<DebugScreen> {
     final selectedCurrencies = ref.watch(selectedCurrenciesProvider);
 
     void debugCheckStorage() async {
-      final currencyBox = store.box<Currency>();
-      final items = await currencyBox.getAllAsync();
+      final currenciesRepo = spot<ICurrenciesRepo>();
+      final items = await currenciesRepo.findAll();
       log.d('Currency items: ${items.length}');
       log.d('Selected Currencies: $selectedCurrencies');
     }
 
     void debugAutoSelectDefaults() async {
-      final currencyBox = store.box<Currency>();
-      final items = await currencyBox.getAllAsync();
+      final currenciesRepo = spot<ICurrenciesRepo>();
+      final items = await currenciesRepo.findAll();
       final symbols = ['USD', 'COP', 'MXN'];
 
       for (var symbol in symbols) {
         final it = items.firstWhereOrNull((e) => e.symbol == symbol);
         if (it != null) {
-          currencyBox.put(it.copyWith(selected: true));
+          currenciesRepo.update(it.copyWith(selected: true));
         } else {
           log.e('Symbol not found: $symbol');
         }
@@ -56,7 +56,7 @@ class _DebugScreenState extends ConsumerState<DebugScreen> {
     }
 
     void debugDumpAllCurrencies() {
-      log.d('\n' + state.currencies.map((it) => '${it.symbol}, ${it.name}').join('\n') + '\n');
+      log.d('\n${state.currencies.map((it) => '${it.symbol}, ${it.name}').join('\n')}\n');
     }
 
     void onFetchCurrenciesClick() {
@@ -82,6 +82,10 @@ class _DebugScreenState extends ConsumerState<DebugScreen> {
               TextButton(
                 onPressed: () => Application.router.navigateTo(context, Routes.debugConvert),
                 child: const Text('Convert Debug'),
+              ),
+              TextButton(
+                onPressed: () => Application.router.navigateTo(context, Routes.debugSqlTest),
+                child: const Text('Sql Test Debug'),
               ),
               ListTile(title: const Text('theme'), trailing: Text(settings.theme)),
               ListTile(
