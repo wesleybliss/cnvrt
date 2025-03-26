@@ -1,5 +1,5 @@
 import 'package:cnvrt/utils/logger.dart';
-import 'package:cnvrt/utils/temperature_utils.dart' as temperature_utils;
+import 'package:cnvrt/utils/unit_conversion_utils.dart' as unit_conversion_utils;
 import 'package:copy_with_extension/copy_with_extension.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -33,11 +33,11 @@ class TemperatureState extends _$TemperatureState {
 
   void setCelsius(int value) {
     log.d("update: celsius: $value");
-    state = state.copyWith(celsius: value, fahrenheit: temperature_utils.celsiusToFahrenheit(value));
+    state = state.copyWith(celsius: value, fahrenheit: unit_conversion_utils.celsiusToFahrenheit(value));
   }
 
   void setFahrenheit(int value) {
     log.d("update: fahrenheit: $value");
-    state = state.copyWith(celsius: temperature_utils.fahrenheitToCelsius(value), fahrenheit: value);
+    state = state.copyWith(celsius: unit_conversion_utils.fahrenheitToCelsius(value), fahrenheit: value);
   }
 }

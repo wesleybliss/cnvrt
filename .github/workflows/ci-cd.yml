@@ -17,7 +17,7 @@ jobs:
           path: ~/.pub-cache
           key: ${{ runner.os }}-pub-${{ hashFiles('**/pubspec.lock') }}
       - run: flutter pub get
-      # - run: flutter test
+      - run: flutter test
 
       # Set up signing
       - name: Decode Keystore
@@ -49,3 +49,14 @@ jobs:
           path: |
             build/app/outputs/flutter-apk/app-release.apk  # For master
             build/app/outputs/flutter-apk/app-develop.apk  # For develop
+
+      # Deploy to Google Play Store
+      # - name: Deploy to Play Store (master)
+      #   if: github.ref_name == 'master'
+      #   uses: r0adkll/upload-google-play@v1
+      #   with:
+      #     serviceAccountJsonPlainText: ${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT }}
+      #     packageName: your.package.name
+      #     releaseFiles: build/app/outputs/flutter-apk/app-release.apk
+      #     track: internal # Or production, beta, alpha
+      #     status: completed # Or draft

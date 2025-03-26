@@ -85,7 +85,7 @@ extension $TemperatureStateModelCopyWith on TemperatureStateModel {
 // RiverpodGenerator
 // **************************************************************************
 
-String _$temperatureStateHash() => r'f405743a6bfb28cb9a83e5648c9aaa07894c7f2d';
+String _$temperatureStateHash() => r'4aa2c372af374873f04e122b30e2d84f4b7f6db2';
 
 /// Copied from Dart SDK
 class _SystemHash {

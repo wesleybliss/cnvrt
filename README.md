@@ -33,8 +33,13 @@ A simple currency conversion app.
 
 ### Converters
 
-1. Temperature F to/from C
-2. Distance Miles to/from Kilometers
+* [x] Temperature F to/from C
+* [x] Distance Miles to/from Kilometers
+* [x] Weight from Pounds to/from Kilograms
+* [ ] Volume from Gallons to/from Liters
+* [ ] Time from Hours to/from Minutes
+* [ ] Speed from MPH to/from KPH
+* [ ] Area from Square Feet to/from Square Meters
 
 
 `flutter build apk --release && adb -s 'adb-RFCX60JX8MP-MRJbrg._adb-tls-connect._tcp' install build/app/outputs/flutter-apk/app-release.apk`
