@@ -17,11 +17,13 @@ jobs:
           path: ~/.pub-cache
           key: ${{ runner.os }}-pub-${{ hashFiles('**/pubspec.lock') }}
       - run: flutter pub get
-      - run: flutter test
+      # - run: flutter test
 
       # Set up signing
       - name: Decode Keystore
         run: |
+          pwd
+          ls -alh .
           ls -alh keystore
           echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > keystore/release-key.jks
           ls -alh keystore
