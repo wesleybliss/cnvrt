@@ -1,8 +1,8 @@
 import 'package:cnvrt/config/application.dart';
 import 'package:cnvrt/config/routing/routes.dart';
-import 'package:cnvrt/domain/di/providers/settings_provider.dart';
-import 'package:cnvrt/domain/di/providers/state/currencies_provider.dart';
-import 'package:cnvrt/domain/di/providers/state/currency_values_provider.dart';
+import 'package:cnvrt/domain/di/providers/currencies/currencies_provider.dart';
+import 'package:cnvrt/domain/di/providers/currencies/currency_values_provider.dart';
+import 'package:cnvrt/domain/di/providers/settings/settings_provider.dart';
 import 'package:cnvrt/ui/widgets/currency_inputs_list/currency_inputs_list.dart';
 import 'package:cnvrt/utils/logger.dart';
 import 'package:collection/collection.dart';

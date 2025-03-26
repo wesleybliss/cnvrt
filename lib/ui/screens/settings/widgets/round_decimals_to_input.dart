@@ -1,8 +1,8 @@
+import 'package:cnvrt/domain/di/providers/settings/settings_provider.dart';
+import 'package:cnvrt/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:cnvrt/domain/di/providers/settings_provider.dart';
-import 'package:cnvrt/theme.dart';
 
 class RoundDecimalsToInput extends ConsumerWidget {
   final TextEditingController? controller;
@@ -21,9 +21,7 @@ class RoundDecimalsToInput extends ConsumerWidget {
           decoration: defaultInputDecoration,
           textAlign: TextAlign.end,
           keyboardType: TextInputType.number,
-          inputFormatters: [
-            FilteringTextInputFormatter.digitsOnly,
-          ],
+          inputFormatters: [FilteringTextInputFormatter.digitsOnly],
           onChanged: (text) {
             ref.read(settingsNotifierProvider.notifier).setRoundingDecimals(int.parse(text, radix: 10));
           },

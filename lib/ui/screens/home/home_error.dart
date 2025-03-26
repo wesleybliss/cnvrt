@@ -1,4 +1,4 @@
-import 'package:cnvrt/domain/di/providers/state/currencies_provider.dart';
+import 'package:cnvrt/domain/di/providers/currencies/currencies_provider.dart';
 import 'package:cnvrt/ui/screens/home/widgets/no_internet_error.dart';
 import 'package:cnvrt/ui/widgets/unknown_error.dart';
 import 'package:flutter/material.dart';

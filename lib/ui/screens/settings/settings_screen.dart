@@ -1,6 +1,6 @@
 import 'package:cnvrt/config/application.dart';
 import 'package:cnvrt/config/routing/routes.dart';
-import 'package:cnvrt/domain/di/providers/settings_provider.dart';
+import 'package:cnvrt/domain/di/providers/settings/settings_provider.dart';
 import 'package:cnvrt/io/settings.dart';
 import 'package:cnvrt/ui/screens/settings/widgets/ShowCountryFlagsSwitch.dart';
 import 'package:cnvrt/ui/screens/settings/widgets/account_for_inflation_switch.dart';

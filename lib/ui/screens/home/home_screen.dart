@@ -1,4 +1,4 @@
-import 'package:cnvrt/domain/di/providers/state/currencies_provider.dart';
+import 'package:cnvrt/domain/di/providers/currencies/currencies_provider.dart';
 import 'package:cnvrt/ui/screens/home/home_error.dart';
 import 'package:cnvrt/ui/screens/home/home_loading.dart';
 import 'package:cnvrt/ui/screens/home/home_ready.dart';
@@ -32,13 +32,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       onRefresh: () async {
         ref.read(currenciesProvider.notifier).fetchCurrencies();
       },
-      child: state.loading
-                  ? state.currencies.isNotEmpty
-                      ? const HomeReady()
-                      : HomeLoading(isFetching: state.isFetching)
-                  : state.error != null
-                  ? const HomeError()
-                  : const HomeReady(),
-        );
+      child:
+          state.loading
+              ? state.currencies.isNotEmpty
+                  ? const HomeReady()
+                  : HomeLoading(isFetching: state.isFetching)
+              : state.error != null
+              ? const HomeError()
+              : const HomeReady(),
+    );
   }
 }

@@ -1,23 +1,23 @@
-double celsiusToFahrenheit(double celsius) {
-  return (celsius * 9 / 5) + 32;
+int celsiusToFahrenheit(int celsius) {
+  return ((celsius * 9 / 5) + 32).toInt();
 }
 
-double fahrenheitToCelsius(double fahrenheit) {
-  return (fahrenheit - 32) * 5 / 9;
+int fahrenheitToCelsius(int fahrenheit) {
+  return ((fahrenheit - 32) * 5 / 9).toInt();
 }
 
-double celsiusToKelvin(double celsius) {
-  return celsius + 273.15;
+int celsiusToKelvin(int celsius) {
+  return (celsius + 273.15).toInt();
 }
 
-double kelvinToCelsius(double kelvin) {
-  return kelvin - 273.15;
+int kelvinToCelsius(int kelvin) {
+  return (kelvin - 273.15).toInt();
 }
 
-double fahrenheitToKelvin(double fahrenheit) {
-  return (fahrenheit + 459.67) * 5 / 9;
+int fahrenheitToKelvin(int fahrenheit) {
+  return ((fahrenheit + 459.67) * 5 / 9).toInt();
 }
 
-double kelvinToFahrenheit(double kelvin) {
-  return kelvin * 9 / 5 - 459.67;
+int kelvinToFahrenheit(int kelvin) {
+  return (kelvin * 9 / 5 - 459.67).toInt();
 }

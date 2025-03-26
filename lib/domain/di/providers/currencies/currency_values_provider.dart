@@ -1,6 +1,6 @@
 import 'package:cnvrt/db/database.dart';
-import 'package:cnvrt/domain/di/providers/sorted_currencies_provider.dart';
-import 'package:cnvrt/domain/di/providers/state/currencies_provider.dart';
+import 'package:cnvrt/domain/di/providers/currencies/currencies_provider.dart';
+import 'package:cnvrt/domain/di/providers/currencies/sorted_currencies_provider.dart';
 import 'package:cnvrt/utils/currency_utils.dart';
 import 'package:cnvrt/utils/logger.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

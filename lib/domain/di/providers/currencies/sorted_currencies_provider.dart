@@ -1,5 +1,5 @@
 import 'package:cnvrt/db/database.dart';
-import 'package:cnvrt/domain/di/providers/state/currencies_provider.dart';
+import 'package:cnvrt/domain/di/providers/currencies/currencies_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final sortedCurrenciesProvider = StateNotifierProvider<SortedCurrenciesNotifier, List<Currency>>((ref) {

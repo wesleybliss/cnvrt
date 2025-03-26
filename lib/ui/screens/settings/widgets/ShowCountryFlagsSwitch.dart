@@ -1,4 +1,4 @@
-import 'package:cnvrt/domain/di/providers/settings_provider.dart';
+import 'package:cnvrt/domain/di/providers/settings/settings_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 

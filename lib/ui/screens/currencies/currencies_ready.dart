@@ -1,8 +1,8 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:cnvrt/domain/di/providers/state/currencies_provider.dart';
+import 'package:cnvrt/domain/di/providers/currencies/currencies_provider.dart';
 import 'package:cnvrt/ui/widgets/currencies_list.dart';
 import 'package:cnvrt/utils/logger.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class CurrenciesReady extends ConsumerStatefulWidget {
   const CurrenciesReady({super.key});
@@ -26,13 +26,14 @@ class _CurrenciesReadyState extends ConsumerState<CurrenciesReady> {
     final state = ref.watch(currenciesProvider);
     final searchText = controller.text.toLowerCase();
 
-    final filteredCurrencies = searchText.isEmpty
-        ? state.currencies
-        : state.currencies.where((it) {
-            final currencyName = it.name.toLowerCase();
-            final currencySymbol = it.symbol.toLowerCase();
-            return currencyName.contains(searchText) || currencySymbol.contains(searchText);
-          }).toList();
+    final filteredCurrencies =
+        searchText.isEmpty
+            ? state.currencies
+            : state.currencies.where((it) {
+              final currencyName = it.name.toLowerCase();
+              final currencySymbol = it.symbol.toLowerCase();
+              return currencyName.contains(searchText) || currencySymbol.contains(searchText);
+            }).toList();
 
     filteredCurrencies.sort((a, b) {
       if (a.selected && !b.selected) {
@@ -44,15 +45,18 @@ class _CurrenciesReadyState extends ConsumerState<CurrenciesReady> {
       }
     });
 
-    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      const Padding(
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Padding(
           padding: EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 8.0),
           child: Text(
             'Choose your favorite currencies.\nThese will be pinned to the home screen.',
             textAlign: TextAlign.left,
             style: TextStyle(fontSize: 16),
-          )),
-      Padding(
+          ),
+        ),
+        Padding(
           padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 16.0),
           child: TextField(
             controller: controller,
@@ -64,16 +68,19 @@ class _CurrenciesReadyState extends ConsumerState<CurrenciesReady> {
               // Empty state update to trigger the change & filter the list
               setState(() {});
             },
-          )),
-      const SizedBox(height: 20),
-      Expanded(
-        child: CurrenciesList(
+          ),
+        ),
+        const SizedBox(height: 20),
+        Expanded(
+          child: CurrenciesList(
             currencies: filteredCurrencies,
             onFavoriteToggled: () {
               controller.clear();
               setState(() {});
-            }),
-      )
-    ]);
+            },
+          ),
+        ),
+      ],
+    );
   }
 }

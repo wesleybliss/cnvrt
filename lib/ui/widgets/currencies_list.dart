@@ -1,5 +1,5 @@
 import 'package:cnvrt/db/database.dart';
-import 'package:cnvrt/domain/di/providers/state/currencies_provider.dart';
+import 'package:cnvrt/domain/di/providers/currencies/currencies_provider.dart';
 import 'package:cnvrt/domain/di/spot.dart';
 import 'package:cnvrt/domain/io/repos/i_currencies_repo.dart';
 import 'package:cnvrt/utils/logger.dart';
