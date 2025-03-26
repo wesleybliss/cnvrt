@@ -22,9 +22,7 @@ jobs:
       # Set up signing
       - name: Decode Keystore
         run: |
-          pwd
-          ls -alh .
-          ls -alh keystore
+          mkdir keystore
           echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > keystore/release-key.jks
           ls -alh keystore
       - name: Create key.properties
