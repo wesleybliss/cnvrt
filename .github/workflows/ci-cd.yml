@@ -22,7 +22,9 @@ jobs:
       # Set up signing
       - name: Decode Keystore
         run: |
+          ls -alh keystore
           echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > keystore/release-key.jks
+          ls -alh keystore
       - name: Create key.properties
         run: |
           echo "storePassword=${{ secrets.STORE_PASSWORD }}" > android/key.properties

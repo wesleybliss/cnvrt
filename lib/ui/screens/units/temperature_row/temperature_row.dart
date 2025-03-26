@@ -37,7 +37,7 @@ class TemperatureRowState extends ConsumerState<TemperatureRow> {
     );
 
     final outputDecoration = defaultInputDecoration.copyWith(
-      hintText: "2",
+      hintText: "1",
       prefix: Text("F"),
       labelStyle: TextStyle(fontSize: 12),
     );
