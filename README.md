@@ -40,6 +40,3 @@ A simple currency conversion app.
 * [ ] Time from Hours to/from Minutes
 * [ ] Speed from MPH to/from KPH
 * [ ] Area from Square Feet to/from Square Meters
-
-
-`flutter build apk --release && adb -s 'adb-RFCX60JX8MP-MRJbrg._adb-tls-connect._tcp' install build/app/outputs/flutter-apk/app-release.apk`

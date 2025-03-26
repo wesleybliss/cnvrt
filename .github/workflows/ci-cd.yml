@@ -42,6 +42,12 @@ jobs:
             mv build/app/outputs/flutter-apk/app-release.apk build/app/outputs/flutter-apk/app-develop.apk
           fi
 
+      - name: Debug - List files
+        run: |
+          pwd
+          ls -lR build/app/outputs/flutter-apk
+          find . -type f -name '*.apk'
+
       # Upload artifact after build
       - uses: actions/upload-artifact@v4
         with:
