@@ -1,14 +1,11 @@
+import 'package:cnvrt/domain/di/providers/settings/settings_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:cnvrt/domain/di/providers/settings_provider.dart';
 
 class ShowFullCurrencyNameLabelSwitch extends ConsumerWidget {
   final bool value;
 
-  const ShowFullCurrencyNameLabelSwitch({
-    super.key,
-    required this.value,
-  });
+  const ShowFullCurrencyNameLabelSwitch({super.key, required this.value});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

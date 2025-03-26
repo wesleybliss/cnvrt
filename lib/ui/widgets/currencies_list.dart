@@ -1,9 +1,10 @@
+import 'package:cnvrt/db/database.dart';
+import 'package:cnvrt/domain/di/providers/currencies/currencies_provider.dart';
+import 'package:cnvrt/domain/di/spot.dart';
+import 'package:cnvrt/domain/io/repos/i_currencies_repo.dart';
+import 'package:cnvrt/utils/logger.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:cnvrt/domain/di/providers/state/currencies_provider.dart';
-import 'package:cnvrt/domain/models/currency.dart';
-import 'package:cnvrt/store/SimpleCurrencyStore.dart';
-import 'package:cnvrt/utils/logger.dart';
 
 class CurrenciesList extends ConsumerWidget {
   final List<Currency> currencies;
@@ -22,18 +23,16 @@ class CurrenciesList extends ConsumerWidget {
         return ListTile(
           title: Text(item.symbol),
           subtitle: Text(item.name),
-          trailing: Icon(
-            item.selected ? Icons.favorite : Icons.favorite_border_outlined,
-          ),
+          trailing: Icon(item.selected ? Icons.favorite : Icons.favorite_border_outlined),
           onTap: () async {
-            final box = store.box<Currency>();
+            final currenciesRepo = spot<ICurrenciesRepo>();
             final next = item.copyWith(selected: !item.selected);
 
             // Update observable state
             ref.read(currenciesProvider.notifier).setCurrency(next);
 
             // Update saved data
-            await box.putAsync(next);
+            await currenciesRepo.update(next);
 
             onFavoriteToggled();
           },

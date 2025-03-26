@@ -1,11 +1,13 @@
-import 'package:dio/dio.dart';
+import 'package:cnvrt/db/repos/currencies_repo.dart';
 import 'package:cnvrt/domain/di/spot.dart';
 import 'package:cnvrt/domain/io/i_settings.dart';
 import 'package:cnvrt/domain/io/net/dio_client.dart';
 import 'package:cnvrt/domain/io/net/i_dio_client.dart';
-import 'package:cnvrt/domain/io/repos/currencies_repo.dart';
 import 'package:cnvrt/domain/io/repos/i_currencies_repo.dart';
+import 'package:cnvrt/domain/io/services/currencies_service.dart';
+import 'package:cnvrt/domain/io/services/i_currencies_service.dart';
 import 'package:cnvrt/io/settings.dart';
+import 'package:dio/dio.dart';
 
 abstract class SpotModule {
   static void registerDependencies() {
@@ -21,8 +23,10 @@ abstract class SpotModule {
       // single<AUserDao, AUserDao>((get) => UserDao());
 
       // Repositories
-      single<ICurrenciesRepo, ICurrenciesRepo>(
-          (get) => CurrenciesRepo(get<IDioClient>()));
+      factory<ICurrenciesRepo, ICurrenciesRepo>((get) => CurrenciesRepo());
+
+      // Services
+      single<ICurrenciesService, ICurrenciesService>((get) => CurrenciesService(get<IDioClient>()));
 
       // Core Services
       // factory<IAuthService, AuthService>((get) => AuthService());

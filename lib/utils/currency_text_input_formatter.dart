@@ -1,12 +1,15 @@
+import 'dart:math';
+
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 
 class CurrencyTextInputFormatter extends TextInputFormatter {
   final String currencyCode;
+  final int decimalRange;
 
-  CurrencyTextInputFormatter({required this.currencyCode});
+  CurrencyTextInputFormatter({required this.currencyCode, this.decimalRange = 2});
 
-  static String formatCurrencyDisplay(String value, String currencyCode) {
+  static String formatCurrencyDisplay(String value, String currencyCode, {int decimalRange = 2}) {
     if (value.isEmpty) return '';
 
     // Parse the value to double, handling different decimal separators
@@ -24,6 +27,9 @@ class CurrencyTextInputFormatter extends TextInputFormatter {
 
     if (numericValue == null) return value;
 
+    // Round the value to the specified decimal places
+    final double roundedValue = double.parse(numericValue.toStringAsFixed(decimalRange));
+
     // Use intl package for proper formatting
     final NumberFormat numberFormat;
 
@@ -31,22 +37,37 @@ class CurrencyTextInputFormatter extends TextInputFormatter {
       case 'USD':
       case 'GBP':
       case 'AUD':
-        numberFormat = NumberFormat.decimalPattern('en_US');
+        numberFormat =
+            NumberFormat.decimalPattern('en_US')
+              ..minimumFractionDigits = decimalRange
+              ..maximumFractionDigits = decimalRange;
         break;
       case 'EUR':
-        numberFormat = NumberFormat.decimalPattern('de_DE');
+        numberFormat =
+            NumberFormat.decimalPattern('de_DE')
+              ..minimumFractionDigits = decimalRange
+              ..maximumFractionDigits = decimalRange;
         break;
       case 'COP':
-        numberFormat = NumberFormat.decimalPattern('es_CO');
+        numberFormat =
+            NumberFormat.decimalPattern('es_CO')
+              ..minimumFractionDigits = decimalRange
+              ..maximumFractionDigits = decimalRange;
         break;
       case 'BRL':
-        numberFormat = NumberFormat.decimalPattern('pt_BR');
+        numberFormat =
+            NumberFormat.decimalPattern('pt_BR')
+              ..minimumFractionDigits = decimalRange
+              ..maximumFractionDigits = decimalRange;
         break;
       default:
-        numberFormat = NumberFormat.decimalPattern('en_US');
+        numberFormat =
+            NumberFormat.decimalPattern('en_US')
+              ..minimumFractionDigits = decimalRange
+              ..maximumFractionDigits = decimalRange;
     }
 
-    return numberFormat.format(numericValue);
+    return numberFormat.format(roundedValue);
   }
 
   @override
@@ -63,9 +84,18 @@ class CurrencyTextInputFormatter extends TextInputFormatter {
     String cleanText = newValue.text.replaceAll(groupSeparator, '');
 
     // Regular expression to match valid decimal numbers with the appropriate separator
-    final RegExp regex = RegExp('^\\d*\\$decimalSeparator?\\d*\$');
+    final RegExp regex = RegExp(r'^\d*([.,]\d*)?$');
 
     if (regex.hasMatch(cleanText)) {
+      // Truncate to the specified number of decimal places
+      if (cleanText.contains(decimalSeparator)) {
+        final parts = cleanText.split(decimalSeparator);
+        if (parts.length == 2) {
+          parts[1] = parts[1].substring(0, min(decimalRange, parts[1].length));
+          cleanText = parts.join(decimalSeparator);
+        }
+      }
+
       // Format the number with group separators if needed
       if (cleanText.length > 3 && !cleanText.contains(decimalSeparator)) {
         // Add group separators for the integer part
@@ -80,10 +110,20 @@ class CurrencyTextInputFormatter extends TextInputFormatter {
         }
       }
 
+      cleanText = _ensureTrailingDecimalPlace(cleanText, decimalSeparator);
+
       return TextEditingValue(text: cleanText, selection: TextSelection.collapsed(offset: cleanText.length));
     }
 
-    return oldValue;
+    return oldValue.copyWith(text: _ensureTrailingDecimalPlace(oldValue.text, decimalSeparator));
+  }
+
+  String _ensureTrailingDecimalPlace(String value, String decimalSeparator) {
+    if (!value.contains(decimalSeparator)) return value;
+
+    final trailing = value.split(decimalSeparator).last;
+
+    return trailing.length < decimalRange ? '${value}0' : value;
   }
 
   String _addGroupSeparators(String value, String separator) {

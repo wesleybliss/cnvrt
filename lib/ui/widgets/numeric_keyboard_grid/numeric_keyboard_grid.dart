@@ -1,11 +1,10 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:cnvrt/domain/di/providers/state/currencies_provider.dart';
-import 'package:cnvrt/domain/di/providers/state/currency_input_mode_provider.dart';
-import 'package:cnvrt/domain/di/providers/state/currency_values_provider.dart';
+import 'package:cnvrt/domain/di/providers/currencies/currencies_provider.dart';
+import 'package:cnvrt/domain/di/providers/currencies/currency_input_mode_provider.dart';
+import 'package:cnvrt/domain/di/providers/currencies/currency_values_provider.dart';
 import 'package:cnvrt/ui/widgets/numeric_keyboard_grid/numeric_keyboard_grid_button.dart';
 import 'package:cnvrt/utils/logger.dart';
-import 'package:cnvrt/utils/utils.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class NumericKeyboardGrid extends ConsumerStatefulWidget {
   const NumericKeyboardGrid({super.key});
@@ -16,18 +15,15 @@ class NumericKeyboardGrid extends ConsumerStatefulWidget {
 
 class _NumericKeyboardGridState extends ConsumerState<NumericKeyboardGrid> {
   final log = Logger('NumericKeyboardGrid');
-  
+
   @override
   Widget build(BuildContext context) {
     int buttonLabelIndex = 1;
     final focusedCurrencyInputSymbol = ref.watch(focusedCurrencyInputSymbolProvider);
-    
+
     // Get the bottom padding to account for safe area
-    final bottomPadding = MediaQuery
-        .of(context)
-        .padding
-        .bottom;
-    
+    final bottomPadding = MediaQuery.of(context).padding.bottom;
+
     int nextButtonIndex() {
       if (buttonLabelIndex == 10) buttonLabelIndex = 0;
       return buttonLabelIndex++;
@@ -37,21 +33,18 @@ class _NumericKeyboardGridState extends ConsumerState<NumericKeyboardGrid> {
       if (focusedCurrencyInputSymbol == null) return;
       ref.read(currencyValuesProvider.notifier).setValue(focusedCurrencyInputSymbol, value);
     }
-    
+
     void setInputMode(CurrencyInputModes mode) {
       ref.read(currencyInputModeProvider.notifier).setMode(mode);
     }
-    
+
     void onBackspaceLongPressed() {
       if (focusedCurrencyInputSymbol == null) return;
       ref.read(currencyValuesProvider.notifier).setValue(focusedCurrencyInputSymbol, '');
     }
-    
-    Widget numericButtonFor(String label, VoidCallback onPressed, [VoidCallback? onLongPress]) => NumericKeyboardGridButton(
-      label: label,
-      onPressed: onPressed,
-      onLongPress: onLongPress,
-    );
+
+    Widget numericButtonFor(String label, VoidCallback onPressed, [VoidCallback? onLongPress]) =>
+        NumericKeyboardGridButton(label: label, onPressed: onPressed, onLongPress: onLongPress);
 
     final indexToButtonMap = {
       3: numericButtonFor('+', () => setInputMode(CurrencyInputModes.addition)),
@@ -61,22 +54,15 @@ class _NumericKeyboardGridState extends ConsumerState<NumericKeyboardGrid> {
       14: numericButtonFor('/', () => setInputMode(CurrencyInputModes.normal)),
       15: numericButtonFor('/', () => setInputMode(CurrencyInputModes.division), onBackspaceLongPressed),
     };
-    
+
     return Container(
       padding: EdgeInsets.fromLTRB(16, 16, 16, 16 + bottomPadding),
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.surface,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.1),
-            blurRadius: 8,
-            offset: const Offset(0, -2),
-          ),
-        ],
+        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 8, offset: const Offset(0, -2))],
       ),
       child: LayoutBuilder(
         builder: (context, constraints) {
-          
           return GridView.builder(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
@@ -88,7 +74,6 @@ class _NumericKeyboardGridState extends ConsumerState<NumericKeyboardGrid> {
               childAspectRatio: 2.0, // Width is 2x the height
             ),
             itemBuilder: (context, index) {
-              
               if (indexToButtonMap.containsKey(index)) {
                 return indexToButtonMap[index]!;
               } else {

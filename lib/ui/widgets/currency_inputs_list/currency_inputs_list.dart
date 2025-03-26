@@ -1,12 +1,14 @@
+import 'package:cnvrt/db/database.dart';
+import 'package:cnvrt/domain/di/providers/currencies/currencies_provider.dart';
+import 'package:cnvrt/domain/di/providers/currencies/currency_values_provider.dart';
+import 'package:cnvrt/domain/di/providers/currencies/sorted_currencies_provider.dart';
+import 'package:cnvrt/domain/di/providers/settings/settings_provider.dart';
+import 'package:cnvrt/ui/widgets/currency_inputs_list/currency_inputs_list_row.dart';
+import 'package:cnvrt/utils/currency_locales.dart';
+import 'package:cnvrt/utils/logger.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:cnvrt/domain/di/providers/settings_provider.dart';
-import 'package:cnvrt/domain/di/providers/sorted_currencies_provider.dart';
-import 'package:cnvrt/domain/di/providers/state/currencies_provider.dart';
-import 'package:cnvrt/domain/di/providers/state/currency_values_provider.dart';
-import 'package:cnvrt/domain/models/currency.dart';
-import 'package:cnvrt/ui/widgets/currency_inputs_list/currency_inputs_list_row.dart';
-import 'package:cnvrt/utils/logger.dart';
+import 'package:intl/intl.dart';
 
 class CurrenciesInputsList extends ConsumerStatefulWidget {
   final List<Currency> currencies;
@@ -32,6 +34,16 @@ class _CurrenciesInputsListState extends ConsumerState<CurrenciesInputsList> {
   /// Clear all controllers when the focused input changes
   void clearAllInputs() {
     ref.read(currencyValuesProvider.notifier).clearValues();
+  }
+
+  String formatCurrency(String symbol, String value) {
+    final formatter = NumberFormat.currency(
+      locale: currencyLocales[symbol] ?? 'en_US',
+      symbol: '', // '\$',
+      decimalDigits: 0, // Set to 0 for whole numbers
+    );
+
+    return formatter.format(int.parse(value)).trim();
   }
 
   @override
@@ -61,14 +73,15 @@ class _CurrenciesInputsListState extends ConsumerState<CurrenciesInputsList> {
 
       for (var entry in currencyValues.entries) {
         final symbol = entry.key;
-        final value = entry.value;
+        final value = formatCurrency(symbol, entry.value.toInt().toString());
+
         log.d(['DEBUG DEBUG DEBUG DEBUG: updateControllers $symbol => $value'].join('\n'));
         // Don't update the input field they've typed in
         if (focusedCurrencyInputSymbol == symbol) continue;
 
         if (_controllers.containsKey(symbol)) {
           final controller = _controllers[symbol]!;
-          final valueAsString = value.toStringAsFixed(2); // @todo make this configurable
+          final valueAsString = value; //.toString(); //.toStringAsFixed(2); // @todo make this configurable
 
           log.d('updateControllers $symbol => ${controller.text} -> $valueAsString');
           // Update controller only if the value has changed
@@ -91,7 +104,9 @@ class _CurrenciesInputsListState extends ConsumerState<CurrenciesInputsList> {
         return;
       }
 
-      final updatedValues = ref.read(currencyValuesProvider.notifier).setValue(symbol, text);
+      final numericText = text.replaceAll(RegExp(r'[^0-9.]'), '');
+      log.d('SET VALUE $symbol $text ($numericText)');
+      final updatedValues = ref.read(currencyValuesProvider.notifier).setValue(symbol, numericText);
 
       updateControllers(updatedValues);
     }
@@ -104,21 +119,23 @@ class _CurrenciesInputsListState extends ConsumerState<CurrenciesInputsList> {
 
         // Update the order property and save to ObjectBox
         for (int i = 0; i < sortedCurrencies.length; i++) {
-          sortedCurrencies[i].order = i;
+          sortedCurrencies[i] = sortedCurrencies[i].copyWith(order: i);
           ref.read(currenciesProvider.notifier).setCurrency(sortedCurrencies[i]);
         }
       });
     }
 
     return settingsAsyncValue.when(
-        loading: () => const CircularProgressIndicator(),
-        error: (error, stackTrace) => Text('Error: $error'),
-        data: (settings) {
-          return ReorderableListView(
-            shrinkWrap: true,
-            onReorder: onReorderCurrency,
-            children: sortedCurrencies
-                .map((e) => ListTile(
+      loading: () => const CircularProgressIndicator(),
+      error: (error, stackTrace) => Text('Error: $error'),
+      data: (settings) {
+        return ReorderableListView(
+          shrinkWrap: true,
+          onReorder: onReorderCurrency,
+          children:
+              sortedCurrencies
+                  .map(
+                    (e) => ListTile(
                       key: ValueKey(e.symbol),
                       leading: settings.showDragReorderHandles ? const Icon(Icons.drag_handle) : null,
                       title: CurrencyInputsListRow(
@@ -126,12 +143,16 @@ class _CurrenciesInputsListState extends ConsumerState<CurrenciesInputsList> {
                         controller: _controllers[e.symbol],
                         onFocusChanged: onFocusChanged,
                         onTextChanged: onTextChanged,
+                        useLargeInputs: settings.useLargeInputs,
                         showCopyToClipboardButtons: settings.showCopyToClipboardButtons,
                         showFullCurrencyNameLabel: settings.showFullCurrencyNameLabel,
+                        showCountryFlags: settings.showCountryFlags,
                       ),
-                    ))
-                .toList(),
-          );
-        });
+                    ),
+                  )
+                  .toList(),
+        );
+      },
+    );
   }
 }

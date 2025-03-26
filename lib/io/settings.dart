@@ -1,6 +1,6 @@
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:cnvrt/domain/constants/constants.dart';
 import 'package:cnvrt/domain/io/i_settings.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Settings implements ISettings {
   @override
@@ -10,7 +10,9 @@ class Settings implements ISettings {
   @override
   int updateFrequencyInHours = 12;
   @override
-  int roundingDecimals = 4;
+  int roundingDecimals = 2;
+  @override
+  bool useLargeInputs = false;
   @override
   bool showDragReorderHandles = true;
   @override
@@ -21,17 +23,24 @@ class Settings implements ISettings {
   String inputsPosition = "center";
   @override
   String showCurrencyRate = "selected";
+  @override
+  bool accountForInflation = true;
+  @override
+  bool showCountryFlags = true;
 
   Settings({
     this.theme = "system",
     this.lastUpdated,
     this.updateFrequencyInHours = 12,
-    this.roundingDecimals = 4,
+    this.roundingDecimals = 2,
+    this.useLargeInputs = false,
     this.showDragReorderHandles = true,
     this.showCopyToClipboardButtons = true,
     this.showFullCurrencyNameLabel = true,
     this.inputsPosition = "center",
     this.showCurrencyRate = "selected",
+    this.accountForInflation = true,
+    this.showCountryFlags = true,
   });
 
   @override
@@ -40,23 +49,28 @@ class Settings implements ISettings {
     DateTime? lastUpdated,
     int? updateFrequencyInHours,
     int? roundingDecimals,
+    bool? useLargeInputs,
     bool? showDragReorderHandles,
     bool? showCopyToClipboardButtons,
     bool? showFullCurrencyNameLabel,
     String? inputsPosition,
     String? showCurrencyRate,
-  }) =>
-      Settings(
-        theme: theme ?? this.theme,
-        lastUpdated: lastUpdated ?? this.lastUpdated,
-        updateFrequencyInHours: updateFrequencyInHours ?? this.updateFrequencyInHours,
-        roundingDecimals: roundingDecimals ?? this.roundingDecimals,
-        showDragReorderHandles: showDragReorderHandles ?? this.showDragReorderHandles,
-        showCopyToClipboardButtons: showCopyToClipboardButtons ?? this.showCopyToClipboardButtons,
-        showFullCurrencyNameLabel: showFullCurrencyNameLabel ?? this.showFullCurrencyNameLabel,
-        inputsPosition: inputsPosition ?? this.inputsPosition,
-        showCurrencyRate: showCurrencyRate ?? this.showCurrencyRate,
-      );
+    bool? accountForInflation,
+    bool? showCountryFlags,
+  }) => Settings(
+    theme: theme ?? this.theme,
+    lastUpdated: lastUpdated ?? this.lastUpdated,
+    updateFrequencyInHours: updateFrequencyInHours ?? this.updateFrequencyInHours,
+    roundingDecimals: roundingDecimals ?? this.roundingDecimals,
+    useLargeInputs: useLargeInputs ?? this.useLargeInputs,
+    showDragReorderHandles: showDragReorderHandles ?? this.showDragReorderHandles,
+    showCopyToClipboardButtons: showCopyToClipboardButtons ?? this.showCopyToClipboardButtons,
+    showFullCurrencyNameLabel: showFullCurrencyNameLabel ?? this.showFullCurrencyNameLabel,
+    inputsPosition: inputsPosition ?? this.inputsPosition,
+    showCurrencyRate: showCurrencyRate ?? this.showCurrencyRate,
+    accountForInflation: accountForInflation ?? this.accountForInflation,
+    showCountryFlags: showCountryFlags ?? this.showCountryFlags,
+  );
 
   // Factory method to create a Settings object from SharedPreferences
   factory Settings.fromPreferences(SharedPreferences prefs) {
@@ -68,11 +82,14 @@ class Settings implements ISettings {
           prefs.getString(keys.lastUpdated) != null ? DateTime.parse(prefs.getString(keys.lastUpdated)!) : null,
       updateFrequencyInHours: prefs.getInt(keys.updateFrequencyInHours) ?? 12,
       roundingDecimals: prefs.getInt(keys.roundingDecimals) ?? 4,
+      useLargeInputs: prefs.getInt(keys.useLargeInputs) == 1,
       showDragReorderHandles: prefs.getInt(keys.showDragReorderHandles) == 1,
       showCopyToClipboardButtons: prefs.getInt(keys.showCopyToClipboardButtons) == 1,
       showFullCurrencyNameLabel: prefs.getInt(keys.showFullCurrencyNameLabel) == 1,
       inputsPosition: prefs.getString(keys.inputsPosition) ?? "center",
       showCurrencyRate: prefs.getString(keys.showCurrencyRate) ?? "selected",
+      accountForInflation: prefs.getBool(keys.accountForInflation) ?? true,
+      showCountryFlags: prefs.getBool(keys.showCountryFlags) ?? true,
     );
   }
 
@@ -89,10 +106,13 @@ class Settings implements ISettings {
 
     await prefs.setInt(keys.updateFrequencyInHours, updateFrequencyInHours);
     await prefs.setInt(keys.roundingDecimals, roundingDecimals);
+    await prefs.setInt(keys.useLargeInputs, useLargeInputs ? 1 : 0);
     await prefs.setInt(keys.showDragReorderHandles, showDragReorderHandles ? 1 : 0);
     await prefs.setInt(keys.showCopyToClipboardButtons, showCopyToClipboardButtons ? 1 : 0);
     await prefs.setInt(keys.showFullCurrencyNameLabel, showFullCurrencyNameLabel ? 1 : 0);
     await prefs.setString(keys.inputsPosition, inputsPosition);
     await prefs.setString(keys.showCurrencyRate, showCurrencyRate);
+    await prefs.setBool(keys.accountForInflation, accountForInflation);
+    await prefs.setBool(keys.showCountryFlags, showCountryFlags);
   }
 }

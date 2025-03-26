@@ -2,19 +2,26 @@
 
 A simple currency conversion app.
 
+
 ## Getting Started
 
 1. Clone the repository
 2. Make sure Flutter is up to date (`flutter clean`, `flutter pub get`, etc.)
 3. Make sure AGP is up to date
 4. Run the API server
-5. Bridge ADB ports via `adb reverse tcp:3001 tcp:3001`
-6. Run the app
+5. Bridge ADB ports via `adb reverse tcp:3002 tcp:3002`
+6. Run the build server via `dart run build_runner watch`
+7. Run the app
 
 
 ## TODO
 
-1. Remember theme preference for subsequent launches
+* [x] Remember theme preference for subsequent launches
+* [x] Show flag next to currency symbol on inputs
+* [ ] Common denominations screen? (e.g. 50k COP = $usd, 100k, etc)
+* [ ] Ability to perform basic math operations
+* [ ] Translations
+
 
 ### Settings
 
@@ -22,7 +29,7 @@ A simple currency conversion app.
 * [x] Show copy to clipboard buttons
 * [x] Show full currency name label
 * [x] Position of inputs (top, middle, bottom)
-* [ ] Show currency rate (all, selected, none)
+* [x] Show currency rate (all, selected, none)
 
 ### Converters
 

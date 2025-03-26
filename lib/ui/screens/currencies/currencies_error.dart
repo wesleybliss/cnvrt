@@ -1,6 +1,6 @@
+import 'package:cnvrt/domain/di/providers/currencies/currencies_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:cnvrt/domain/di/providers/state/currencies_provider.dart';
 
 class CurrenciesError extends ConsumerWidget {
   const CurrenciesError({super.key});
@@ -13,9 +13,6 @@ class CurrenciesError extends ConsumerWidget {
       ref.read(currenciesProvider.notifier).fetchCurrencies();
     }
 
-    return Center(
-        child: Column(children: [
-          Text('Error: ${state.error}'),
-        ]));
+    return Center(child: Column(children: [Text('Error: ${state.error}')]));
   }
 }

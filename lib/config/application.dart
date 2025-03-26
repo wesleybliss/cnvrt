@@ -1,16 +1,17 @@
-import 'package:fluro/fluro.dart';
-import 'package:flutter/services.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:cnvrt/db/database.dart';
 import 'package:cnvrt/domain/constants/constants.dart';
 import 'package:cnvrt/domain/di/spot.dart';
 import 'package:cnvrt/domain/di/spot_module.dart';
-import 'package:cnvrt/store/SimpleCurrencyStore.dart';
 import 'package:cnvrt/utils/logger.dart';
+import 'package:fluro/fluro.dart';
+import 'package:flutter/services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Application {
   static bool isInitialized = false;
   static late final FluroRouter router;
   static late final SharedPreferences prefs;
+  static late final AppDatabase database;
 
   static Future<void> initialize() async {
     // Force portrait mode
@@ -39,8 +40,16 @@ class Application {
     Spot.logging = false;
     SpotModule.registerDependencies();
 
-    // Initialize ObjectBox database
-    await SimpleCurrencyStore.initializeStore();
+    // Initialize database
+    database = AppDatabase();
+
+    /*if (kDebugMode && FeatureFlags.wipeDatabaseOnStart) {
+      log.w('***********************************************************************');
+      log.w('**** FeatureFlags.wipeDatabaseOnStart set to true, WIPING ALL DATA ****');
+      log.w('***********************************************************************');
+      spot<AUserDao>().deleteAll(areYouReallySure: true);
+      spot<APostDao>().deleteAll(areYouReallySure: true);
+    }*/
 
     /*// Register Google Font licenses
     LicenseUtils.registerLicenses();

@@ -1,10 +1,10 @@
-import 'package:fluro/fluro.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cnvrt/config/application.dart';
 import 'package:cnvrt/config/routing/routes.dart';
 import 'package:cnvrt/domain/constants/constants.dart';
-import 'package:cnvrt/domain/di/providers/settings_selectors.dart';
+import 'package:cnvrt/domain/di/providers/settings/settings_selectors.dart';
+import 'package:fluro/fluro.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class SimpleCurrencyApp extends ConsumerWidget {
   SimpleCurrencyApp({super.key}) {
@@ -25,7 +25,10 @@ class SimpleCurrencyApp extends ConsumerWidget {
       ),
       // darkTheme: ThemeData.dark(),
       darkTheme: ThemeData(
-          useMaterial3: true, colorSchemeSeed: const Color.fromRGBO(178, 239, 155, 171), brightness: Brightness.dark),
+        useMaterial3: true,
+        colorSchemeSeed: const Color.fromRGBO(178, 239, 155, 171),
+        brightness: Brightness.dark,
+      ),
       themeMode: themeMode,
       initialRoute: Routes.home,
       onGenerateRoute: Application.router.generator,
@@ -37,15 +40,17 @@ class SimpleCurrencyApp extends ConsumerWidget {
     final themeAsyncValue = ref.watch(themeProvider);
 
     return themeAsyncValue.when(
-        loading: () => const CircularProgressIndicator(),
-        error: (error, stackTrace) => Text('Error: $error'),
-        data: (theme) {
-          final themeMode = theme == "system"
-              ? ThemeMode.system
-              : theme == "dark"
-                  ? ThemeMode.dark
-                  : ThemeMode.light;
-          return buildApp(context, themeMode);
-        });
+      loading: () => const CircularProgressIndicator(),
+      error: (error, stackTrace) => Text('Error: $error'),
+      data: (theme) {
+        final themeMode =
+            theme == "system"
+                ? ThemeMode.system
+                : theme == "dark"
+                ? ThemeMode.dark
+                : ThemeMode.light;
+        return buildApp(context, themeMode);
+      },
+    );
   }
 }

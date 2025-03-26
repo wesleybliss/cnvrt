@@ -1,13 +1,17 @@
+import 'package:cnvrt/config/application.dart';
+import 'package:cnvrt/config/routing/routes.dart';
 import 'package:flutter/material.dart';
 
-class Navbar extends StatefulWidget {
-  const Navbar({super.key});
+class BottomNavbar extends StatefulWidget {
+  const BottomNavbar({super.key});
 
   @override
-  State<Navbar> createState() => NavbarState();
+  State<BottomNavbar> createState() => BottomNavbarState();
 }
 
-class NavbarState extends State<Navbar> {
+class BottomNavbarState extends State<BottomNavbar> {
+  final pageRoutes = [Routes.home, Routes.units];
+
   int currentPageIndex = 0;
 
   @override
@@ -17,6 +21,7 @@ class NavbarState extends State<Navbar> {
       onDestinationSelected: (int index) {
         setState(() {
           currentPageIndex = index;
+          Application.router.navigateTo(context, pageRoutes[index]);
         });
       },
       selectedIndex: currentPageIndex,
@@ -26,10 +31,7 @@ class NavbarState extends State<Navbar> {
           icon: Icon(Icons.attach_money),
           label: 'Currencies',
         ),
-        NavigationDestination(
-          icon: Badge(child: Icon(Icons.rule_rounded)),
-          label: 'Units',
-        ),
+        NavigationDestination(icon: Badge(child: Icon(Icons.rule_rounded)), label: 'Units'),
       ],
     );
   }

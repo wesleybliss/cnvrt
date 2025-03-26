@@ -1,8 +1,8 @@
+import 'package:cnvrt/io/settings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:cnvrt/io/settings.dart';
 
 part 'settings_provider.g.dart';
 
@@ -47,6 +47,12 @@ class SettingsNotifier extends _$SettingsNotifier {
     await updateSettings(newSettings);
   }
 
+  Future<void> setUseLargeInputs(bool value) async {
+    final currentSettings = await future;
+    final newSettings = currentSettings.copyWith(useLargeInputs: !currentSettings.useLargeInputs);
+    await updateSettings(newSettings);
+  }
+
   Future<void> setDragReorderHandles(bool value) async {
     final currentSettings = await future;
     final newSettings = currentSettings.copyWith(showDragReorderHandles: !currentSettings.showDragReorderHandles);
@@ -55,8 +61,9 @@ class SettingsNotifier extends _$SettingsNotifier {
 
   Future<void> setShowCopyToClipboardButtons(bool value) async {
     final currentSettings = await future;
-    final newSettings =
-        currentSettings.copyWith(showCopyToClipboardButtons: !currentSettings.showCopyToClipboardButtons);
+    final newSettings = currentSettings.copyWith(
+      showCopyToClipboardButtons: !currentSettings.showCopyToClipboardButtons,
+    );
     await updateSettings(newSettings);
   }
 
@@ -78,13 +85,28 @@ class SettingsNotifier extends _$SettingsNotifier {
     await updateSettings(newSettings);
   }
 
+  Future<void> setAccountForInflation(bool value) async {
+    final currentSettings = await future;
+    final newSettings = currentSettings.copyWith(accountForInflation: !currentSettings.accountForInflation);
+    await updateSettings(newSettings);
+  }
+
+  Future<void> setShowCountryFlags(bool value) async {
+    final currentSettings = await future;
+    final newSettings = currentSettings.copyWith(showCountryFlags: !currentSettings.showCountryFlags);
+    await updateSettings(newSettings);
+  }
+
   //region Utilities
+
   void setThemeMode(ThemeMode newThemeMode) {
-    setTheme(newThemeMode == ThemeMode.system
-        ? "system"
-        : newThemeMode == ThemeMode.light
-            ? "light"
-            : "dark");
+    setTheme(
+      newThemeMode == ThemeMode.system
+          ? "system"
+          : newThemeMode == ThemeMode.light
+          ? "light"
+          : "dark",
+    );
   }
 
   void cycleNextTheme() {
@@ -101,5 +123,6 @@ class SettingsNotifier extends _$SettingsNotifier {
   Brightness getSystemBrightness() {
     return SchedulerBinding.instance.platformDispatcher.platformBrightness;
   }
+
   //endregion Utilities
 }
