@@ -50,4 +50,4 @@ final debugSqlTestHandler = handlerFor(const DebugSqlTestScreen(), "Debug Sql Te
 final homeHandler = handlerFor(const HomeScreen(), Constants.strings.appName);
 final settingsHandler = handlerFor(const SettingsScreen(), "Settings");
 final currenciesHandler = handlerFor(const CurrenciesScreen(), "Currencies");
-final unitsHandler = handlerFor(const UnitsScreen(), "Units");
+final unitsHandler = handlerFor(UnitsScreen(), "Units");

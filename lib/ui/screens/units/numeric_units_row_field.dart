@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-class TemperatureRowField extends StatelessWidget {
+class NumericUnitsRowField extends StatelessWidget {
   final TextEditingController controller;
   final InputDecoration decoration;
   final ValueChanged<String> onChanged;
 
-  const TemperatureRowField({super.key, required this.controller, required this.decoration, required this.onChanged});
+  const NumericUnitsRowField({super.key, required this.controller, required this.decoration, required this.onChanged});
 
   @override
   Widget build(BuildContext context) {

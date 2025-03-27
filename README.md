@@ -36,7 +36,6 @@ A simple currency conversion app.
 * [x] Temperature F to/from C
 * [x] Distance Miles to/from Kilometers
 * [x] Weight from Pounds to/from Kilograms
-* [ ] Volume from Gallons to/from Liters
-* [ ] Time from Hours to/from Minutes
-* [ ] Speed from MPH to/from KPH
-* [ ] Area from Square Feet to/from Square Meters
+* [x] Volume from Gallons to/from Liters
+* [x] Speed from MPH to/from KPH
+* [x] Area from Square Feet to/from Square Meters

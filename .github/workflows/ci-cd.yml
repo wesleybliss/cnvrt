@@ -33,23 +33,30 @@ jobs:
           echo "storeFile=$(pwd)/keystore/release-key.jks" >> android/key.properties
 
       # Conditional build based on branch
+#      - name: Build APK
+#        run: |
+#          if [ "${{ github.ref_name }}" = "master" ]; then
+#            flutter build apk --release
+#            mv build/app/outputs/flutter-apk/app-release.apk build/app/outputs/flutter-apk/cnvrt-release.apk
+#            mv build/app/outputs/flutter-apk/app-release.apk.sha1 build/app/outputs/flutter-apk/cnvrt-release.apk.sha1
+#          else
+#            flutter build apk --release
+#            mv build/app/outputs/flutter-apk/app-release.apk build/app/outputs/flutter-apk/cnvrt-develop.apk
+#            mv build/app/outputs/flutter-apk/app-release.apk.sha1 build/app/outputs/flutter-apk/cnvrt-develop.apk.sha1
+#          fi
       - name: Build APK
         run: |
-          if [ "${{ github.ref_name }}" = "master" ]; then
-            flutter build apk --release
-          else
-            flutter build apk --release
-            mv build/app/outputs/flutter-apk/app-release.apk build/app/outputs/flutter-apk/app-develop.apk
-            mv build/app/outputs/flutter-apk/app-release.apk.sha1 build/app/outputs/flutter-apk/app-develop.apk.sha1
-          fi
+          flutter build apk --release
+          mv build/app/outputs/flutter-apk/app-release.apk build/app/outputs/flutter-apk/cnvrt-${{ github.ref_name }}.apk
+          mv build/app/outputs/flutter-apk/app-release.apk.sha1 build/app/outputs/flutter-apk/cnvrt-${{ github.ref_name }}.apk.sha1
 
       # Upload artifact after build
       - uses: actions/upload-artifact@v4
         with:
           name: app-${{ github.ref_name }}  # app-master or app-develop
           path: |
-            build/app/outputs/flutter-apk/app-release.apk
-            build/app/outputs/flutter-apk/app-develop.apk
+            build/app/outputs/flutter-apk/cnvrt-${{ github.ref_name }}.apk
+            build/app/outputs/flutter-apk/cnvrt-${{ github.ref_name }}.apk.sha1
 
       # Deploy to Google Play Store
       # - name: Deploy to Play Store (master)
