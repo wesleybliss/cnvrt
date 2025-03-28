@@ -4,7 +4,10 @@ import 'package:cnvrt/domain/constants/constants.dart';
 import 'package:cnvrt/domain/di/providers/settings/settings_selectors.dart';
 import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+const overrideLocale = false;
 
 class SimpleCurrencyApp extends ConsumerWidget {
   SimpleCurrencyApp({super.key}) {
@@ -32,6 +35,9 @@ class SimpleCurrencyApp extends ConsumerWidget {
       themeMode: themeMode,
       initialRoute: Routes.home,
       onGenerateRoute: Application.router.generator,
+      locale: Locale('es'),
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
     );
   }
 
