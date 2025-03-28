@@ -82,6 +82,10 @@ class _DebugScreenState extends ConsumerState<DebugScreen> {
             children: [
               Text(AppLocalizations.of(context)!.helloWorld),
               TextButton(
+                onPressed: () => Application.router.navigateTo(context, Routes.debugTheme),
+                child: const Text('Theme Debug'),
+              ),
+              TextButton(
                 onPressed: () => Application.router.navigateTo(context, Routes.debugConvert),
                 child: const Text('Convert Debug'),
               ),

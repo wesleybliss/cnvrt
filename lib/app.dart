@@ -3,6 +3,7 @@ import 'package:cnvrt/config/routing/routes.dart';
 import 'package:cnvrt/domain/constants/constants.dart';
 import 'package:cnvrt/domain/di/providers/settings/settings_selectors.dart';
 import 'package:cnvrt/l10n/app_localizations.dart';
+import 'package:cnvrt/ui/main_screen.dart';
 import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -38,6 +39,7 @@ class SimpleCurrencyApp extends ConsumerWidget {
       locale: Locale('es'),
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
+      home: const MainScreen(),
     );
   }
 
