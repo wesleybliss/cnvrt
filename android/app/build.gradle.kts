@@ -1,4 +1,5 @@
 import java.util.Properties
+import java.io.FileInputStream
 
 plugins {
     id("com.android.application")
@@ -7,9 +8,20 @@ plugins {
     id("dev.flutter.flutter-gradle-plugin")
 }
 
-val keystorePropertiesFile = rootProject.file("key.properties")
-val keystoreProperties = Properties().apply {
-    load(keystorePropertiesFile.inputStream())
+val keystoreProperties = Properties()
+val keystorePropertiesFile = rootProject.file("key.properties") // Assumes key.properties is in your android directory
+
+if (keystorePropertiesFile.exists()) {
+    keystoreProperties.load(FileInputStream(keystorePropertiesFile))
+}
+
+val localProperties = Properties()
+val localPropertiesFile = project.rootProject.file("local.properties")
+
+if (localPropertiesFile.exists()) {
+    localPropertiesFile.inputStream().use {
+        localProperties.load(it)
+    }
 }
 
 android {
@@ -58,7 +70,7 @@ android {
             signingConfig = signingConfigs.getByName("release")
         }
     }
-
+    
 }
 
 flutter {

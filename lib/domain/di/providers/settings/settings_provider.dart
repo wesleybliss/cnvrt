@@ -29,6 +29,12 @@ class SettingsNotifier extends _$SettingsNotifier {
     await updateSettings(newSettings);
   }
 
+  Future<void> setLanguage(String value) async {
+    final currentSettings = await future;
+    final newSettings = currentSettings.copyWith(language: value);
+    await updateSettings(newSettings);
+  }
+
   Future<void> setLastUpdated(DateTime value) async {
     final currentSettings = await future;
     final newSettings = currentSettings.copyWith(lastUpdated: value);
@@ -94,6 +100,12 @@ class SettingsNotifier extends _$SettingsNotifier {
   Future<void> setShowCountryFlags(bool value) async {
     final currentSettings = await future;
     final newSettings = currentSettings.copyWith(showCountryFlags: !currentSettings.showCountryFlags);
+    await updateSettings(newSettings);
+  }
+
+  Future<void> setDeveloperModeActive(bool value) async {
+    final currentSettings = await future;
+    final newSettings = currentSettings.copyWith(developerModeActive: !currentSettings.developerModeActive);
     await updateSettings(newSettings);
   }
 

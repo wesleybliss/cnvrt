@@ -39,3 +39,5 @@ A simple currency conversion app.
 * [x] Volume from Gallons to/from Liters
 * [x] Speed from MPH to/from KPH
 * [x] Area from Square Feet to/from Square Meters
+
+flutter gen-l10n

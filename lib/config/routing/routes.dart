@@ -8,6 +8,7 @@ class Routes {
   static final log = Logger('Routes');
 
   static const String debug = '/debug';
+  static const String debugTheme = '/debug-theme';
   static const String debugConvert = '/debug-convert';
   static const String debugSqlTest = '/debug-sql-test';
 
@@ -38,6 +39,7 @@ class Routes {
     );
 
     define(debug, debugHandler, TransitionType.fadeIn);
+    define(debugTheme, debugThemeHandler, TransitionType.fadeIn);
     define(debugConvert, debugConvertHandler, TransitionType.fadeIn);
     define(debugSqlTest, debugSqlTestHandler, TransitionType.fadeIn);
 

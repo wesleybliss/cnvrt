@@ -1,10 +1,11 @@
 import 'package:cnvrt/config/application.dart';
 import 'package:cnvrt/config/routing/routes.dart';
-import 'package:cnvrt/domain/di/providers/settings/settings_provider.dart';
 import 'package:cnvrt/domain/di/providers/currencies/currencies_provider.dart';
+import 'package:cnvrt/domain/di/providers/settings/settings_provider.dart';
 import 'package:cnvrt/domain/di/spot.dart';
 import 'package:cnvrt/domain/io/repos/i_currencies_repo.dart';
 import 'package:cnvrt/io/settings.dart';
+import 'package:cnvrt/l10n/app_localizations.dart';
 import 'package:cnvrt/utils/logger.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
@@ -63,7 +64,9 @@ class _DebugScreenState extends ConsumerState<DebugScreen> {
       ref.read(currenciesProvider.notifier).fetchCurrencies();
     }
 
-    void onClearCurrenciesClick() {
+    Future<void> onClearCurrenciesClick() async {
+      final currenciesRepo = spot<ICurrenciesRepo>();
+      await currenciesRepo.deleteAll();
       ref.read(currenciesProvider.notifier).fetchCurrencies();
     }
 
@@ -79,6 +82,11 @@ class _DebugScreenState extends ConsumerState<DebugScreen> {
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
+              Text(AppLocalizations.of(context)!.helloWorld),
+              TextButton(
+                onPressed: () => Application.router.navigateTo(context, Routes.debugTheme),
+                child: const Text('Theme Debug'),
+              ),
               TextButton(
                 onPressed: () => Application.router.navigateTo(context, Routes.debugConvert),
                 child: const Text('Convert Debug'),

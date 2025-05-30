@@ -1,4 +1,5 @@
 import 'package:cnvrt/domain/di/providers/settings/settings_provider.dart';
+import 'package:cnvrt/l10n/app_localizations.dart';
 import 'package:cnvrt/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -12,7 +13,7 @@ class RoundDecimalsToInput extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return ListTile(
-      title: const Text('Round decimals to'),
+      title: Text(AppLocalizations.of(context)!.roundDecimalsTo),
       leading: const Icon(Icons.numbers),
       trailing: SizedBox(
         width: 75,

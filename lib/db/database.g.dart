@@ -30,7 +30,9 @@ class $CurrenciesTable extends Currencies
   @override
   late final GeneratedColumn<String> symbol = GeneratedColumn<String>(
       'symbol', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
+      type: DriftSqlType.string,
+      requiredDuringInsert: true,
+      $customConstraints: 'UNIQUE');
   static const VerificationMeta _nameMeta = const VerificationMeta('name');
   @override
   late final GeneratedColumn<String> name = GeneratedColumn<String>(

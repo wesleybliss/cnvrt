@@ -1,4 +1,5 @@
 import 'package:cnvrt/domain/di/providers/settings/settings_provider.dart';
+import 'package:cnvrt/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -19,9 +20,13 @@ class ThemeDropdown extends ConsumerWidget {
       onChanged: (String? value) {
         ref.read(settingsNotifierProvider.notifier).setTheme(value ?? "system");
       },
-      hint: const Text('Select an option'),
+      hint: Text(AppLocalizations.of(context)!.selectAnOption),
     );
 
-    return ListTile(title: const Text('Theme'), leading: const Icon(Icons.color_lens), trailing: dropdown);
+    return ListTile(
+      title: Text(AppLocalizations.of(context)!.theme),
+      leading: const Icon(Icons.color_lens),
+      trailing: dropdown,
+    );
   }
 }

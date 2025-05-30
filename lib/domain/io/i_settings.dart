@@ -2,6 +2,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 abstract class ISettings {
   abstract String theme;
+  abstract String language;
   abstract DateTime? lastUpdated;
   abstract int updateFrequencyInHours;
   abstract int roundingDecimals;
@@ -14,8 +15,12 @@ abstract class ISettings {
   abstract bool showCountryFlags;
   abstract bool accountForInflation;
 
+  // If the user has tapped the version number 10 times, we enable developer mode
+  abstract bool developerModeActive;
+
   ISettings copyWith({
     String? theme,
+    String? language,
     DateTime? lastUpdated,
     int? updateFrequencyInHours,
     int? roundingDecimals,
@@ -27,6 +32,8 @@ abstract class ISettings {
     String? showCurrencyRate,
     bool? accountForInflation,
     bool? showCountryFlags,
+
+    bool? developerModeActive,
   });
 
   Future<void> saveToPreferences(SharedPreferences prefs);

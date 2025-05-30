@@ -1,4 +1,5 @@
 import 'package:cnvrt/domain/di/providers/settings/settings_provider.dart';
+import 'package:cnvrt/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -19,11 +20,11 @@ class InputsPositionDropdown extends ConsumerWidget {
       onChanged: (String? value) {
         ref.read(settingsNotifierProvider.notifier).setInputsPosition(value ?? "center");
       },
-      hint: const Text('Select an option'),
+      hint: Text(AppLocalizations.of(context)!.selectAnOption),
     );
 
     return ListTile(
-      title: const Text('Align inputs to'),
+      title: Text(AppLocalizations.of(context)!.alignInputsTo),
       leading: const Icon(Icons.align_vertical_center),
       trailing: dropdown,
     );

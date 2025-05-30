@@ -1,4 +1,5 @@
 import 'package:cnvrt/domain/di/providers/currencies/currencies_provider.dart';
+import 'package:cnvrt/l10n/app_localizations.dart';
 import 'package:cnvrt/ui/widgets/currencies_list.dart';
 import 'package:cnvrt/utils/logger.dart';
 import 'package:flutter/material.dart';
@@ -48,21 +49,21 @@ class _CurrenciesReadyState extends ConsumerState<CurrenciesReady> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Padding(
-          padding: EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 8.0),
+        Padding(
+          padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 8.0),
           child: Text(
-            'Choose your favorite currencies.\nThese will be pinned to the home screen.',
+            AppLocalizations.of(context)!.chooseYourFavoriteCurrencies,
             textAlign: TextAlign.left,
-            style: TextStyle(fontSize: 16),
+            style: const TextStyle(fontSize: 16),
           ),
         ),
         Padding(
           padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 16.0),
           child: TextField(
             controller: controller,
-            decoration: const InputDecoration(
-              border: UnderlineInputBorder(),
-              labelText: 'Search by name or symbol (e.g. USD)',
+            decoration: InputDecoration(
+              border: const UnderlineInputBorder(),
+              labelText: AppLocalizations.of(context)!.searchByNameOrSymbol,
             ),
             onChanged: (text) {
               // Empty state update to trigger the change & filter the list
