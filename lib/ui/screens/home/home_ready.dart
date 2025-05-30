@@ -58,7 +58,7 @@ class HomeReady extends ConsumerWidget {
                   ? MainAxisAlignment.end
                   : MainAxisAlignment.center,
           children: [
-            CurrenciesInputsList(currencies: selectedCurrencies),
+            CurrenciesInputsList(/*currencies: selectedCurrencies*/),
 
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
