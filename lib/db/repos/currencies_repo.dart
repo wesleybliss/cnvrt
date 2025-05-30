@@ -110,8 +110,22 @@ class CurrenciesRepo extends ICurrenciesRepo {
     return await db.transaction(() async {
       final List<Currency> upsertedRows = [];
 
-      for (final companion in companions) {
-        log.d("upsertManyCompanions: inserting ${companion.symbol.value}");
+      for (CurrenciesCompanion companion in companions) {
+        log.d("upsertManyCompanions: upserting ${companion.symbol.value}");
+
+        // Fetch the existing currency if it exists
+        final existingCurrency =
+            await (db.select(db.currencies)
+              ..where((tbl) => tbl.symbol.equals(companion.symbol.value))).getSingleOrNull();
+
+        /*log.d(
+          "upsertManyCompanions: existingCurrency: ${existingCurrency?.symbol}: ${existingCurrency?.id} (selected: ${existingCurrency?.selected})",
+        );*/
+
+        // If the currency exists, retain its selected property
+        if (existingCurrency != null) {
+          companion = companion.copyWith(id: Value(existingCurrency.id), selected: Value(existingCurrency.selected));
+        }
 
         // Use InsertMode.insertOrReplace for upsert behavior
         final insertedId = await db.into(db.currencies).insert(companion, mode: InsertMode.insertOrReplace);
@@ -129,6 +143,11 @@ class CurrenciesRepo extends ICurrenciesRepo {
           upsertedRows.add(upsertedRow);
         }
       }
+
+      final debugAllCurrencies = await (db.select(db.currencies)).get();
+      log.d(
+        "upsertManyCompanions: all currencies: ${debugAllCurrencies.map((e) => '${e.symbol}: (${e.selected})').join(', ')}",
+      );
 
       return upsertedRows;
     });

@@ -1,4 +1,5 @@
 import 'package:cnvrt/domain/di/providers/settings/settings_provider.dart';
+import 'package:cnvrt/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -19,11 +20,11 @@ class UpdateFrequencyInHoursDropdown extends ConsumerWidget {
       onChanged: (int? value) {
         ref.read(settingsNotifierProvider.notifier).setUpdateFrequencyInHours(value ?? 12);
       },
-      hint: const Text('Select an option'),
+      hint: Text(AppLocalizations.of(context)!.selectAnOption),
     );
 
     return ListTile(
-      title: const Text('Update frequency'),
+      title: Text(AppLocalizations.of(context)!.updateFrequency),
       leading: const Icon(Icons.access_time_filled),
       trailing: dropdown,
     );

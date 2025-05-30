@@ -37,10 +37,15 @@ dependencies:
 
   path: ^1.9.0
   path_provider: ^2.1.5
-  intl: any
+  package_info_plus: ^8.3.0
+  intl: 0.19.0
+#  flutter_config: ^2.0.2
   flutter_localizations:
     sdk: flutter
   collection: ^1.19.1
+
+  # Splash screen
+  flutter_native_splash: ^2.4.5
 
   # Routing & navigation
   fluro: ^2.0.5
@@ -110,6 +115,10 @@ flutter:
   assets:
     - assets/lang/en.json
     - assets/lang/es.json
+    - assets/images/logo.png
+    - assets/images/logo_dark.png
+    - assets/images/logo_android12.png
+    - assets/images/logo_android12_dark.png
     - assets/images/no-wifi-2-svgrepo-com.svg
 
   # An image asset can refer to one or more resolution-specific "variants", see
@@ -137,3 +146,25 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
+
+# For Android 12, the image should be 1152x1152 pixels and fit within a circle of 768 pixels
+# in diameter (if no icon background is used). If you use an icon background, it should be
+# 960x960 pixels, fitting within a 640-pixel diameter circle.
+flutter_native_splash:
+  # Background color for light mode
+  color: "#d4d4d4"
+  # Background color for dark mode
+  color_dark: "#2e2e2e"
+  # Splash screen image (logo)
+  image: assets/images/logo.png
+  image_dark: assets/images/logo_dark.png
+  # Platform support
+  android: true
+  ios: true
+  web: true
+  # Android 12 and later specific configuration
+  android_12:
+    color: "#d4d4d4"
+    image: assets/images/logo_android12.png
+    color_dark: "#2e2e2e"
+    image_dark: assets/images/logo_android12_dark.png

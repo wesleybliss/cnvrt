@@ -3,6 +3,7 @@ import 'package:cnvrt/config/routing/routes.dart';
 import 'package:cnvrt/domain/di/providers/currencies/currencies_provider.dart';
 import 'package:cnvrt/domain/di/providers/currencies/currency_values_provider.dart';
 import 'package:cnvrt/domain/di/providers/settings/settings_provider.dart';
+import 'package:cnvrt/l10n/app_localizations.dart';
 import 'package:cnvrt/ui/widgets/currency_inputs_list/currency_inputs_list.dart';
 import 'package:cnvrt/utils/logger.dart';
 import 'package:collection/collection.dart';
@@ -35,13 +36,11 @@ class HomeReady extends ConsumerWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           if (state.error != null) Text(state.error!),
-          const Center(
-            child: Text('You don\'t have any currencies selected yet. \nAdd some by clicking the button below.'),
-          ),
+          Center(child: Text(AppLocalizations.of(context)!.noSelectedCurrencies)),
           const SizedBox(height: 24.0),
           TextButton(
             onPressed: () => Application.router.navigateTo(context, Routes.currencies),
-            child: const Text('Manage Currencies'),
+            child: Text(AppLocalizations.of(context)!.manageCurrencies),
           ),
         ],
       );

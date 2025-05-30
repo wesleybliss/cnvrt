@@ -52,6 +52,8 @@ class CurrenciesNotifier extends StateNotifier<CurrenciesState> {
   }
 
   Future<void> fetchCurrencies() async {
+    if (state.loading) return;
+
     state = CurrenciesState(loading: true, isFetching: true, currencies: state.currencies);
 
     try {
@@ -59,7 +61,9 @@ class CurrenciesNotifier extends StateNotifier<CurrenciesState> {
 
       final data = res?.data.currencies ?? [];
 
-      log.d("fetchCurrencies: upserting $data");
+      log.d("fetchCurrencies: upserting ${data.length} currencies");
+
+      // await currenciesRepo.deleteAll();
 
       // Update currencies without destroying locally saved data, like selected state
       final savedCurrencies = await currenciesRepo.upsertManyCompanions(data);

@@ -6,6 +6,8 @@ class Settings implements ISettings {
   @override
   String theme = "system";
   @override
+  String language = "system";
+  @override
   DateTime? lastUpdated;
   @override
   int updateFrequencyInHours = 12;
@@ -28,8 +30,12 @@ class Settings implements ISettings {
   @override
   bool showCountryFlags = true;
 
+  @override
+  bool developerModeActive = false;
+
   Settings({
     this.theme = "system",
+    this.language = "system",
     this.lastUpdated,
     this.updateFrequencyInHours = 12,
     this.roundingDecimals = 2,
@@ -41,11 +47,14 @@ class Settings implements ISettings {
     this.showCurrencyRate = "selected",
     this.accountForInflation = true,
     this.showCountryFlags = true,
+
+    this.developerModeActive = false,
   });
 
   @override
   Settings copyWith({
     String? theme,
+    String? language,
     DateTime? lastUpdated,
     int? updateFrequencyInHours,
     int? roundingDecimals,
@@ -57,8 +66,11 @@ class Settings implements ISettings {
     String? showCurrencyRate,
     bool? accountForInflation,
     bool? showCountryFlags,
+
+    bool? developerModeActive,
   }) => Settings(
     theme: theme ?? this.theme,
+    language: language ?? this.language,
     lastUpdated: lastUpdated ?? this.lastUpdated,
     updateFrequencyInHours: updateFrequencyInHours ?? this.updateFrequencyInHours,
     roundingDecimals: roundingDecimals ?? this.roundingDecimals,
@@ -70,6 +82,8 @@ class Settings implements ISettings {
     showCurrencyRate: showCurrencyRate ?? this.showCurrencyRate,
     accountForInflation: accountForInflation ?? this.accountForInflation,
     showCountryFlags: showCountryFlags ?? this.showCountryFlags,
+
+    developerModeActive: developerModeActive ?? this.developerModeActive,
   );
 
   // Factory method to create a Settings object from SharedPreferences
@@ -78,6 +92,7 @@ class Settings implements ISettings {
 
     return Settings(
       theme: prefs.getString(keys.theme) ?? "system",
+      language: prefs.getString(keys.language) ?? "system",
       lastUpdated:
           prefs.getString(keys.lastUpdated) != null ? DateTime.parse(prefs.getString(keys.lastUpdated)!) : null,
       updateFrequencyInHours: prefs.getInt(keys.updateFrequencyInHours) ?? 12,
@@ -90,6 +105,8 @@ class Settings implements ISettings {
       showCurrencyRate: prefs.getString(keys.showCurrencyRate) ?? "selected",
       accountForInflation: prefs.getBool(keys.accountForInflation) ?? true,
       showCountryFlags: prefs.getBool(keys.showCountryFlags) ?? true,
+
+      developerModeActive: prefs.getBool(keys.developerModeActive) ?? false,
     );
   }
 
@@ -99,6 +116,7 @@ class Settings implements ISettings {
     final keys = Constants.keys.settings;
 
     await prefs.setString(keys.theme, theme);
+    await prefs.setString(keys.language, language);
 
     if (lastUpdated != null) {
       await prefs.setString(keys.lastUpdated, lastUpdated!.toIso8601String());
@@ -114,5 +132,7 @@ class Settings implements ISettings {
     await prefs.setString(keys.showCurrencyRate, showCurrencyRate);
     await prefs.setBool(keys.accountForInflation, accountForInflation);
     await prefs.setBool(keys.showCountryFlags, showCountryFlags);
+
+    await prefs.setBool(keys.developerModeActive, developerModeActive);
   }
 }

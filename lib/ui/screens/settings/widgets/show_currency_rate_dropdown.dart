@@ -1,4 +1,5 @@
 import 'package:cnvrt/domain/di/providers/settings/settings_provider.dart';
+import 'package:cnvrt/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -11,17 +12,21 @@ class ShowCurrencyRateDropdown extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final dropdown = DropdownButton(
       value: value,
-      items: const [
-        DropdownMenuItem(value: "all", child: Text("All")),
-        DropdownMenuItem(value: "selected", child: Text("Selected")),
-        DropdownMenuItem(value: "none", child: Text("None")),
+      items: [
+        DropdownMenuItem(value: "all", child: Text(AppLocalizations.of(context)!.all)),
+        DropdownMenuItem(value: "selected", child: Text(AppLocalizations.of(context)!.selected)),
+        DropdownMenuItem(value: "none", child: Text(AppLocalizations.of(context)!.none)),
       ],
       onChanged: (String? value) {
         ref.read(settingsNotifierProvider.notifier).setShowCurrencyRate(value ?? "selected");
       },
-      hint: const Text('Select an option'),
+      hint: Text(AppLocalizations.of(context)!.selectAnOption),
     );
 
-    return ListTile(title: const Text('Show current rates'), leading: const Icon(Icons.message), trailing: dropdown);
+    return ListTile(
+      title: Text(AppLocalizations.of(context)!.showCurrentRates),
+      leading: Icon(Icons.message),
+      trailing: dropdown,
+    );
   }
 }

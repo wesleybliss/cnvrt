@@ -100,6 +100,192 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Hello World!'**
   String get helloWorld;
+
+  /// No description provided for @error.
+  ///
+  /// In en, this message translates to:
+  /// **'Error'**
+  String get error;
+
+  /// No description provided for @theme.
+  ///
+  /// In en, this message translates to:
+  /// **'Theme'**
+  String get theme;
+
+  /// No description provided for @language.
+  ///
+  /// In en, this message translates to:
+  /// **'Language'**
+  String get language;
+
+  /// No description provided for @system.
+  ///
+  /// In en, this message translates to:
+  /// **'System'**
+  String get system;
+
+  /// No description provided for @settings.
+  ///
+  /// In en, this message translates to:
+  /// **'Settings'**
+  String get settings;
+
+  /// No description provided for @currencies.
+  ///
+  /// In en, this message translates to:
+  /// **'Currencies'**
+  String get currencies;
+
+  /// No description provided for @units.
+  ///
+  /// In en, this message translates to:
+  /// **'Units'**
+  String get units;
+
+  /// No description provided for @chooseYourFavoriteCurrencies.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose your favorite currencies.\\nThese will be pinned to the home screen.'**
+  String get chooseYourFavoriteCurrencies;
+
+  /// No description provided for @searchByNameOrSymbol.
+  ///
+  /// In en, this message translates to:
+  /// **'Search by name or symbol (e.g. USD)'**
+  String get searchByNameOrSymbol;
+
+  /// No description provided for @noSelectedCurrencies.
+  ///
+  /// In en, this message translates to:
+  /// **'You don\'t have any currencies selected yet. \nAdd some by clicking the button below.'**
+  String get noSelectedCurrencies;
+
+  /// No description provided for @manageCurrencies.
+  ///
+  /// In en, this message translates to:
+  /// **'Manage Currencies'**
+  String get manageCurrencies;
+
+  /// No description provided for @selectAnOption.
+  ///
+  /// In en, this message translates to:
+  /// **'Select an option'**
+  String get selectAnOption;
+
+  /// No description provided for @roundDecimalsTo.
+  ///
+  /// In en, this message translates to:
+  /// **'Round decimals to'**
+  String get roundDecimalsTo;
+
+  /// No description provided for @updateFrequency.
+  ///
+  /// In en, this message translates to:
+  /// **'Update frequency'**
+  String get updateFrequency;
+
+  /// No description provided for @useLargeInputs.
+  ///
+  /// In en, this message translates to:
+  /// **'Use large inputs'**
+  String get useLargeInputs;
+
+  /// No description provided for @showDragToReorderHandles.
+  ///
+  /// In en, this message translates to:
+  /// **'Show drag to reorder handles'**
+  String get showDragToReorderHandles;
+
+  /// No description provided for @showCopyToClipboardButtons.
+  ///
+  /// In en, this message translates to:
+  /// **'Show copy to clipboard buttons'**
+  String get showCopyToClipboardButtons;
+
+  /// No description provided for @showFullCurrencyNameLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Show full currency name label'**
+  String get showFullCurrencyNameLabel;
+
+  /// No description provided for @alignInputsTo.
+  ///
+  /// In en, this message translates to:
+  /// **'Align inputs to'**
+  String get alignInputsTo;
+
+  /// No description provided for @showCurrentRates.
+  ///
+  /// In en, this message translates to:
+  /// **'Show current rates'**
+  String get showCurrentRates;
+
+  /// No description provided for @accountForInflation.
+  ///
+  /// In en, this message translates to:
+  /// **'Account for inflation'**
+  String get accountForInflation;
+
+  /// No description provided for @showCountryFlags.
+  ///
+  /// In en, this message translates to:
+  /// **'Show country flags'**
+  String get showCountryFlags;
+
+  /// No description provided for @all.
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get all;
+
+  /// No description provided for @selected.
+  ///
+  /// In en, this message translates to:
+  /// **'Selected'**
+  String get selected;
+
+  /// No description provided for @none.
+  ///
+  /// In en, this message translates to:
+  /// **'None'**
+  String get none;
+
+  /// No description provided for @temperature.
+  ///
+  /// In en, this message translates to:
+  /// **'Temperature'**
+  String get temperature;
+
+  /// No description provided for @distance.
+  ///
+  /// In en, this message translates to:
+  /// **'Distance'**
+  String get distance;
+
+  /// No description provided for @speed.
+  ///
+  /// In en, this message translates to:
+  /// **'Speed'**
+  String get speed;
+
+  /// No description provided for @weight.
+  ///
+  /// In en, this message translates to:
+  /// **'Weight'**
+  String get weight;
+
+  /// No description provided for @area.
+  ///
+  /// In en, this message translates to:
+  /// **'Area'**
+  String get area;
+
+  /// No description provided for @volume.
+  ///
+  /// In en, this message translates to:
+  /// **'Volume'**
+  String get volume;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

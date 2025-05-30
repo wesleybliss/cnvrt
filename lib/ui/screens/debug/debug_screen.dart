@@ -64,7 +64,9 @@ class _DebugScreenState extends ConsumerState<DebugScreen> {
       ref.read(currenciesProvider.notifier).fetchCurrencies();
     }
 
-    void onClearCurrenciesClick() {
+    Future<void> onClearCurrenciesClick() async {
+      final currenciesRepo = spot<ICurrenciesRepo>();
+      await currenciesRepo.deleteAll();
       ref.read(currenciesProvider.notifier).fetchCurrencies();
     }
 

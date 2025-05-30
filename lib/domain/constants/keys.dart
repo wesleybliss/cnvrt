@@ -4,6 +4,7 @@ class ConstantsKeys {
 
 class ConstantsKeysSettings {
   final theme = 'theme';
+  final language = 'language';
   final lastUpdated = 'lastUpdated';
   final updateFrequencyInHours = 'updateFrequencyInHours';
   final roundingDecimals = 'roundingDecimals';
@@ -15,4 +16,6 @@ class ConstantsKeysSettings {
   final showCurrencyRate = "showCurrencyRate";
   final accountForInflation = "accountForInflation";
   final showCountryFlags = "showCountryFlags";
+
+  final developerModeActive = "developerModeActive";
 }

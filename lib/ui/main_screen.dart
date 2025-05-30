@@ -17,9 +17,16 @@ class MainScreenState extends State<MainScreen> {
   List<String> get _tabRoutes => [Routes.home, Routes.units];
 
   void _onItemTapped(int index) {
+    // If we're switching to a different tab, reset the previous tab's Navigator stack
+    if (_selectedIndex != index) {
+      final previousNavigator = _navigatorKeys[_selectedIndex].currentState;
+      if (previousNavigator != null) {
+        // Pop all routes until we're back to the root of the previous tab
+        previousNavigator.popUntil((route) => route.isFirst);
+      }
+    }
     setState(() {
       _selectedIndex = index;
-      print('Selected index: $_selectedIndex'); // Debug print
     });
   }
 
