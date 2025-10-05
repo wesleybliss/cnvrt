@@ -8,7 +8,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class DecimalTextInputFormatter extends TextInputFormatter {
   @override
-  TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
+  TextEditingValue formatEditUpdate(
+    TextEditingValue oldValue,
+    TextEditingValue newValue,
+  ) {
     // Allow only digits and one decimal point
     if (newValue.text.isEmpty) {
       return newValue; // Allow empty input
@@ -28,6 +31,7 @@ class DecimalTextInputFormatter extends TextInputFormatter {
 class CurrencyTextField extends ConsumerWidget {
   final Currency item;
   final TextEditingController? controller;
+  final FocusNode? focusNode;
   final void Function(String, String) onTextChanged;
   final bool useLargeInputs;
   final bool showFullCurrencyNameLabel;
@@ -37,6 +41,7 @@ class CurrencyTextField extends ConsumerWidget {
     super.key,
     required this.item,
     required this.controller,
+    required this.focusNode,
     required this.onTextChanged,
     this.useLargeInputs = false,
     this.showFullCurrencyNameLabel = true,
@@ -45,12 +50,19 @@ class CurrencyTextField extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final allowDecimalInput = ref.watch(settingsNotifierProvider.select((s) => s.value?.allowDecimalInput ?? false));
+    final allowDecimalInput = ref.watch(
+      settingsNotifierProvider.select(
+        (s) => s.value?.allowDecimalInput ?? false,
+      ),
+    );
 
     final labelFontSize = useLargeInputs ? 16.0 : 12.0;
     final inputFontSize = useLargeInputs ? 20.0 : 12.0;
 
-    final prefixText = showCountryFlags ? "${currencyFlags[item.symbol]}  ${item.symbol}" : item.symbol;
+    final prefixText =
+        showCountryFlags
+            ? "${currencyFlags[item.symbol]}  ${item.symbol}"
+            : item.symbol;
     final prefixIcon = Padding(
       padding: const EdgeInsets.only(left: 12.0, right: 8.0),
       child: Row(
@@ -59,7 +71,9 @@ class CurrencyTextField extends ConsumerWidget {
           Text(
             prefixText,
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: Theme.of(context).colorScheme.onSurface.withAlpha(90), // Dimmer text
+              color: Theme.of(
+                context,
+              ).colorScheme.onSurface.withAlpha(90), // Dimmer text
               fontSize: labelFontSize,
             ),
           ),
@@ -78,7 +92,10 @@ class CurrencyTextField extends ConsumerWidget {
                     child: Text(
                       item.name,
                       textAlign: TextAlign.end,
-                      style: TextStyle(fontSize: labelFontSize, color: Colors.grey),
+                      style: TextStyle(
+                        fontSize: labelFontSize,
+                        color: Colors.grey,
+                      ),
                     ),
                   ),
                 ],
@@ -95,10 +112,14 @@ class CurrencyTextField extends ConsumerWidget {
 
     return TextField(
       controller: controller,
+      focusNode: focusNode,
       decoration: decoration,
       textAlign: TextAlign.end,
       style: TextStyle(fontFamily: 'monospace', fontSize: inputFontSize),
-      keyboardType: allowDecimalInput ? const TextInputType.numberWithOptions(decimal: true) : TextInputType.number,
+      keyboardType:
+          allowDecimalInput
+              ? const TextInputType.numberWithOptions(decimal: true)
+              : TextInputType.number,
       inputFormatters: [
         // When decimals are allowed, use DecimalTextInputFormatter to allow decimal point
         // When decimals are not allowed, use digitsOnly to block decimal point

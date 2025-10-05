@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 class CurrencyInputsListRow extends StatelessWidget {
   final Currency item;
   final TextEditingController? controller;
-  final void Function(String) onFocusChanged;
+  final FocusNode? focusNode;
   final void Function(String, String) onTextChanged;
   final bool useLargeInputs;
   final bool showCopyToClipboardButtons;
@@ -17,7 +17,7 @@ class CurrencyInputsListRow extends StatelessWidget {
     super.key,
     required this.item,
     required this.controller,
-    required this.onFocusChanged,
+    required this.focusNode,
     required this.onTextChanged,
 
     this.useLargeInputs = false,
@@ -31,20 +31,14 @@ class CurrencyInputsListRow extends StatelessWidget {
     return Row(
       children: [
         Expanded(
-          child: Focus(
-            onFocusChange: (hasFocus) {
-              if (hasFocus) {
-                onFocusChanged(item.symbol);
-              }
-            },
-            child: CurrencyTextField(
-              item: item,
-              controller: controller,
-              onTextChanged: onTextChanged,
-              useLargeInputs: useLargeInputs,
-              showFullCurrencyNameLabel: showFullCurrencyNameLabel,
-              showCountryFlags: showCountryFlags,
-            ),
+          child: CurrencyTextField(
+            item: item,
+            controller: controller,
+            focusNode: focusNode,
+            onTextChanged: onTextChanged,
+            useLargeInputs: useLargeInputs,
+            showFullCurrencyNameLabel: showFullCurrencyNameLabel,
+            showCountryFlags: showCountryFlags,
           ),
         ),
         if (showCopyToClipboardButtons)

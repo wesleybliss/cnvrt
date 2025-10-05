@@ -18,13 +18,13 @@ class CurrenciesInputsList extends ConsumerWidget {
     final viewModel = ref.watch(currencyInputsListViewModelProvider.notifier);
     final settingsAsyncValue = ref.watch(settingsNotifierProvider);
     final sortedCurrencies = ref.watch(sortedCurrenciesProvider);
-    final controllers = ref.watch(currencyInputsListViewModelProvider);
-    
+    final viewModelState = ref.watch(currencyInputsListViewModelProvider);
+
     // Automatically call `updateControllers` when `currencyValuesProvider` changes
     ref.listen<Map<String, double>>(currencyValuesProvider, (_, next) {
       viewModel.updateControllers(next);
     });
-    
+
     return settingsAsyncValue.when(
       loading: () => const CircularProgressIndicator(),
       error: (error, stackTrace) => Text('Error: $error'),
@@ -33,24 +33,29 @@ class CurrenciesInputsList extends ConsumerWidget {
           shrinkWrap: true,
           onReorder: viewModel.onReorderCurrency,
           children:
-          sortedCurrencies
-              .map(
-                (e) => ListTile(
-              key: ValueKey(e.symbol),
-              leading: settings.showDragReorderHandles ? const Icon(Icons.drag_handle) : null,
-              title: CurrencyInputsListRow(
-                item: e,
-                controller: controllers[e.symbol],
-                onFocusChanged: viewModel.onFocusChanged,
-                onTextChanged: viewModel.onTextChanged,
-                useLargeInputs: settings.useLargeInputs,
-                showCopyToClipboardButtons: settings.showCopyToClipboardButtons,
-                showFullCurrencyNameLabel: settings.showFullCurrencyNameLabel,
-                showCountryFlags: settings.showCountryFlags,
-              ),
-            ),
-          )
-              .toList(),
+              sortedCurrencies
+                  .map(
+                    (e) => ListTile(
+                      key: ValueKey(e.symbol),
+                      leading:
+                          settings.showDragReorderHandles
+                              ? const Icon(Icons.drag_handle)
+                              : null,
+                      title: CurrencyInputsListRow(
+                        item: e,
+                        controller: viewModelState.controllers[e.symbol],
+                        focusNode: viewModelState.focusNodes[e.symbol],
+                        onTextChanged: viewModel.onTextChanged,
+                        useLargeInputs: settings.useLargeInputs,
+                        showCopyToClipboardButtons:
+                            settings.showCopyToClipboardButtons,
+                        showFullCurrencyNameLabel:
+                            settings.showFullCurrencyNameLabel,
+                        showCountryFlags: settings.showCountryFlags,
+                      ),
+                    ),
+                  )
+                  .toList(),
         );
       },
     );
