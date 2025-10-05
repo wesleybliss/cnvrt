@@ -34,5 +34,18 @@
     "speed": "Velocidad",
     "weight": "Peso",
     "area": "Área",
-    "volume": "Volumen"
+    "volume": "Volumen",
+    "themeDescription": "Elige la apariencia de la aplicación: claro, oscuro o predeterminado del sistema",
+    "languageDescription": "Selecciona el idioma de visualización de la aplicación",
+    "roundDecimalsToDescription": "Establece cuántos decimales mostrar en los resultados",
+    "updateFrequencyDescription": "Elige con qué frecuencia se actualizan las tasas de cambio",
+    "useLargeInputsDescription": "Activa campos de entrada más grandes para facilitar el uso",
+    "showDragToReorderHandlesDescription": "Muestra controles para arrastrar y reordenar entradas de moneda",
+    "showCopyToClipboardButtonsDescription": "Muestra botones para copiar los resultados de conversión",
+    "showFullCurrencyNameLabelDescription": "Muestra el nombre completo de la moneda junto al símbolo",
+    "alignInputsToDescription": "Elige la alineación de texto para los campos de entrada",
+    "showCurrentRatesDescription": "Muestra la tasa de cambio actual debajo de las conversiones",
+    "accountForInflationDescription": "Ajusta los resultados de conversión por inflación a lo largo del tiempo",
+    "showCountryFlagsDescription": "Muestra banderas de países junto a los símbolos de moneda",
+    "allowDecimalInputDescription": "Permite ingresar puntos decimales en los campos de entrada"
 }

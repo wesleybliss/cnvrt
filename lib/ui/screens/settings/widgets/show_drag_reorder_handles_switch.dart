@@ -12,6 +12,7 @@ class ShowDragReorderHandlesSwitch extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return SwitchListTile(
       title: Text(AppLocalizations.of(context)!.showDragToReorderHandles),
+      subtitle: Text(AppLocalizations.of(context)!.showDragToReorderHandlesDescription),
       value: value,
       onChanged: (bool value) {
         ref.read(settingsNotifierProvider.notifier).setDragReorderHandles(value);

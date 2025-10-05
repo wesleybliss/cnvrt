@@ -108,4 +108,55 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get volume => 'Volume';
+
+  @override
+  String get themeDescription =>
+      'Choose the app\'s appearance: light, dark, or system default';
+
+  @override
+  String get languageDescription => 'Select the display language for the app';
+
+  @override
+  String get roundDecimalsToDescription =>
+      'Set how many decimal places to show in results';
+
+  @override
+  String get updateFrequencyDescription =>
+      'Choose how often exchange rates are refreshed';
+
+  @override
+  String get useLargeInputsDescription =>
+      'Enable larger input fields for easier tapping';
+
+  @override
+  String get showDragToReorderHandlesDescription =>
+      'Show drag handles to reorder currency inputs';
+
+  @override
+  String get showCopyToClipboardButtonsDescription =>
+      'Display buttons to copy conversion results';
+
+  @override
+  String get showFullCurrencyNameLabelDescription =>
+      'Show full currency names alongside symbols';
+
+  @override
+  String get alignInputsToDescription =>
+      'Choose text alignment for input fields';
+
+  @override
+  String get showCurrentRatesDescription =>
+      'Display the current exchange rate beneath conversions';
+
+  @override
+  String get accountForInflationDescription =>
+      'Adjust conversion results for inflation over time';
+
+  @override
+  String get showCountryFlagsDescription =>
+      'Show country flags next to currency symbols';
+
+  @override
+  String get allowDecimalInputDescription =>
+      'Allow entering decimal points in input fields';
 }

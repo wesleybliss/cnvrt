@@ -25,6 +25,7 @@ class ThemeDropdown extends ConsumerWidget {
 
     return ListTile(
       title: Text(AppLocalizations.of(context)!.theme),
+      subtitle: Text(AppLocalizations.of(context)!.themeDescription),
       leading: const Icon(Icons.color_lens),
       trailing: dropdown,
     );

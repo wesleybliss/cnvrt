@@ -12,6 +12,7 @@ class ShowCountryFlagsSwitch extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return SwitchListTile(
       title: Text(AppLocalizations.of(context)!.showCountryFlags),
+      subtitle: Text(AppLocalizations.of(context)!.showCountryFlagsDescription),
       value: value,
       onChanged: (bool value) {
         ref.read(settingsNotifierProvider.notifier).setShowCountryFlags(value);

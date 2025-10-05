@@ -111,4 +111,56 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get volume => 'Volumen';
+
+  @override
+  String get themeDescription =>
+      'Elige la apariencia de la aplicación: claro, oscuro o predeterminado del sistema';
+
+  @override
+  String get languageDescription =>
+      'Selecciona el idioma de visualización de la aplicación';
+
+  @override
+  String get roundDecimalsToDescription =>
+      'Establece cuántos decimales mostrar en los resultados';
+
+  @override
+  String get updateFrequencyDescription =>
+      'Elige con qué frecuencia se actualizan las tasas de cambio';
+
+  @override
+  String get useLargeInputsDescription =>
+      'Activa campos de entrada más grandes para facilitar el uso';
+
+  @override
+  String get showDragToReorderHandlesDescription =>
+      'Muestra controles para arrastrar y reordenar entradas de moneda';
+
+  @override
+  String get showCopyToClipboardButtonsDescription =>
+      'Muestra botones para copiar los resultados de conversión';
+
+  @override
+  String get showFullCurrencyNameLabelDescription =>
+      'Muestra el nombre completo de la moneda junto al símbolo';
+
+  @override
+  String get alignInputsToDescription =>
+      'Elige la alineación de texto para los campos de entrada';
+
+  @override
+  String get showCurrentRatesDescription =>
+      'Muestra la tasa de cambio actual debajo de las conversiones';
+
+  @override
+  String get accountForInflationDescription =>
+      'Ajusta los resultados de conversión por inflación a lo largo del tiempo';
+
+  @override
+  String get showCountryFlagsDescription =>
+      'Muestra banderas de países junto a los símbolos de moneda';
+
+  @override
+  String get allowDecimalInputDescription =>
+      'Permite ingresar puntos decimales en los campos de entrada';
 }

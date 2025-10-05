@@ -34,5 +34,18 @@
   "speed": "Speed",
   "weight": "Weight",
   "area": "Area",
-  "volume": "Volume"
+  "volume": "Volume",
+  "themeDescription": "Choose the app's appearance: light, dark, or system default",
+  "languageDescription": "Select the display language for the app",
+  "roundDecimalsToDescription": "Set how many decimal places to show in results",
+  "updateFrequencyDescription": "Choose how often exchange rates are refreshed",
+  "useLargeInputsDescription": "Enable larger input fields for easier tapping",
+  "showDragToReorderHandlesDescription": "Show drag handles to reorder currency inputs",
+  "showCopyToClipboardButtonsDescription": "Display buttons to copy conversion results",
+  "showFullCurrencyNameLabelDescription": "Show full currency names alongside symbols",
+  "alignInputsToDescription": "Choose text alignment for input fields",
+  "showCurrentRatesDescription": "Display the current exchange rate beneath conversions",
+  "accountForInflationDescription": "Adjust conversion results for inflation over time",
+  "showCountryFlagsDescription": "Show country flags next to currency symbols",
+  "allowDecimalInputDescription": "Allow entering decimal points in input fields"
 }

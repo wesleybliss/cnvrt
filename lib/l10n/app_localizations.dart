@@ -295,6 +295,84 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Volume'**
   String get volume;
+
+  /// No description provided for @themeDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose the app\'s appearance: light, dark, or system default'**
+  String get themeDescription;
+
+  /// No description provided for @languageDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Select the display language for the app'**
+  String get languageDescription;
+
+  /// No description provided for @roundDecimalsToDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Set how many decimal places to show in results'**
+  String get roundDecimalsToDescription;
+
+  /// No description provided for @updateFrequencyDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose how often exchange rates are refreshed'**
+  String get updateFrequencyDescription;
+
+  /// No description provided for @useLargeInputsDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Enable larger input fields for easier tapping'**
+  String get useLargeInputsDescription;
+
+  /// No description provided for @showDragToReorderHandlesDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Show drag handles to reorder currency inputs'**
+  String get showDragToReorderHandlesDescription;
+
+  /// No description provided for @showCopyToClipboardButtonsDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Display buttons to copy conversion results'**
+  String get showCopyToClipboardButtonsDescription;
+
+  /// No description provided for @showFullCurrencyNameLabelDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Show full currency names alongside symbols'**
+  String get showFullCurrencyNameLabelDescription;
+
+  /// No description provided for @alignInputsToDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose text alignment for input fields'**
+  String get alignInputsToDescription;
+
+  /// No description provided for @showCurrentRatesDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Display the current exchange rate beneath conversions'**
+  String get showCurrentRatesDescription;
+
+  /// No description provided for @accountForInflationDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Adjust conversion results for inflation over time'**
+  String get accountForInflationDescription;
+
+  /// No description provided for @showCountryFlagsDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Show country flags next to currency symbols'**
+  String get showCountryFlagsDescription;
+
+  /// No description provided for @allowDecimalInputDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Allow entering decimal points in input fields'**
+  String get allowDecimalInputDescription;
 }
 
 class _AppLocalizationsDelegate

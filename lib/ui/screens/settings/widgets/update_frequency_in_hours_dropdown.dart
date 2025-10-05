@@ -25,6 +25,7 @@ class UpdateFrequencyInHoursDropdown extends ConsumerWidget {
 
     return ListTile(
       title: Text(AppLocalizations.of(context)!.updateFrequency),
+      subtitle: Text(AppLocalizations.of(context)!.updateFrequencyDescription),
       leading: const Icon(Icons.access_time_filled),
       trailing: dropdown,
     );

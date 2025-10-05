@@ -12,6 +12,7 @@ class AllowDecimalInputSwitch extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return SwitchListTile(
       title: Text(AppLocalizations.of(context)!.allowDecimalInput),
+      subtitle: Text(AppLocalizations.of(context)!.allowDecimalInputDescription),
       value: value,
       onChanged: (bool value) {
         ref.read(settingsNotifierProvider.notifier).setAllowDecimalInput(value);

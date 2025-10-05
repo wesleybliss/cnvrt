@@ -30,6 +30,7 @@ class LanguageDropdown extends ConsumerWidget {
 
     return ListTile(
       title: Text(AppLocalizations.of(context)!.language),
+      subtitle: Text(AppLocalizations.of(context)!.languageDescription),
       leading: const Icon(Icons.language),
       trailing: dropdown,
     );

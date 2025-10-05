@@ -12,6 +12,7 @@ class UseLargeInputsSwitch extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return SwitchListTile(
       title: Text(AppLocalizations.of(context)!.useLargeInputs),
+      subtitle: Text(AppLocalizations.of(context)!.useLargeInputsDescription),
       value: value,
       onChanged: (bool value) {
         ref.read(settingsNotifierProvider.notifier).setUseLargeInputs(value);

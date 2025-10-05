@@ -12,6 +12,7 @@ class AccountForInflationSwitch extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return SwitchListTile(
       title: Text(AppLocalizations.of(context)!.accountForInflation),
+      subtitle: Text(AppLocalizations.of(context)!.accountForInflationDescription),
       value: value,
       onChanged: (bool value) {
         ref.read(settingsNotifierProvider.notifier).setAccountForInflation(value);

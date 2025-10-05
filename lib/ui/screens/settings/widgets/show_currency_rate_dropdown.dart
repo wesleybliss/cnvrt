@@ -25,6 +25,7 @@ class ShowCurrencyRateDropdown extends ConsumerWidget {
 
     return ListTile(
       title: Text(AppLocalizations.of(context)!.showCurrentRates),
+      subtitle: Text(AppLocalizations.of(context)!.showCurrentRatesDescription),
       leading: Icon(Icons.message),
       trailing: dropdown,
     );

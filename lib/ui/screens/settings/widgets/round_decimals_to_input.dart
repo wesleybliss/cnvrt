@@ -14,6 +14,7 @@ class RoundDecimalsToInput extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return ListTile(
       title: Text(AppLocalizations.of(context)!.roundDecimalsTo),
+      subtitle: Text(AppLocalizations.of(context)!.roundDecimalsToDescription),
       leading: const Icon(Icons.numbers),
       trailing: SizedBox(
         width: 75,

@@ -25,6 +25,7 @@ class InputsPositionDropdown extends ConsumerWidget {
 
     return ListTile(
       title: Text(AppLocalizations.of(context)!.alignInputsTo),
+      subtitle: Text(AppLocalizations.of(context)!.alignInputsToDescription),
       leading: const Icon(Icons.align_vertical_center),
       trailing: dropdown,
     );
