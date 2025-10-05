@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Background color for app icon - white/light gray for better visibility -->
+    <color name="ic_launcher_background">#333333</color>
+</resources>

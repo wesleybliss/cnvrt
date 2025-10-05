@@ -168,3 +168,6 @@ flutter_native_splash:
     image: assets/images/logo_android12.png
     color_dark: "#2e2e2e"
     image_dark: assets/images/logo_android12_dark.png
+    # Disable icon background to prevent circular shape
+    icon_background_color: "#d4d4d4"
+    icon_background_color_dark: "#2e2e2e"
