@@ -51,14 +51,19 @@ class CurrencyTextField extends ConsumerWidget {
     final inputFontSize = useLargeInputs ? 20.0 : 12.0;
 
     final prefixText = showCountryFlags ? "${currencyFlags[item.symbol]}  ${item.symbol}" : item.symbol;
-    final prefix = Padding(
-      padding: const EdgeInsets.only(right: 12.0), // Add space to the right of the prefix
-      child: Text(
-        prefixText,
-        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-          color: Theme.of(context).colorScheme.onSurface.withAlpha(90), // Dimmer text
-          fontSize: labelFontSize,
-        ),
+    final prefixIcon = Padding(
+      padding: const EdgeInsets.only(left: 12.0, right: 8.0),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            prefixText,
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+              color: Theme.of(context).colorScheme.onSurface.withAlpha(90), // Dimmer text
+              fontSize: labelFontSize,
+            ),
+          ),
+        ],
       ),
     );
 
@@ -83,7 +88,7 @@ class CurrencyTextField extends ConsumerWidget {
 
     final decoration = defaultInputDecoration.copyWith(
       hintText: allowDecimalInput ? "0.00" : "0",
-      prefix: prefix,
+      prefixIcon: prefixIcon,
       label: label,
       labelStyle: TextStyle(fontSize: labelFontSize),
     );
