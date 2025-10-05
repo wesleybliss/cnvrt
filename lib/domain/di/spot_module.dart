@@ -33,3 +33,11 @@ abstract class SpotModule {
     });
   }
 }
+
+abstract class TestSpotModule extends SpotModule {
+  static void registerDependencies() {
+    Spot.init((factory, single) {
+
+    });
+  }
+}
