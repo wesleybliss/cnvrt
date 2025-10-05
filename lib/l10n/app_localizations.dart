@@ -373,6 +373,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Allow entering decimal points in input fields'**
   String get allowDecimalInputDescription;
+
+  /// No description provided for @inflationHelpTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Account for Inflation'**
+  String get inflationHelpTitle;
+
+  /// No description provided for @inflationHelpContent.
+  ///
+  /// In en, this message translates to:
+  /// **'When enabled, this feature adjusts currency conversion results to account for inflation over time.\n\nInflation is the rate at which the general level of prices for goods and services rises, causing purchasing power to fall. This means that money today is worth more than the same amount of money in the future.\n\nFor example:\nIf you\'re comparing currency values from different time periods, enabling this option will adjust the conversion to reflect the real purchasing power difference, not just the nominal exchange rate.\n\nThis is particularly useful when analyzing historical exchange rates or making financial comparisons across different time periods.\n\nNote: Inflation calculations use historical data and may vary by country and time period.'**
+  String get inflationHelpContent;
 }
 
 class _AppLocalizationsDelegate

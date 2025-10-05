@@ -7,6 +7,7 @@ import 'package:cnvrt/ui/screens/debug/debug_sql_test_screen.dart';
 import 'package:cnvrt/ui/screens/debug/debug_theme_screen.dart';
 import 'package:cnvrt/ui/screens/error/ErrorScreen.dart';
 import 'package:cnvrt/ui/screens/home/home_screen.dart';
+import 'package:cnvrt/ui/screens/settings/inflation_help_screen.dart';
 import 'package:cnvrt/ui/screens/settings/settings_screen.dart';
 import 'package:cnvrt/ui/screens/units/units_screen.dart';
 import 'package:cnvrt/ui/widgets/toolbar.dart';
@@ -70,5 +71,6 @@ final debugSqlTestHandler = handlerFor(const DebugSqlTestScreen(), (context) => 
 
 final homeHandler = handlerFor(const HomeScreen(), (context) => Constants.strings.appName);
 final settingsHandler = handlerFor(const SettingsScreen(), (context) => AppLocalizations.of(context)!.settings);
+final inflationHelpHandler = handlerFor(const InflationHelpScreen(), (context) => AppLocalizations.of(context)!.inflationHelpTitle);
 final currenciesHandler = handlerFor(const CurrenciesScreen(), (context) => AppLocalizations.of(context)!.currencies, allowBackNavigation: false);
 final unitsHandler = handlerFor(UnitsScreen(), (context) => AppLocalizations.of(context)!.units, allowBackNavigation: false);

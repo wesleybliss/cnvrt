@@ -163,4 +163,11 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get allowDecimalInputDescription =>
       'Permite ingresar puntos decimales en los campos de entrada';
+
+  @override
+  String get inflationHelpTitle => 'Tener en cuenta la inflación';
+
+  @override
+  String get inflationHelpContent =>
+      'Cuando está habilitada, esta función ajusta los resultados de conversión de moneda para tener en cuenta la inflación a lo largo del tiempo.\n\nLa inflación es la tasa a la que el nivel general de precios de bienes y servicios aumenta, lo que hace que el poder adquisitivo disminuya. Esto significa que el dinero hoy vale más que la misma cantidad de dinero en el futuro.\n\nPor ejemplo:\nSi estás comparando valores de moneda de diferentes períodos de tiempo, habilitar esta opción ajustará la conversión para reflejar la diferencia real del poder adquisitivo, no solo el tipo de cambio nominal.\n\nEsto es particularmente útil al analizar tasas de cambio históricas o hacer comparaciones financieras entre diferentes períodos de tiempo.\n\nNota: Los cálculos de inflación utilizan datos históricos y pueden variar según el país y el período de tiempo.';
 }

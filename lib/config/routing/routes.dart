@@ -14,6 +14,7 @@ class Routes {
 
   static const String home = '/';
   static const String settings = '/settings';
+  static const String inflationHelp = '/settings/inflation-help';
   static const String currencies = '/currencies';
   static const String units = '/units';
 
@@ -45,6 +46,7 @@ class Routes {
 
     define(home, homeHandler, TransitionType.fadeIn);
     define(settings, settingsHandler, TransitionType.fadeIn);
+    define(inflationHelp, inflationHelpHandler, TransitionType.fadeIn);
     define(currencies, currenciesHandler, TransitionType.fadeIn);
     define(units, unitsHandler, TransitionType.fadeIn);
   }
