@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 
@@ -10,7 +8,10 @@ class CurrencyFormatter extends TextInputFormatter {
   CurrencyFormatter({required this.currencySymbol, this.decimalDigits = 2});
 
   @override
-  TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
+  TextEditingValue formatEditUpdate(
+    TextEditingValue oldValue,
+    TextEditingValue newValue,
+  ) {
     if (newValue.text.isEmpty) {
       return newValue;
     }
@@ -21,8 +22,8 @@ class CurrencyFormatter extends TextInputFormatter {
       return newValue;
     }
 
-    // Convert to decimal value
-    double value = double.parse(newText) / pow(10, decimalDigits);
+    // Convert to decimal value (treat input as whole units rather than cents)
+    double value = double.parse(newText);
 
     // Format with appropriate decimal places
     final formatter = NumberFormat.currency(
@@ -33,6 +34,9 @@ class CurrencyFormatter extends TextInputFormatter {
 
     String formattedValue = formatter.format(value).trim();
 
-    return TextEditingValue(text: formattedValue, selection: TextSelection.collapsed(offset: formattedValue.length));
+    return TextEditingValue(
+      text: formattedValue,
+      selection: TextSelection.collapsed(offset: formattedValue.length),
+    );
   }
 }
