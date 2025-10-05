@@ -33,13 +33,15 @@ class AppLocalizationsEs extends AppLocalizations {
   String get units => 'Unidades';
 
   @override
-  String get chooseYourFavoriteCurrencies => 'Elige tus monedas favoritas.\\nEstas se mostrarán en la pantalla de inicio.';
+  String get chooseYourFavoriteCurrencies =>
+      'Elige tus monedas favoritas.\\nEstas se mostrarán en la pantalla de inicio.';
 
   @override
   String get searchByNameOrSymbol => 'Busca por nombre o símbolo (p. ej. USD)';
 
   @override
-  String get noSelectedCurrencies => 'Aún no has seleccionado ninguna moneda.\nAñade algunas haciendo clic en el botón de abajo.';
+  String get noSelectedCurrencies =>
+      'Aún no has seleccionado ninguna moneda.\nAñade algunas haciendo clic en el botón de abajo.';
 
   @override
   String get manageCurrencies => 'Administrar Monedas';
@@ -57,13 +59,16 @@ class AppLocalizationsEs extends AppLocalizations {
   String get useLargeInputs => 'Usar entradas grandes';
 
   @override
-  String get showDragToReorderHandles => 'Mostrar los controladores de arrastrar para reordenar';
+  String get showDragToReorderHandles =>
+      'Mostrar los controladores de arrastrar para reordenar';
 
   @override
-  String get showCopyToClipboardButtons => 'Mostrar los botones de copiar al portapapeles';
+  String get showCopyToClipboardButtons =>
+      'Mostrar los botones de copiar al portapapeles';
 
   @override
-  String get showFullCurrencyNameLabel => 'Mostrar la etiqueta del nombre completo de la moneda';
+  String get showFullCurrencyNameLabel =>
+      'Mostrar la etiqueta del nombre completo de la moneda';
 
   @override
   String get alignInputsTo => 'Alinear las entradas a';
@@ -76,6 +81,9 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get showCountryFlags => 'Mostrar banderas de países';
+
+  @override
+  String get allowDecimalInput => 'Permitir entrada decimal';
 
   @override
   String get all => 'Todo';

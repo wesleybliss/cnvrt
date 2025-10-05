@@ -16,6 +16,7 @@ class ConstantsKeysSettings {
   final showCurrencyRate = "showCurrencyRate";
   final accountForInflation = "accountForInflation";
   final showCountryFlags = "showCountryFlags";
+  final allowDecimalInput = "allowDecimalInput";
 
   final developerModeActive = "developerModeActive";
 }

@@ -25,6 +25,7 @@
   "showCurrentRates": "Show current rates",
   "accountForInflation": "Account for inflation",
   "showCountryFlags": "Show country flags",
+  "allowDecimalInput": "Allow decimal input",
   "all": "All",
   "selected": "Selected",
   "none":  "None",

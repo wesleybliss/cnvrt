@@ -1,10 +1,10 @@
 import 'package:cnvrt/db/database.dart';
+import 'package:cnvrt/domain/di/providers/settings/settings_provider.dart';
 import 'package:cnvrt/theme.dart';
 import 'package:cnvrt/utils/currency_flags.dart';
-import 'package:cnvrt/utils/currency_formatter.dart';
-import 'package:cnvrt/utils/logger.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class DecimalTextInputFormatter extends TextInputFormatter {
   @override
@@ -25,7 +25,7 @@ class DecimalTextInputFormatter extends TextInputFormatter {
   }
 }
 
-class CurrencyTextField extends StatelessWidget {
+class CurrencyTextField extends ConsumerWidget {
   final Currency item;
   final TextEditingController? controller;
   final void Function(String, String) onTextChanged;
@@ -44,8 +44,8 @@ class CurrencyTextField extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
-    final log = Logger('CurrencyTextField');
+  Widget build(BuildContext context, WidgetRef ref) {
+    final allowDecimalInput = ref.watch(settingsNotifierProvider.select((s) => s.value?.allowDecimalInput ?? false));
 
     final labelFontSize = useLargeInputs ? 16.0 : 12.0;
     final inputFontSize = useLargeInputs ? 20.0 : 12.0;
@@ -82,7 +82,7 @@ class CurrencyTextField extends StatelessWidget {
             : null;
 
     final decoration = defaultInputDecoration.copyWith(
-      hintText: "0.00",
+      hintText: allowDecimalInput ? "0.00" : "0",
       prefix: prefix,
       label: label,
       labelStyle: TextStyle(fontSize: labelFontSize),
@@ -93,15 +93,14 @@ class CurrencyTextField extends StatelessWidget {
       decoration: decoration,
       textAlign: TextAlign.end,
       style: TextStyle(fontFamily: 'monospace', fontSize: inputFontSize),
-      keyboardType: TextInputType.number,
+      keyboardType: allowDecimalInput ? const TextInputType.numberWithOptions(decimal: true) : TextInputType.number,
       inputFormatters: [
-        // FilteringTextInputFormatter.digitsOnly,
-        // DecimalTextInputFormatter(),
-        // CurrencyInputFormatter(item.symbol),
-
-        // CurrencyTextInputFormatter(currencyCode: item.symbol),
-        FilteringTextInputFormatter.digitsOnly,
-        CurrencyFormatter(currencySymbol: item.symbol),
+        // When decimals are allowed, use DecimalTextInputFormatter to allow decimal point
+        // When decimals are not allowed, use digitsOnly to block decimal point
+        if (allowDecimalInput)
+          DecimalTextInputFormatter()
+        else
+          FilteringTextInputFormatter.digitsOnly,
       ],
       onTap: () {
         controller?.clear();

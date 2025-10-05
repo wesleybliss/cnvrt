@@ -1,6 +1,7 @@
 import 'package:cnvrt/domain/di/providers/currencies/currencies_provider.dart';
 import 'package:cnvrt/domain/di/providers/currencies/currency_input_mode_provider.dart';
 import 'package:cnvrt/domain/di/providers/currencies/currency_values_provider.dart';
+import 'package:cnvrt/domain/di/providers/settings/settings_provider.dart';
 import 'package:cnvrt/ui/widgets/numeric_keyboard_grid/numeric_keyboard_grid_button.dart';
 import 'package:cnvrt/utils/logger.dart';
 import 'package:flutter/material.dart';
@@ -20,6 +21,7 @@ class _NumericKeyboardGridState extends ConsumerState<NumericKeyboardGrid> {
   Widget build(BuildContext context) {
     int buttonLabelIndex = 1;
     final focusedCurrencyInputSymbol = ref.watch(focusedCurrencyInputSymbolProvider);
+    final allowDecimalInput = ref.watch(settingsNotifierProvider.select((s) => s.value?.allowDecimalInput ?? false));
 
     // Get the bottom padding to account for safe area
     final bottomPadding = MediaQuery.of(context).padding.bottom;
@@ -50,7 +52,10 @@ class _NumericKeyboardGridState extends ConsumerState<NumericKeyboardGrid> {
       3: numericButtonFor('+', () => setInputMode(CurrencyInputModes.addition)),
       7: numericButtonFor('-', () => setInputMode(CurrencyInputModes.subtraction)),
       11: numericButtonFor('*', () => setInputMode(CurrencyInputModes.multiplication)),
-      12: numericButtonFor(',', () => setInputMode(CurrencyInputModes.decimal)),
+      // Only show decimal button if allowDecimalInput is true, otherwise show empty container
+      12: allowDecimalInput 
+        ? numericButtonFor(',', () => setInputMode(CurrencyInputModes.decimal))
+        : const SizedBox.shrink(),
       14: numericButtonFor('/', () => setInputMode(CurrencyInputModes.normal)),
       15: numericButtonFor('/', () => setInputMode(CurrencyInputModes.division), onBackspaceLongPressed),
     };

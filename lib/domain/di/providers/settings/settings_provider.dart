@@ -103,6 +103,12 @@ class SettingsNotifier extends _$SettingsNotifier {
     await updateSettings(newSettings);
   }
 
+  Future<void> setAllowDecimalInput(bool value) async {
+    final currentSettings = await future;
+    final newSettings = currentSettings.copyWith(allowDecimalInput: !currentSettings.allowDecimalInput);
+    await updateSettings(newSettings);
+  }
+
   Future<void> setDeveloperModeActive(bool value) async {
     final currentSettings = await future;
     final newSettings = currentSettings.copyWith(developerModeActive: !currentSettings.developerModeActive);

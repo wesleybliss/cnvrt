@@ -1,6 +1,7 @@
 import 'package:cnvrt/domain/di/providers/currencies/currencies_provider.dart';
 import 'package:cnvrt/domain/di/providers/currencies/currency_values_provider.dart';
 import 'package:cnvrt/domain/di/providers/currencies/sorted_currencies_provider.dart';
+import 'package:cnvrt/domain/di/providers/settings/settings_provider.dart';
 import 'package:cnvrt/utils/currency_locales.dart';
 import 'package:cnvrt/utils/logger.dart';
 import 'package:flutter/material.dart';
@@ -37,13 +38,13 @@ class CurrencyInputsListViewModel extends Notifier<Map<String, TextEditingContro
   }
 
   String _formatCurrency(String symbol, double value) {
-    // Access settings here if needed for formatting options
-    // final settings = ref.read(settingsNotifierProvider).value; // Example access
+    // Access settings to determine if decimals are allowed
+    final allowDecimalInput = ref.read(settingsNotifierProvider).value?.allowDecimalInput ?? false;
 
     final formatter = NumberFormat.currency(
       locale: currencyLocales[symbol] ?? 'en_US',
       symbol: '',
-      decimalDigits: 0, // Set to 0 for whole numbers
+      decimalDigits: allowDecimalInput ? 2 : 0, // Set to 0 for whole numbers, 2 for decimals
     );
 
     // Use the actual double value for formatting

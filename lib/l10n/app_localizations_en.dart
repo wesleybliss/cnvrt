@@ -33,13 +33,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get units => 'Units';
 
   @override
-  String get chooseYourFavoriteCurrencies => 'Choose your favorite currencies.\\nThese will be pinned to the home screen.';
+  String get chooseYourFavoriteCurrencies =>
+      'Choose your favorite currencies.\\nThese will be pinned to the home screen.';
 
   @override
   String get searchByNameOrSymbol => 'Search by name or symbol (e.g. USD)';
 
   @override
-  String get noSelectedCurrencies => 'You don\'t have any currencies selected yet. \nAdd some by clicking the button below.';
+  String get noSelectedCurrencies =>
+      'You don\'t have any currencies selected yet. \nAdd some by clicking the button below.';
 
   @override
   String get manageCurrencies => 'Manage Currencies';
@@ -76,6 +78,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get showCountryFlags => 'Show country flags';
+
+  @override
+  String get allowDecimalInput => 'Allow decimal input';
 
   @override
   String get all => 'All';

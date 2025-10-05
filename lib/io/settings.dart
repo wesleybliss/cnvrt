@@ -29,6 +29,8 @@ class Settings implements ISettings {
   bool accountForInflation = true;
   @override
   bool showCountryFlags = true;
+  @override
+  bool allowDecimalInput = false;
 
   @override
   bool developerModeActive = false;
@@ -47,6 +49,7 @@ class Settings implements ISettings {
     this.showCurrencyRate = "selected",
     this.accountForInflation = true,
     this.showCountryFlags = true,
+    this.allowDecimalInput = false,
 
     this.developerModeActive = false,
   });
@@ -66,6 +69,7 @@ class Settings implements ISettings {
     String? showCurrencyRate,
     bool? accountForInflation,
     bool? showCountryFlags,
+    bool? allowDecimalInput,
 
     bool? developerModeActive,
   }) => Settings(
@@ -82,6 +86,7 @@ class Settings implements ISettings {
     showCurrencyRate: showCurrencyRate ?? this.showCurrencyRate,
     accountForInflation: accountForInflation ?? this.accountForInflation,
     showCountryFlags: showCountryFlags ?? this.showCountryFlags,
+    allowDecimalInput: allowDecimalInput ?? this.allowDecimalInput,
 
     developerModeActive: developerModeActive ?? this.developerModeActive,
   );
@@ -105,6 +110,7 @@ class Settings implements ISettings {
       showCurrencyRate: prefs.getString(keys.showCurrencyRate) ?? "selected",
       accountForInflation: prefs.getBool(keys.accountForInflation) ?? true,
       showCountryFlags: prefs.getBool(keys.showCountryFlags) ?? true,
+      allowDecimalInput: prefs.getBool(keys.allowDecimalInput) ?? false,
 
       developerModeActive: prefs.getBool(keys.developerModeActive) ?? false,
     );
@@ -132,6 +138,7 @@ class Settings implements ISettings {
     await prefs.setString(keys.showCurrencyRate, showCurrencyRate);
     await prefs.setBool(keys.accountForInflation, accountForInflation);
     await prefs.setBool(keys.showCountryFlags, showCountryFlags);
+    await prefs.setBool(keys.allowDecimalInput, allowDecimalInput);
 
     await prefs.setBool(keys.developerModeActive, developerModeActive);
   }

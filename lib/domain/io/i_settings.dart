@@ -14,6 +14,7 @@ abstract class ISettings {
   abstract String showCurrencyRate;
   abstract bool showCountryFlags;
   abstract bool accountForInflation;
+  abstract bool allowDecimalInput;
 
   // If the user has tapped the version number 10 times, we enable developer mode
   abstract bool developerModeActive;
@@ -32,6 +33,7 @@ abstract class ISettings {
     String? showCurrencyRate,
     bool? accountForInflation,
     bool? showCountryFlags,
+    bool? allowDecimalInput,
 
     bool? developerModeActive,
   });

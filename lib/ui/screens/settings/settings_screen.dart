@@ -4,6 +4,7 @@ import 'package:cnvrt/domain/di/providers/settings/settings_provider.dart';
 import 'package:cnvrt/io/settings.dart';
 import 'package:cnvrt/ui/screens/settings/widgets/ShowCountryFlagsSwitch.dart';
 import 'package:cnvrt/ui/screens/settings/widgets/account_for_inflation_switch.dart';
+import 'package:cnvrt/ui/screens/settings/widgets/allow_decimal_input_switch.dart';
 import 'package:cnvrt/ui/screens/settings/widgets/language_dropdown.dart';
 import 'package:cnvrt/ui/screens/settings/widgets/use_large_inputs_switch.dart';
 import 'package:cnvrt/ui/widgets/tap_counter.dart';
@@ -89,6 +90,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             ShowCurrencyRateDropdown(value: settings.showCurrencyRate),
             AccountForInflationSwitch(value: settings.accountForInflation),
             ShowCountryFlagsSwitch(value: settings.showCountryFlags),
+            AllowDecimalInputSwitch(value: settings.allowDecimalInput),
             Padding(padding: EdgeInsets.symmetric(vertical: 16), child: debugWidget),
           ],
         ),

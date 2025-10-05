@@ -25,6 +25,7 @@
     "showCurrentRates": "Mostrar las tasas actuales",
     "accountForInflation": "Tener en cuenta la inflación",
     "showCountryFlags": "Mostrar banderas de países",
+    "allowDecimalInput": "Permitir entrada decimal",
     "all": "Todo",
     "selected": "Seleccionado",
     "none":  "Ninguno",
