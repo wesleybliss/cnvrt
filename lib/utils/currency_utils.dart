@@ -8,25 +8,18 @@ List<String> inflatedCurrencies = ["COP", "IDR", "VND", "KRW", "IRR", "PYG", "CL
 double getInflatedCurrencyValue(String symbol, double value) {
   final log = Logger('convertCurrencies');
 
-  String result = "$value";
-  final commaIndex = result.indexOf(",");
-  final decimalIndex = result.indexOf(".");
-  final delimiter = commaIndex > decimalIndex ? "," : ".";
-  final hasDelimiter = (commaIndex + decimalIndex) > 0;
-
-  if (inflatedCurrencies.contains(symbol) && hasDelimiter) {
-    final parts = result.split(delimiter);
-
-    if (parts.length == 2) {
-      parts[0] = "${parts[0]}000";
-    } else if (parts.length > 2) {
-      parts[parts.length - 2] = "${parts[parts.length - 2]}000";
+  // For inflated currencies, multiply by 1000 if the value is a whole number
+  // This allows users to type "4" and get "4000" for better UX
+  // If they want precise decimal entry, they can type "4.0" or "4.5" which won't be multiplied
+  if (inflatedCurrencies.contains(symbol)) {
+    // Check if the value is effectively a whole number
+    // We check if value equals its floor (handles cases like 4.0 -> 4)
+    if (value == value.floor()) {
+      return value * 1000;
     }
-
-    result = parts.join(delimiter);
   }
 
-  return double.parse(result);
+  return value;
 }
 
 /// Converts the input value to the currency of the symbol, using USD as the base.

@@ -69,37 +69,34 @@ void main() {
       expect(getInflatedCurrencyValue('JPY', 1000.0), equals(1000.0));
     });
 
-    test('returns original value for inflated currencies without delimiter', () {
-      // Integer values without decimal points will still have "." in string representation (e.g., "1000.0")
-      // So they will get the inflation multiplier
+    test('multiplies whole numbers for inflated currencies', () {
+      // Whole numbers (integers) should get multiplied by 1000
       expect(getInflatedCurrencyValue('COP', 1000), equals(1000000.0));
       expect(getInflatedCurrencyValue('IDR', 5000), equals(5000000.0));
       expect(getInflatedCurrencyValue('VND', 25000), equals(25000000.0));
+      expect(getInflatedCurrencyValue('COP', 4), equals(4000.0));
     });
 
-    test('multiplies for inflated currencies when period decimal index makes hasDelimiter true', () {
-      // hasDelimiter check: (commaIndex + decimalIndex) > 0
-      // For "100.5": commaIndex=-1, decimalIndex=3, sum=2 > 0, so multiplication DOES happen
-      // For "5.25": commaIndex=-1, decimalIndex=1, sum=0, NOT > 0, so NO multiplication
-      expect(getInflatedCurrencyValue('COP', 100.50), equals(100000.5)); // "100.5" idx 3
-      expect(getInflatedCurrencyValue('IDR', 5.25), equals(5.25)); // "5.25" idx 1
-      expect(getInflatedCurrencyValue('VND', 10.5), equals(10000.5)); // "10.5" idx 2
-      expect(getInflatedCurrencyValue('KRW', 1.0), equals(1.0)); // "1.0" idx 1
+    test('does NOT multiply decimal values for inflated currencies', () {
+      // Decimal values should NOT be multiplied - allows precise entry
+      expect(getInflatedCurrencyValue('COP', 100.50), equals(100.50));
+      expect(getInflatedCurrencyValue('IDR', 5.25), equals(5.25));
+      expect(getInflatedCurrencyValue('VND', 10.5), equals(10.5));
+      expect(getInflatedCurrencyValue('KRW', 1.5), equals(1.5));
     });
 
-    test('multiplies by 1000 for inflated currencies based on decimal position', () {
-      // Dart doubles stringify with period: "100.5" has period at index 3
-      // hasDelimiter = (-1 + 3) = 2 > 0, so multiplication happens
-      expect(getInflatedCurrencyValue('COP', 100.50), equals(100000.5));
-      // "2.75" has period at index 1, hasDelimiter = (-1 + 1) = 0, NOT > 0, NO multiplication
+    test('handles edge case: value that looks like whole number (e.g., 1.0)', () {
+      // 1.0 equals its floor (1), so it's treated as a whole number and multiplied
+      expect(getInflatedCurrencyValue('COP', 1.0), equals(1000.0));
+      // But 1.5 is not equal to its floor, so it's not multiplied
       expect(getInflatedCurrencyValue('IRR', 2.75), equals(2.75));
     });
 
-    test('does NOT multiply for inflated currencies with only period (Dart double stringification)', () {
+    test('does NOT multiply decimal values for any inflated currency', () {
       final inflatedCodes = ['COP', 'IDR', 'VND', 'KRW', 'IRR', 'PYG', 'CLP', 'LAK', 'LBP', 'TRY'];
       
       for (var code in inflatedCodes) {
-        // 1.5 becomes "1.5", commaIndex=-1, decimalIndex=1, sum=0, NOT > 0
+        // Decimal values are not multiplied
         expect(getInflatedCurrencyValue(code, 1.5), equals(1.5));
       }
     });
@@ -112,10 +109,9 @@ void main() {
     });
 
     test('handles very large values', () {
-      // 1000.5 becomes "1000.5", splits to ["1000", "5"], becomes ["1000000", "5"], joins to "1000000.5"
-      expect(getInflatedCurrencyValue('COP', 1000.5), equals(1000000.5));
-      // 999.99 becomes "999.99", splits to ["999", "99"], becomes ["999000", "99"], joins to "999000.99"
-      expect(getInflatedCurrencyValue('VND', 999.99), equals(999000.99));
+      // Decimal values are not multiplied, even if large
+      expect(getInflatedCurrencyValue('COP', 1000.5), equals(1000.5));
+      expect(getInflatedCurrencyValue('VND', 999.99), equals(999.99));
     });
 
     test('handles zero value', () {
@@ -185,6 +181,31 @@ void main() {
       final result = convertCurrencies('COP', copPerUsd, currencies);
       expect(result['COP'], equals(copPerUsd));
       expect(result['USD'], equals(1.0));
+    });
+    
+    test('fixes bug: entering low value like 4 in COP shows proper USD value', () {
+      // This is the exact bug scenario: entering "4" in COP should show ~$1 USD
+      // With accountForInflation enabled, 4 COP becomes 4000 COP
+      SpotTestHelper.setupTestDependencies(
+        settings: Settings(
+          roundingDecimals: 2,
+          accountForInflation: true,
+        ),
+      );
+      
+      const copPerUsd = 4115.61;
+      final currencies = [
+        const Currency(id: 1, symbol: 'COP', name: 'Colombian Peso', rate: copPerUsd, selected: true, order: 0),
+        const Currency(id: 2, symbol: 'USD', name: 'US Dollar', rate: 1.0, selected: true, order: 1),
+      ];
+      
+      // User types "4" in COP field
+      final result = convertCurrencies('COP', 4, currencies);
+      
+      // 4 gets inflated to 4000 COP
+      // 4000 COP / 4115.61 ≈ 0.97 USD
+      expect(result['COP'], equals(4000.0));
+      expect(result['USD'], equals(0.97)); // Rounded to 2 decimals
     });
 
     test('respects rounding decimals setting', () {
