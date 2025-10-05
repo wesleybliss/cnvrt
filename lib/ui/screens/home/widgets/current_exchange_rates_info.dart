@@ -25,18 +25,30 @@ class CurrentExchangeRatesInfo extends StatelessWidget {
 
     if (showCurrencyRate == "all") {
       child = Text(
-        selectedCurrencies.map((e) => '${e.symbol}: ${nf.format(e.rate)}').join('\n'),
+        selectedCurrencies
+            .map((e) => '${e.symbol}: ${nf.format(e.rate)}')
+            .join('\n'),
         textAlign: TextAlign.center,
-        style: TextStyle(fontSize: 17, fontFamily: 'monospace', color: Theme.of(context).colorScheme.surfaceTint),
+        style: TextStyle(
+          fontSize: 17,
+          fontFamily: 'monospace',
+          color: Theme.of(context).colorScheme.surfaceTint,
+        ),
       );
     } else {
       final currentExchangeRate =
-          focusedCurrency == null ? '' : '\$1 = ${nf.format(focusedCurrency?.rate)} $focusedCurrencyInputSymbol';
+          focusedCurrency == null
+              ? ''
+              : '\$1 = ${nf.format(focusedCurrency?.rate)} $focusedCurrencyInputSymbol';
 
       child = Text(
         currentExchangeRate,
         textAlign: TextAlign.center,
-        style: TextStyle(fontSize: 17, fontFamily: 'monospace', color: Theme.of(context).colorScheme.surfaceTint),
+        style: TextStyle(
+          fontSize: 17,
+          fontFamily: 'monospace',
+          color: Theme.of(context).colorScheme.surfaceTint,
+        ),
       );
     }
 
@@ -46,11 +58,11 @@ class CurrentExchangeRatesInfo extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
-            "EXCHANGE RATE",
+            focusedCurrency != null ? "EXCHANGE RATE" : "",
             textAlign: TextAlign.center,
-            style: Theme.of(
-              context,
-            ).textTheme.labelLarge?.copyWith(color: Theme.of(context).colorScheme.onSurface.withAlpha(125)),
+            style: Theme.of(context).textTheme.labelLarge?.copyWith(
+              color: Theme.of(context).colorScheme.onSurface.withAlpha(125),
+            ),
           ),
           SizedBox(height: 10),
           child,
