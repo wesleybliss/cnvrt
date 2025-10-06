@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
@@ -12,6 +13,16 @@ Future<void> initializeFirebase() async {
   print('[Firebase] Starting initialization...');
   print('[Firebase] kDebugMode = $kDebugMode');
   print('[Firebase] kReleaseMode = $kReleaseMode');
+  print('[Firebase] Platform: ${Platform.operatingSystem}');
+  
+  // Firebase Core doesn't support Linux natively
+  // Skip Firebase initialization on Linux
+  if (!kIsWeb && Platform.isLinux) {
+    print('[Firebase] Linux platform detected - Firebase is not supported natively on Linux');
+    print('[Firebase] Skipping Firebase initialization');
+    print('[Firebase] App will run without Firebase features (Crashlytics, etc.)');
+    return;
+  }
   
   // Initialize Firebase first
   await Firebase.initializeApp(
