@@ -65,9 +65,11 @@ void main() {
         ),
       ];
 
-      // Create controllers for testing
+      // Create controllers and focus nodes for testing
       final copController = TextEditingController();
       final usdController = TextEditingController();
+      final copFocusNode = FocusNode();
+      final usdFocusNode = FocusNode();
 
       // Build the widget tree with ProviderScope
       await tester.pumpWidget(
@@ -85,6 +87,7 @@ void main() {
                     key: const Key('cop_input'),
                     item: currencies[0],
                     controller: copController,
+                    focusNode: copFocusNode,
                     onTextChanged: (symbol, text) {
                       // Simulate the conversion logic
                       if (text.isNotEmpty) {
@@ -110,6 +113,7 @@ void main() {
                     key: const Key('usd_input'),
                     item: currencies[1],
                     controller: usdController,
+                    focusNode: usdFocusNode,
                     onTextChanged: (symbol, text) {
                       // Simulate the conversion logic
                       if (text.isNotEmpty) {
@@ -208,6 +212,8 @@ void main() {
 
       final copController = TextEditingController();
       final usdController = TextEditingController();
+      final copFocusNode = FocusNode();
+      final usdFocusNode = FocusNode();
 
       await tester.pumpWidget(
         ProviderScope(
@@ -222,6 +228,7 @@ void main() {
                     key: const Key('cop_input'),
                     item: currencies[0],
                     controller: copController,
+                    focusNode: copFocusNode,
                     onTextChanged: (symbol, text) {
                       if (text.isNotEmpty) {
                         final numericText = text.replaceAll(RegExp(r'[^0-9.]'), '');
@@ -241,6 +248,7 @@ void main() {
                     key: const Key('usd_input'),
                     item: currencies[1],
                     controller: usdController,
+                    focusNode: usdFocusNode,
                     onTextChanged: (symbol, text) {},
                     useLargeInputs: false,
                     showFullCurrencyNameLabel: true,
@@ -314,6 +322,8 @@ void main() {
 
       final copController = TextEditingController();
       final usdController = TextEditingController();
+      final copFocusNode = FocusNode();
+      final usdFocusNode = FocusNode();
 
       await tester.pumpWidget(
         ProviderScope(
@@ -328,6 +338,7 @@ void main() {
                     key: const Key('cop_input'),
                     item: currencies[0],
                     controller: copController,
+                    focusNode: copFocusNode,
                     onTextChanged: (symbol, text) {
                       if (text.isNotEmpty) {
                         final numericText = text.replaceAll(RegExp(r'[^0-9.]'), '');
@@ -347,6 +358,7 @@ void main() {
                     key: const Key('usd_input'),
                     item: currencies[1],
                     controller: usdController,
+                    focusNode: usdFocusNode,
                     onTextChanged: (symbol, text) {},
                     useLargeInputs: false,
                     showFullCurrencyNameLabel: true,

@@ -118,6 +118,11 @@ void main() {
       expect(getInflatedCurrencyValue('COP', 0.0), equals(0.0));
       expect(getInflatedCurrencyValue('USD', 0.0), equals(0.0));
     });
+    
+    test('edge case: COP to USD with inflation adjustment', () {
+      // 4 COP should become 4000 COP, which is roughly 1 USD
+      expect(getInflatedCurrencyValue('COP', 4), equals(4000.0));
+    });
   });
 
   group('convertCurrencies', () {
