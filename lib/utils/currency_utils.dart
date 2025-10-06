@@ -6,8 +6,10 @@ import 'package:cnvrt/utils/logger.dart';
 List<String> inflatedCurrencies = ["COP", "IDR", "VND", "KRW", "IRR", "PYG", "CLP", "LAK", "LBP", "TRY"];
 
 double getInflatedCurrencyValue(String symbol, double value) {
-  final log = Logger('convertCurrencies');
-
+  final log = Logger('getInflatedCurrencyValue');
+  
+  log.d('getInflatedCurrencyValue: symbol=$symbol, value=$value, isInflated=${inflatedCurrencies.contains(symbol)}');
+  
   // For inflated currencies, multiply by 1000 if the value is a whole number
   // This allows users to type "4" and get "4000" for better UX
   // If they want precise decimal entry, they can type "4.0" or "4.5" which won't be multiplied
@@ -37,7 +39,10 @@ Map<String, double> convertCurrencies(String symbol, double inputValue, List<Cur
       settings.accountForInflation ? getInflatedCurrencyValue(changedCurrency.symbol, inputValue) : inputValue;
 
   log.d('convertCurrencies: $inputValue -> $sourceValue -> ${currencies.join(', ')}');
-
+  
+  final inflatedValue = getInflatedCurrencyValue(changedCurrency.symbol, inputValue);
+  log.d('convertCurrencies: accountForInflation=${settings.accountForInflation}, inputValue=$inputValue, inflatedValue=$inflatedValue');
+  
   // Convert the input value to USD
   final double valueInUSD = symbol == 'USD' ? sourceValue : sourceValue / changedCurrency.rate;
 
