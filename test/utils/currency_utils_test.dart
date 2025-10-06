@@ -135,7 +135,10 @@ void main() {
         accountForInflation: false,
       ));
 
-      expect(getInflatedCurrencyValue('COP', 4), equals(4000.0));
+      // When accountForInflation is false, getInflatedCurrencyValue should NOT multiply
+      expect(getInflatedCurrencyValue('COP', 4, accountForInflation: false), equals(4.0));
+      // But when enabled (default), it should multiply
+      expect(getInflatedCurrencyValue('COP', 4, accountForInflation: true), equals(4000.0));
       
       const rate = 4115.61;
       
