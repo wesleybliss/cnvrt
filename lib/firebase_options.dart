@@ -29,10 +29,7 @@ class DefaultFirebaseOptions {
       case TargetPlatform.windows:
         return windows;
       case TargetPlatform.linux:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for linux - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return linux;
       default:
         throw UnsupportedError(
           'DefaultFirebaseOptions are not supported for this platform.',
@@ -85,4 +82,15 @@ class DefaultFirebaseOptions {
     storageBucket: 'cnvrt-dc3f2.firebasestorage.app',
     measurementId: 'G-SC9BLB1FCB',
   );
+
+  static const FirebaseOptions linux = FirebaseOptions(
+    apiKey: 'AIzaSyBI6-dz3FnJ_LwSnyD-6yAzYA9-kp2-cbM',
+    appId: '1:1021931476908:web:e5e20933f94c7474ef4c09',
+    messagingSenderId: '1021931476908',
+    projectId: 'cnvrt-dc3f2',
+    authDomain: 'cnvrt-dc3f2.firebaseapp.com',
+    storageBucket: 'cnvrt-dc3f2.firebasestorage.app',
+    measurementId: 'G-SBQRL8HYL0',
+  );
+
 }
