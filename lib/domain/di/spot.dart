@@ -3,8 +3,6 @@ import 'package:cnvrt/utils/logger.dart';
 
 typedef SpotGetter<T> = T Function(Function<R>() get);
 
-typedef SpotInitCallback = void Function<T, R>(SpotGetter<T> get);
-
 enum SpotType {
   factory,
   singleton,
@@ -112,26 +110,29 @@ abstract class Spot {
   }
 
   /// Registers a new factory dependency
-  //static void registerFactory<T, R>(T Function(Function<R>() get) locator) {
-  static void registerFactory<T, R>(SpotGetter<T> locator) {
+  /// The concrete type [R] must extend or implement the interface type [T]
+  /// This provides compile-time type safety to prevent registration mistakes
+  static void registerFactory<T, R extends T>(SpotGetter<R> locator) {
     if (registry.containsKey(T) && logging) {
-      log.w('Overriding factory: (${T.runtimeType}) ${registry[T].runtimeType} with ${R.runtimeType}');
+      log.w('Overriding factory: $T with $R');
     }
 
-    registry[T] = SpotService(SpotType.factory, locator, R);
+    registry[T] = SpotService<T>(SpotType.factory, locator as SpotGetter<T>, R);
 
-    if (logging) log.v('Registered factory $T');
+    if (logging) log.v('Registered factory $T -> $R');
   }
 
   /// Registers a new singleton dependency
-  static void registerSingle<T, R>(SpotGetter<T> locator) {
+  /// The concrete type [R] must extend or implement the interface type [T]
+  /// This provides compile-time type safety to prevent registration mistakes
+  static void registerSingle<T, R extends T>(SpotGetter<R> locator) {
     if (registry.containsKey(T) && logging) {
-      log.w('Overriding single: (${T.runtimeType}) ${registry[T].runtimeType} with ${R.runtimeType}');
+      log.w('Overriding single: $T with $R');
     }
 
-    registry[T] = SpotService(SpotType.singleton, locator, R);
+    registry[T] = SpotService<T>(SpotType.singleton, locator as SpotGetter<T>, R);
 
-    if (logging) log.v('Registered singleton $T');
+    if (logging) log.v('Registered singleton $T -> $R');
   }
 
   static SpotService<T> getRegistered<T>() {
@@ -193,7 +194,13 @@ abstract class Spot {
   /// Convenience method for registering dependencies
   /// Alternatively, you can just call
   /// Spot.registerFactory & Spot.registerSingle directly
-  static void init(Function(SpotInitCallback factory, SpotInitCallback single) initializer) =>
+  static void init(
+    void Function(
+      void Function<T, R extends T>(SpotGetter<R> locator) factory,
+      void Function<T, R extends T>(SpotGetter<R> locator) single,
+    )
+        initializer,
+  ) =>
       initializer(registerFactory, registerSingle);
 
   /// For intentionally disposing of singleton instances

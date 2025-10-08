@@ -17,16 +17,16 @@ abstract class SpotModule {
 
       // Networking
       single<Dio, Dio>((get) => Dio());
-      single<IDioClient, IDioClient>((get) => DioClient());
+      single<IDioClient, DioClient>((get) => DioClient());
 
       // DAOs
       // single<AUserDao, AUserDao>((get) => UserDao());
 
       // Repositories
-      factory<ICurrenciesRepo, ICurrenciesRepo>((get) => CurrenciesRepo());
+      factory<ICurrenciesRepo, CurrenciesRepo>((get) => CurrenciesRepo());
 
       // Services
-      single<ICurrenciesService, ICurrenciesService>((get) => CurrenciesService(get<IDioClient>()));
+      single<ICurrenciesService, CurrenciesService>((get) => CurrenciesService(get<IDioClient>()));
 
       // Core Services
       // factory<IAuthService, AuthService>((get) => AuthService());
