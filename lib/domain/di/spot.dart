@@ -119,7 +119,11 @@ abstract class Spot {
 
   static SpotService<T> getRegistered<T>() {
     if (!registry.containsKey(T)) {
-      throw SpotException('Class $T is not registered');
+      final registeredTypes = registry.keys.map((t) => t.toString()).join(', ');
+      throw SpotException(
+        'Type $T is not registered in Spot container.\n'
+        'Registered types: ${registeredTypes.isNotEmpty ? registeredTypes : '(none)'}'
+      );
     }
 
     return registry[T]! as SpotService<T>;
@@ -129,7 +133,13 @@ abstract class Spot {
   /// @example
   static T spot<T>() {
     if (!registry.containsKey(T)) {
-      throw SpotException('Class $T is not registered');
+      final registeredTypes = registry.keys.map((t) => t.toString()).join(', ');
+      throw SpotException(
+        'Type $T is not registered in Spot container.\n'
+        'Registered types: ${registeredTypes.isNotEmpty ? registeredTypes : '(none)'}\n\n'
+        'Did you forget to register it in SpotModule.registerDependencies()?\n'
+        'Example: single<$T, ConcreteType>((get) => ConcreteType());'
+      );
     }
 
     // Check for circular dependency
