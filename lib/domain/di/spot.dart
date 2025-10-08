@@ -2,13 +2,35 @@ import 'package:cnvrt/domain/di/disposable.dart';
 import 'package:cnvrt/domain/di/spot_exception.dart';
 import 'package:cnvrt/utils/logger.dart';
 
+/// Factory function type for creating instances.
+/// 
+/// The `get` parameter allows resolving dependencies:
+/// ```dart
+/// (get) => ApiClient(dio: get<Dio>(), settings: get<ISettings>())
+/// ```
 typedef SpotGetter<T> = T Function(Function<R>() get);
 
+/// Async factory function type for creating instances with async initialization.
+/// 
+/// The `get` parameter allows resolving dependencies:
+/// ```dart
+/// (get) async {
+///   final db = AppDatabase();
+///   await db.initialize();
+///   return db;
+/// }
+/// ```
 typedef SpotAsyncGetter<T> = Future<T> Function(Function<R>() get);
 
+/// Type of service registration.
 enum SpotType {
+  /// Creates a new instance on each resolution
   factory,
+  
+  /// Creates one instance and reuses it for all resolutions
   singleton,
+  
+  /// Creates one instance asynchronously and reuses it
   asyncSingleton,
 }
 
@@ -137,7 +159,109 @@ class SpotService<T> {
   }*/
 }
 
-/// Minimal service locator pattern
+/// Lightweight service locator for dependency injection.
+/// 
+/// Spot provides a minimal yet powerful DI framework with support for:
+/// - **Singletons**: Shared instance across the application
+/// - **Factories**: New instance on each request
+/// - **Async Singletons**: Asynchronous initialization support
+/// - **Lifecycle Hooks**: Automatic cleanup via [Disposable] interface
+/// - **Type Safety**: Compile-time type checking with `R extends T`
+/// - **Circular Dependency Detection**: Runtime detection with helpful error messages
+/// - **Testing Support**: Comprehensive utilities via [SpotTestHelper]
+/// - **Performance**: Singleton caching for faster repeated access
+/// 
+/// ## Registration
+/// 
+/// Register dependencies during app initialization:
+/// 
+/// ```dart
+/// Spot.init((factory, single) {
+///   // Singleton - one instance shared across app
+///   single<ISettings, Settings>((get) => Settings());
+///   
+///   // Factory - new instance on each request
+///   factory<IRepository, Repository>((get) => Repository(get<Database>()));
+///   
+///   // Singleton with dependencies
+///   single<IApiClient, ApiClient>((get) => ApiClient(
+///     dio: get<Dio>(),
+///     settings: get<ISettings>(),
+///   ));
+/// });
+/// 
+/// // Async singleton (requires async initialization)
+/// Spot.registerAsync<Database, AppDatabase>((get) async {
+///   final db = AppDatabase();
+///   await db.initialize();
+///   return db;
+/// });
+/// ```
+/// 
+/// ## Resolution
+/// 
+/// Inject dependencies using [spot] or [spotAsync]:
+/// 
+/// ```dart
+/// // Synchronous resolution
+/// final settings = spot<ISettings>();
+/// final repo = Spot.spot<IRepository>();
+/// 
+/// // Asynchronous resolution
+/// final db = await spotAsync<Database>();
+/// final api = await Spot.spotAsync<ApiClient>();
+/// ```
+/// 
+/// ## Lifecycle Management
+/// 
+/// Services implementing [Disposable] are automatically cleaned up:
+/// 
+/// ```dart
+/// class ApiClient implements Disposable {
+///   final Dio dio;
+///   ApiClient(this.dio);
+///   
+///   @override
+///   void dispose() {
+///     dio.close();
+///   }
+/// }
+/// 
+/// // Dispose specific service
+/// Spot.dispose<ApiClient>();  // Calls dispose() automatically
+/// 
+/// // Dispose all services
+/// Spot.disposeAll();  // Cleanup on app shutdown
+/// ```
+/// 
+/// ## Testing
+/// 
+/// Use [SpotTestHelper] for isolated test environments:
+/// 
+/// ```dart
+/// test('with mocked dependencies', () async {
+///   await SpotTestHelper.runIsolated(() async {
+///     SpotTestHelper.registerMock<ISettings>(MockSettings());
+///     // Test runs with mock, original state restored after
+///   });
+/// });
+/// ```
+/// 
+/// ## Features
+/// 
+/// - **Thread-Safe**: Singleton initialization prevents race conditions
+/// - **Performance**: Caching for fast repeated singleton access
+/// - **Debugging**: [printRegistry] and [isRegistered] utilities
+/// - **Error Messages**: Detailed errors with registered type listings
+/// - **Circular Detection**: Clear error messages showing dependency cycles
+/// 
+/// See also:
+/// - [spot] for dependency resolution
+/// - [registerFactory] for factory registration
+/// - [registerSingle] for singleton registration
+/// - [registerAsync] for async singleton registration
+/// - [Disposable] for lifecycle management
+/// - [SpotTestHelper] for testing utilities
 abstract class Spot {
   static final log = Logger('Spot');
 
@@ -177,9 +301,38 @@ abstract class Spot {
     log.i('=' * 50);
   }
 
-  /// Registers a new factory dependency
-  /// The concrete type [R] must extend or implement the interface type [T]
-  /// This provides compile-time type safety to prevent registration mistakes
+  /// Registers a factory that creates a new instance on each resolution.
+  /// 
+  /// Factories are useful for stateless services or when you need a fresh
+  /// instance each time (e.g., request handlers, temporary workers).
+  /// 
+  /// Type Parameters:
+  /// - [T]: The interface or base type to register
+  /// - [R]: The concrete implementation (must extend or implement [T])
+  /// 
+  /// Parameters:
+  /// - [locator]: Factory function that creates instances. Use `get` parameter
+  ///   to resolve dependencies.
+  /// 
+  /// Example:
+  /// ```dart
+  /// // Simple factory
+  /// Spot.registerFactory<IRepository, Repository>(
+  ///   (get) => Repository(),
+  /// );
+  /// 
+  /// // Factory with dependencies
+  /// Spot.registerFactory<IApiClient, ApiClient>(
+  ///   (get) => ApiClient(
+  ///     dio: get<Dio>(),
+  ///     settings: get<ISettings>(),
+  ///   ),
+  /// );
+  /// ```
+  /// 
+  /// See also:
+  /// - [registerSingle] for singleton registration
+  /// - [registerAsync] for async singleton registration
   static void registerFactory<T, R extends T>(SpotGetter<R> locator) {
     if (registry.containsKey(T) && logging) {
       log.w('Overriding factory: $T with $R');
@@ -190,9 +343,39 @@ abstract class Spot {
     if (logging) log.v('Registered factory $T -> $R');
   }
 
-  /// Registers a new singleton dependency
-  /// The concrete type [R] must extend or implement the interface type [T]
-  /// This provides compile-time type safety to prevent registration mistakes
+  /// Registers a singleton that returns the same instance on each resolution.
+  /// 
+  /// Singletons are initialized lazily on first access and cached for
+  /// subsequent requests. Perfect for shared state, services, and managers.
+  /// 
+  /// Type Parameters:
+  /// - [T]: The interface or base type to register
+  /// - [R]: The concrete implementation (must extend or implement [T])
+  /// 
+  /// Parameters:
+  /// - [locator]: Factory function called once to create the singleton.
+  ///   Use `get` parameter to resolve dependencies.
+  /// 
+  /// Example:
+  /// ```dart
+  /// // Simple singleton
+  /// Spot.registerSingle<ISettings, Settings>(
+  ///   (get) => Settings(),
+  /// );
+  /// 
+  /// // Singleton with dependencies
+  /// Spot.registerSingle<IAuthService, AuthService>(
+  ///   (get) => AuthService(
+  ///     apiClient: get<IApiClient>(),
+  ///     storage: get<IStorage>(),
+  ///   ),
+  /// );
+  /// ```
+  /// 
+  /// See also:
+  /// - [registerFactory] for factory registration
+  /// - [registerAsync] for async singleton registration
+  /// - [dispose] to reset and recreate singletons
   static void registerSingle<T, R extends T>(SpotGetter<R> locator) {
     if (registry.containsKey(T) && logging) {
       log.w('Overriding single: $T with $R');
@@ -203,9 +386,44 @@ abstract class Spot {
     if (logging) log.v('Registered singleton $T -> $R');
   }
 
-  /// Registers a new async singleton dependency
-  /// The concrete type [R] must extend or implement the interface type [T]
-  /// Use [spotAsync] to resolve async singletons
+  /// Registers an async singleton with asynchronous initialization.
+  /// 
+  /// Use this for services that require async setup (database connections,
+  /// API authentication, file loading, etc.). The instance is created once
+  /// on first access and cached for subsequent requests.
+  /// 
+  /// Type Parameters:
+  /// - [T]: The interface or base type to register
+  /// - [R]: The concrete implementation (must extend or implement [T])
+  /// 
+  /// Parameters:
+  /// - [locator]: Async factory function called once to create the singleton.
+  ///   Use `get` parameter to resolve dependencies.
+  /// 
+  /// Example:
+  /// ```dart
+  /// // Database with async initialization
+  /// Spot.registerAsync<Database, AppDatabase>((get) async {
+  ///   final db = AppDatabase();
+  ///   await db.initialize();
+  ///   await db.runMigrations();
+  ///   return db;
+  /// });
+  /// 
+  /// // API client with token refresh
+  /// Spot.registerAsync<IApiClient, ApiClient>((get) async {
+  ///   final client = ApiClient();
+  ///   await client.refreshTokens();
+  ///   return client;
+  /// });
+  /// 
+  /// // Resolve with spotAsync
+  /// final db = await spotAsync<Database>();
+  /// ```
+  /// 
+  /// See also:
+  /// - [spotAsync] for async resolution
+  /// - [registerSingle] for synchronous singletons
   static void registerAsync<T, R extends T>(SpotAsyncGetter<R> locator) {
     if (registry.containsKey(T) && logging) {
       log.w('Overriding async singleton: $T with $R');
@@ -233,8 +451,43 @@ abstract class Spot {
     return registry[T]! as SpotService<T>;
   }
 
-  /// Injects the dependency
-  /// @example
+  /// Resolves and returns an instance of type [T].
+  /// 
+  /// For singletons, returns the cached instance (created lazily on first access).
+  /// For factories, creates and returns a new instance each time.
+  /// 
+  /// Performance: Singletons benefit from caching for fast O(1) repeated access.
+  /// 
+  /// Type Parameters:
+  /// - [T]: The type to resolve (must be registered)
+  /// 
+  /// Returns: Instance of type [T]
+  /// 
+  /// Throws:
+  /// - [SpotException] if [T] is not registered
+  /// - [SpotException] if circular dependency detected
+  /// - [SpotException] if trying to resolve async singleton synchronously
+  /// 
+  /// Example:
+  /// ```dart
+  /// // Basic usage
+  /// final settings = Spot.spot<ISettings>();
+  /// final repo = spot<IRepository>();  // Global function
+  /// 
+  /// // In widget
+  /// class MyWidget extends StatelessWidget {
+  ///   final ISettings settings = spot<ISettings>();
+  ///   
+  ///   @override
+  ///   Widget build(BuildContext context) {
+  ///     return Text('Theme: ${settings.theme}');
+  ///   }
+  /// }
+  /// ```
+  /// 
+  /// See also:
+  /// - [spotAsync] for async singletons
+  /// - [isRegistered] to check registration status
   static T spot<T>() {
     // Fast path: check singleton cache first for performance
     if (_singletonCache.containsKey(T)) {
@@ -290,8 +543,45 @@ abstract class Spot {
     }
   }
 
-  /// Injects an async dependency
-  /// Use this for dependencies registered with [registerAsync]
+  /// Resolves and returns an async singleton of type [T].
+  /// 
+  /// Use this for services registered with [registerAsync] that require
+  /// asynchronous initialization. The instance is created once and cached.
+  /// 
+  /// Can also be used to resolve regular singletons asynchronously.
+  /// 
+  /// Type Parameters:
+  /// - [T]: The type to resolve (must be registered)
+  /// 
+  /// Returns: `Future<T>` that resolves to the instance
+  /// 
+  /// Throws:
+  /// - [SpotException] if [T] is not registered
+  /// - [SpotException] if circular dependency detected
+  /// 
+  /// Example:
+  /// ```dart
+  /// // Resolve async singleton
+  /// final db = await Spot.spotAsync<Database>();
+  /// final api = await spotAsync<IApiClient>();
+  /// 
+  /// // In async context
+  /// Future<void> initApp() async {
+  ///   final db = await spotAsync<Database>();
+  ///   await db.loadInitialData();
+  /// }
+  /// 
+  /// // Multiple async dependencies
+  /// final results = await Future.wait([
+  ///   spotAsync<Database>(),
+  ///   spotAsync<IApiClient>(),
+  ///   spotAsync<IAuthService>(),
+  /// ]);
+  /// ```
+  /// 
+  /// See also:
+  /// - [registerAsync] for async singleton registration
+  /// - [spot] for synchronous resolution
   static Future<T> spotAsync<T>() async {
     // Fast path: check singleton cache first for performance
     if (_singletonCache.containsKey(T)) {
@@ -395,9 +685,26 @@ abstract class Spot {
   }
 }
 
-// Shorthand for convenience
+/// Global convenience function for resolving dependencies.
+/// 
+/// Shorthand for [Spot.spot].
+/// 
+/// Example:
+/// ```dart
+/// final settings = spot<ISettings>();
+/// final repo = spot<IRepository>();
+/// ```
 T spot<T>() => Spot.spot<T>();
 
+/// Global convenience function for resolving async dependencies.
+/// 
+/// Shorthand for [Spot.spotAsync].
+/// 
+/// Example:
+/// ```dart
+/// final db = await spotAsync<Database>();
+/// final api = await spotAsync<IApiClient>();
+/// ```
 Future<T> spotAsync<T>() => Spot.spotAsync<T>();
 
 /*mixin SpotDisposable<T extends StatefulWidget> on State<T> {
