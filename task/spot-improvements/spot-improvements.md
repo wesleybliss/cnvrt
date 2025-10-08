@@ -25,10 +25,10 @@ Each suggestion should be done in it's own git branch, with a descriptive commit
 - [x] Add custom `SpotException` for clearer and consistent error handling
 
 ## Usability Enhancements
-- [ ] Improve error messages to include registered types and registration hints
-- [ ] Add `printRegistry()` and `isRegistered<T>()` utilities for inspection/debugging
-- [ ] Support asynchronous initialization via `SpotAsyncGetter` and `spotAsync<T>()`
-- [ ] Enforce type-safe registration using `R extends T` constraint
+- [x] Improve error messages to include registered types and registration hints
+- [x] Add `printRegistry()` and `isRegistered<T>()` utilities for inspection/debugging
+- [x] Support asynchronous initialization via `SpotAsyncGetter` and `spotAsync<T>()`
+- [x] Enforce type-safe registration using `R extends T` constraint
 
 ## Advanced Features
 - [ ] Add lifecycle hooks with a `Disposable` interface for resource cleanup
