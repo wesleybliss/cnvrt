@@ -1,8 +1,8 @@
 import 'package:cnvrt/db/database.dart';
 import 'package:cnvrt/io/settings.dart';
 import 'package:cnvrt/utils/currency_utils.dart';
+import 'package:cnvrt/utils/logger.dart';
 import 'package:flutter_test/flutter_test.dart';
-
 import '../helpers/spot_test_helper.dart';
 
 void main() {
@@ -120,8 +120,41 @@ void main() {
     });
     
     test('edge case: COP to USD with inflation adjustment', () {
+      SpotTestHelper.updateTestDependencies((settings) => settings.copyWith(
+        accountForInflation: true,
+      ));
+      
       // 4 COP should become 4000 COP, which is roughly 1 USD
       expect(getInflatedCurrencyValue('COP', 4), equals(4000.0));
+
+      SpotTestHelper.setupTestDependencies(); // Reset to default after test
+    });
+
+    test('edge case: COP to USD without inflation adjustment', () {
+      SpotTestHelper.updateTestDependencies((settings) => settings.copyWith(
+        accountForInflation: false,
+      ));
+
+      // When accountForInflation is false, getInflatedCurrencyValue should NOT multiply
+      expect(getInflatedCurrencyValue('COP', 4, accountForInflation: false), equals(4.0));
+      // But when enabled (default), it should multiply
+      expect(getInflatedCurrencyValue('COP', 4, accountForInflation: true), equals(4000.0));
+      
+      const rate = 4115.61;
+      
+      final convertedValue1 = convertCurrencies('COP', 4, [
+        const Currency(id: 1, symbol: 'COP', name: 'Colombian Peso', rate: rate, selected: true, order: 0),
+        const Currency(id: 2, symbol: 'USD', name: 'US Dollar', rate: 1.0, selected: true, order: 1),
+      ]);
+      expect(convertedValue1['USD'], equals(0.0)); // 4 COP without inflation is very small in USD
+
+      final convertedValue2 = convertCurrencies('COP', rate, [
+        const Currency(id: 1, symbol: 'COP', name: 'Colombian Peso', rate: rate, selected: true, order: 0),
+        const Currency(id: 2, symbol: 'USD', name: 'US Dollar', rate: 1.0, selected: true, order: 1),
+      ]);
+      expect(convertedValue2['USD'], equals(1.0));
+
+      SpotTestHelper.setupTestDependencies(); // Reset to default after test
     });
   });
 

@@ -191,6 +191,7 @@ class _DebugScreenState extends ConsumerState<DebugScreen> {
                       buildSettingRow('Full Currency Names', settings.showFullCurrencyNameLabel.toString()),
                       buildSettingRow('Inputs Position', settings.inputsPosition.toString()),
                       buildSettingRow('Show Currency Rate', settings.showCurrencyRate.toString()),
+                      buildSettingRow('Account for Inflation', settings.accountForInflation.toString()),
                     ],
                   ),
                 ),

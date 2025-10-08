@@ -93,7 +93,7 @@ class SettingsNotifier extends _$SettingsNotifier {
 
   Future<void> setAccountForInflation(bool value) async {
     final currentSettings = await future;
-    final newSettings = currentSettings.copyWith(accountForInflation: !currentSettings.accountForInflation);
+    final newSettings = currentSettings.copyWith(accountForInflation: value);
     await updateSettings(newSettings);
   }
 

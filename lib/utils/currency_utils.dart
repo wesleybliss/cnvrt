@@ -5,13 +5,16 @@ import 'package:cnvrt/utils/logger.dart';
 
 List<String> inflatedCurrencies = ["COP", "IDR", "VND", "KRW", "IRR", "PYG", "CLP", "LAK", "LBP", "TRY"];
 
-double getInflatedCurrencyValue(String symbol, double value) {
-  final log = Logger('convertCurrencies');
-
+double getInflatedCurrencyValue(String symbol, double value, {bool accountForInflation = true}) {
+  final log = Logger('getInflatedCurrencyValue');
+  
+  log.d('getInflatedCurrencyValue: symbol=$symbol, value=$value, isInflated=${inflatedCurrencies.contains(symbol)}, accountForInflation=$accountForInflation');
+  
   // For inflated currencies, multiply by 1000 if the value is a whole number
   // This allows users to type "4" and get "4000" for better UX
   // If they want precise decimal entry, they can type "4.0" or "4.5" which won't be multiplied
-  if (inflatedCurrencies.contains(symbol)) {
+  // Only apply this adjustment if accountForInflation is enabled
+  if (accountForInflation && inflatedCurrencies.contains(symbol)) {
     // Check if the value is effectively a whole number
     // We check if value equals its floor (handles cases like 4.0 -> 4)
     if (value == value.floor()) {
@@ -33,11 +36,14 @@ Map<String, double> convertCurrencies(String symbol, double inputValue, List<Cur
   final Currency changedCurrency = currencies.firstWhere((it) => it.symbol == symbol);
 
   // If the currency is very inflated, automatically adjust for easier UX
-  final sourceValue =
-      settings.accountForInflation ? getInflatedCurrencyValue(changedCurrency.symbol, inputValue) : inputValue;
+  final sourceValue = getInflatedCurrencyValue(
+    changedCurrency.symbol,
+    inputValue,
+    accountForInflation: settings.accountForInflation,
+  );
 
-  log.d('convertCurrencies: $inputValue -> $sourceValue -> ${currencies.join(', ')}');
-
+  log.d('convertCurrencies: accountForInflation=${settings.accountForInflation}, inputValue=$inputValue, sourceValue=$sourceValue');
+  
   // Convert the input value to USD
   final double valueInUSD = symbol == 'USD' ? sourceValue : sourceValue / changedCurrency.rate;
 

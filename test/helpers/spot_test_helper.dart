@@ -4,6 +4,23 @@ import 'package:cnvrt/io/settings.dart';
 
 /// Test helper for setting up and tearing down Spot DI container in tests.
 class SpotTestHelper {
+  static Settings defaultTestSettings = Settings(
+  roundingDecimals: 2,
+  accountForInflation: false,
+  theme: "system",
+  language: "en",
+  updateFrequencyInHours: 12,
+  useLargeInputs: false,
+  showDragReorderHandles: true,
+  showCopyToClipboardButtons: true,
+  showFullCurrencyNameLabel: true,
+  inputsPosition: "center",
+  showCurrencyRate: "selected",
+  showCountryFlags: true,
+  allowDecimalInput: false,
+  developerModeActive: false,
+  );
+  
   /// Clears all registered dependencies from the Spot container.
   static void resetDI() {
     Spot.disposeAll();
@@ -23,23 +40,17 @@ class SpotTestHelper {
     resetDI();
     
     // Use provided settings or create a default test settings instance
-    final testSettings = settings ?? Settings(
-      roundingDecimals: 2,
-      accountForInflation: false,
-      theme: "system",
-      language: "en",
-      updateFrequencyInHours: 12,
-      useLargeInputs: false,
-      showDragReorderHandles: true,
-      showCopyToClipboardButtons: true,
-      showFullCurrencyNameLabel: true,
-      inputsPosition: "center",
-      showCurrencyRate: "selected",
-      showCountryFlags: true,
-      allowDecimalInput: false,
-      developerModeActive: false,
-    );
+    final testSettings = settings ?? defaultTestSettings;
     
+    registerSettings(testSettings);
+  }
+
+  static void updateTestDependencies(Function(Settings settings) updateFn) {
+    resetDI();
+
+    // Use provided settings or create a default test settings instance
+    final testSettings = updateFn(defaultTestSettings);
+
     registerSettings(testSettings);
   }
 }
