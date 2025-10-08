@@ -36,11 +36,11 @@ Each suggestion should be done in it's own git branch, with a descriptive commit
 - [ ] Implement scoped containers (child scopes for tests or feature modules)
 
 ## Testing Support
-- [ ] Add `SpotTestHelper` with:
-    - [ ] `saveState()` and `restoreState()` for isolated DI state
-    - [ ] `registerMock<T>()` for mock injection
-    - [ ] `runIsolated()` helper for temporary test scopes
-    - [ ] `resetDI()` and `getRegistrationInfo<T>()` utilities
+- [x] Add `SpotTestHelper` with:
+    - [x] `saveState()` and `restoreState()` for isolated DI state
+    - [x] `registerMock<T>()` for mock injection
+    - [x] `runIsolated()` helper for temporary test scopes
+    - [x] `resetDI()` and `getRegistrationInfo<T>()` utilities
 
 ## Performance Optimizations
 - [ ] Cache singleton instances for faster lookup (`_singletonCache`)
