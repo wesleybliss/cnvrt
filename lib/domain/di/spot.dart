@@ -94,6 +94,23 @@ abstract class Spot {
 
   static bool get isEmpty => registry.isEmpty;
 
+  /// Check if a type is registered without throwing an exception
+  /// Useful for conditional logic and debugging
+  static bool isRegistered<T>() => registry.containsKey(T);
+
+  /// Print all registered types with their details to the log
+  /// Useful for debugging and inspecting the DI container state
+  static void printRegistry() {
+    log.i('=== Spot Registry (${registry.length} types) ===');
+    for (var entry in registry.entries) {
+      final service = entry.value;
+      final typeStr = service.type == SpotType.singleton ? 'singleton' : 'factory';
+      final hasInstance = service.instance != null ? '(initialized)' : '';
+      log.i('  ${entry.key} -> ${service.targetType} [$typeStr] $hasInstance');
+    }
+    log.i('=' * 50);
+  }
+
   /// Registers a new factory dependency
   //static void registerFactory<T, R>(T Function(Function<R>() get) locator) {
   static void registerFactory<T, R>(SpotGetter<T> locator) {
