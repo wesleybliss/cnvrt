@@ -1,3 +1,4 @@
+import 'package:cnvrt/domain/di/disposable.dart';
 import 'package:cnvrt/domain/di/spot_exception.dart';
 import 'package:cnvrt/utils/logger.dart';
 
@@ -108,6 +109,15 @@ class SpotService<T> {
   }
 
   void dispose() {
+    // Call dispose on instance if it implements Disposable
+    if (instance is Disposable) {
+      try {
+        (instance as Disposable).dispose();
+      } catch (e) {
+        // Log error but continue with disposal
+        Spot.log.e('Error disposing $T', e);
+      }
+    }
     instance = null;
     _initializationFuture = null;
   }
