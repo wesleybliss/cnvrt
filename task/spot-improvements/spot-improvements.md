@@ -31,7 +31,7 @@ Each suggestion should be done in it's own git branch, with a descriptive commit
 - [x] Enforce type-safe registration using `R extends T` constraint
 
 ## Advanced Features
-- [ ] Add lifecycle hooks with a `Disposable` interface for resource cleanup
+- [x] Add lifecycle hooks with a `Disposable` interface for resource cleanup
 - [ ] Support named instances / qualifiers (e.g. `Spot.spot<HttpClient>(name: 'public')`)
 - [ ] Implement scoped containers (child scopes for tests or feature modules)
 
