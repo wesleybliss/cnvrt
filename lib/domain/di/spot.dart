@@ -21,6 +21,7 @@ class SpotService<T> {
 
   // Instance of the dependency (only used for singletons)
   T? instance;
+  bool _initializing = false;  // Flag for thread-safe initialization
 
   SpotService(this.type, this.locator, this.targetType);
 
@@ -33,9 +34,29 @@ class SpotService<T> {
       return locator(_spot);
     }
 
-    instance ??= locator(_spot);
-    // addObserver();
-    return instance!;
+    // Thread-safe singleton initialization
+    // Note: Dart is single-threaded per isolate, but this prevents re-entrant
+    // initialization issues and prepares for potential multi-isolate scenarios
+    
+    // Fast path: check if already initialized
+    if (instance != null) return instance!;
+    
+    // Guard against re-entrant initialization (circular dependencies)
+    if (_initializing) {
+      throw Exception(
+        'Re-entrant initialization detected for $T. '
+        'This usually indicates a circular dependency.'
+      );
+    }
+    
+    // Mark as initializing and create instance
+    _initializing = true;
+    try {
+      instance = locator(_spot);
+      return instance!;
+    } finally {
+      _initializing = false;
+    }
   }
 
   void dispose() {
