@@ -43,8 +43,8 @@ Each suggestion should be done in it's own git branch, with a descriptive commit
     - [x] `resetDI()` and `getRegistrationInfo<T>()` utilities
 
 ## Performance Optimizations
-- [ ] Cache singleton instances for faster lookup (`_singletonCache`)
-- [ ] Optimize registry lookups and clear cache on disposal
+- [x] Cache singleton instances for faster lookup (`_singletonCache`)
+- [x] Optimize registry lookups and clear cache on disposal
 
 ## Documentation & DX
 - [ ] Add full dartdoc documentation with usage examples
