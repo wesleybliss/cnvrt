@@ -147,6 +147,10 @@ abstract class Spot {
   /// Registry of all types => dependencies
   static final registry = <Type, SpotService>{};
 
+  /// Cache for initialized singleton instances (performance optimization)
+  /// Provides O(1) lookup for frequently accessed singletons
+  static final _singletonCache = <Type, dynamic>{};
+
   /// Track current resolution stack to detect circular dependencies
   static final _resolutionStack = <Type>[];
 
@@ -232,6 +236,12 @@ abstract class Spot {
   /// Injects the dependency
   /// @example
   static T spot<T>() {
+    // Fast path: check singleton cache first for performance
+    if (_singletonCache.containsKey(T)) {
+      if (logging) log.v('Cache hit for $T');
+      return _singletonCache[T] as T;
+    }
+
     if (!registry.containsKey(T)) {
       final registeredTypes = registry.keys.map((t) => t.toString()).join(', ');
       throw SpotException(
@@ -256,9 +266,16 @@ abstract class Spot {
     try {
       if (logging) log.v('Injecting $T -> ${registry[T]!.targetType}');
 
-      final instance = registry[T]!.locate();
+      final service = registry[T]!;
+      final instance = service.locate();
       if (instance == null) {
         throw SpotException('Class $T resolved to null');
+      }
+
+      // Cache initialized singletons for faster subsequent access
+      if (service.type == SpotType.singleton && service.instance != null) {
+        _singletonCache[T] = instance;
+        if (logging) log.v('Cached singleton $T');
       }
 
       return instance;
@@ -276,6 +293,12 @@ abstract class Spot {
   /// Injects an async dependency
   /// Use this for dependencies registered with [registerAsync]
   static Future<T> spotAsync<T>() async {
+    // Fast path: check singleton cache first for performance
+    if (_singletonCache.containsKey(T)) {
+      if (logging) log.v('Cache hit for async $T');
+      return _singletonCache[T] as T;
+    }
+
     if (!registry.containsKey(T)) {
       final registeredTypes = registry.keys.map((t) => t.toString()).join(', ');
       throw SpotException(
@@ -299,9 +322,16 @@ abstract class Spot {
     try {
       if (logging) log.v('Async injecting $T -> ${registry[T]!.targetType}');
 
-      final instance = await registry[T]!.locateAsync();
+      final service = registry[T]!;
+      final instance = await service.locateAsync();
       if (instance == null) {
         throw SpotException('Class $T resolved to null');
+      }
+
+      // Cache initialized async singletons for faster subsequent access
+      if (service.type == SpotType.asyncSingleton && service.instance != null) {
+        _singletonCache[T] = instance;
+        if (logging) log.v('Cached async singleton $T');
       }
 
       return instance;
@@ -331,12 +361,13 @@ abstract class Spot {
   /// Disposes a specific singleton instance
   /// 
   /// If the instance implements [Disposable], its dispose() method will be called.
-  /// The instance will be removed from the registry and recreated on next injection.
+  /// The instance will be removed from the registry and cache, and recreated on next injection.
   static void dispose<T>() {
     if (registry.containsKey(T)) {
       if (logging) log.v('Disposing $T');
       registry[T]?.dispose();
       registry.remove(T);
+      _singletonCache.remove(T);  // Clear from cache
       if (logging) log.v('Disposed $T');
     }
   }
@@ -345,7 +376,7 @@ abstract class Spot {
   /// 
   /// Iterates through all registered services and calls their dispose() method.
   /// If any service implements [Disposable], its cleanup method will be invoked.
-  /// Finally, clears the entire registry.
+  /// Finally, clears the entire registry and singleton cache.
   static void disposeAll() {
     if (logging) log.i('Disposing all registered services (${registry.length} total)...');
 
@@ -359,6 +390,7 @@ abstract class Spot {
     }
 
     registry.clear();
+    _singletonCache.clear();  // Clear singleton cache
     if (logging) log.i('All services disposed');
   }
 }
