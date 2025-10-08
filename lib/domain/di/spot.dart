@@ -1,3 +1,4 @@
+import 'package:cnvrt/domain/di/disposable.dart';
 import 'package:cnvrt/domain/di/spot_exception.dart';
 import 'package:cnvrt/utils/logger.dart';
 
@@ -108,6 +109,15 @@ class SpotService<T> {
   }
 
   void dispose() {
+    // Call dispose on instance if it implements Disposable
+    if (instance is Disposable) {
+      try {
+        (instance as Disposable).dispose();
+      } catch (e) {
+        // Log error but continue with disposal
+        Spot.log.e('Error disposing $T', e);
+      }
+    }
     instance = null;
     _initializationFuture = null;
   }
@@ -318,17 +328,38 @@ abstract class Spot {
   ) =>
       initializer(registerFactory, registerSingle);
 
-  /// For intentionally disposing of singleton instances
-  /// Instances will be recreated the next time the dependency is injected
+  /// Disposes a specific singleton instance
+  /// 
+  /// If the instance implements [Disposable], its dispose() method will be called.
+  /// The instance will be removed from the registry and recreated on next injection.
   static void dispose<T>() {
     if (registry.containsKey(T)) {
+      if (logging) log.v('Disposing $T');
       registry[T]?.dispose();
       registry.remove(T);
+      if (logging) log.v('Disposed $T');
     }
   }
 
+  /// Disposes all registered services
+  /// 
+  /// Iterates through all registered services and calls their dispose() method.
+  /// If any service implements [Disposable], its cleanup method will be invoked.
+  /// Finally, clears the entire registry.
   static void disposeAll() {
+    if (logging) log.i('Disposing all registered services (${registry.length} total)...');
+
+    for (var entry in registry.entries) {
+      try {
+        if (logging) log.v('Disposing ${entry.key}');
+        entry.value.dispose();
+      } catch (e) {
+        log.e('Error disposing ${entry.key}', e);
+      }
+    }
+
     registry.clear();
+    if (logging) log.i('All services disposed');
   }
 }
 
