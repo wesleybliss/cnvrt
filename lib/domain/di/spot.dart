@@ -1,3 +1,4 @@
+import 'package:cnvrt/domain/di/spot_exception.dart';
 import 'package:cnvrt/utils/logger.dart';
 
 typedef SpotGetter<T> = T Function(Function<R>() get);
@@ -43,7 +44,7 @@ class SpotService<T> {
     
     // Guard against re-entrant initialization (circular dependencies)
     if (_initializing) {
-      throw Exception(
+      throw SpotException(
         'Re-entrant initialization detected for $T. '
         'This usually indicates a circular dependency.'
       );
@@ -88,6 +89,9 @@ abstract class Spot {
   /// Registry of all types => dependencies
   static final registry = <Type, SpotService>{};
 
+  /// Track current resolution stack to detect circular dependencies
+  static final _resolutionStack = <Type>[];
+
   static bool get isEmpty => registry.isEmpty;
 
   /// Registers a new factory dependency
@@ -115,7 +119,7 @@ abstract class Spot {
 
   static SpotService<T> getRegistered<T>() {
     if (!registry.containsKey(T)) {
-      throw Exception('Spot: Class $T is not registered');
+      throw SpotException('Class $T is not registered');
     }
 
     return registry[T]! as SpotService<T>;
@@ -125,24 +129,38 @@ abstract class Spot {
   /// @example
   static T spot<T>() {
     if (!registry.containsKey(T)) {
-      throw Exception('Spot: Class $T is not registered');
+      throw SpotException('Class $T is not registered');
     }
 
-    if (logging) log.v('Injecting $T -> ${registry[T]!.targetType}');
+    // Check for circular dependency
+    if (_resolutionStack.contains(T)) {
+      final cycle = [..._resolutionStack, T].map((t) => t.toString()).join(' -> ');
+      throw SpotException(
+        'Circular dependency detected: $cycle\n'
+        'Cannot resolve $T because it depends on itself (directly or indirectly).'
+      );
+    }
 
-    late final T instance;
+    _resolutionStack.add(T);
 
     try {
-      instance = registry[T]!.locate();
-      if (instance == null) {
-        throw Exception('Spot: Class $T is not registered');
-      }
-    } catch (e) {
-      log.e('Failed to locate class $T', e);
-      throw Exception('Spot: Class $T is not registered');
-    }
+      if (logging) log.v('Injecting $T -> ${registry[T]!.targetType}');
 
-    return instance;
+      final instance = registry[T]!.locate();
+      if (instance == null) {
+        throw SpotException('Class $T resolved to null');
+      }
+
+      return instance;
+    } catch (e) {
+      if (e is SpotException) {
+        rethrow;  // Re-throw SpotException as-is
+      }
+      log.e('Failed to locate class $T', e);
+      throw SpotException('Failed to resolve $T: ${e.toString()}');
+    } finally {
+      _resolutionStack.removeLast();
+    }
   }
 
   /// Convenience method for registering dependencies
