@@ -20,9 +20,9 @@ Each suggestion should be done in it's own git branch, with a descriptive commit
 # Checklist
 
 ## Critical Improvements
-- [ ] Make singleton initialization thread-safe using `synchronized` locks
-- [ ] Add circular dependency detection with resolution stack tracking
-- [ ] Add custom `SpotException` for clearer and consistent error handling
+- [x] Make singleton initialization thread-safe using `synchronized` locks
+- [x] Add circular dependency detection with resolution stack tracking
+- [x] Add custom `SpotException` for clearer and consistent error handling
 
 ## Usability Enhancements
 - [ ] Improve error messages to include registered types and registration hints
