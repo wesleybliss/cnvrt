@@ -47,8 +47,8 @@ Each suggestion should be done in it's own git branch, with a descriptive commit
 - [x] Optimize registry lookups and clear cache on disposal
 
 ## Documentation & DX
-- [ ] Add full dartdoc documentation with usage examples
-- [ ] Provide IntelliSense-friendly comments for all public APIs
+- [x] Add full dartdoc documentation with usage examples
+- [x] Provide IntelliSense-friendly comments for all public APIs
 
 ---
 
