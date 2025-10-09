@@ -33,7 +33,7 @@ Each suggestion should be done in it's own git branch, with a descriptive commit
 ## Advanced Features
 - [x] Add lifecycle hooks with a `Disposable` interface for resource cleanup
 - [x] Support named instances / qualifiers (e.g. `Spot.spot<HttpClient>(name: 'public')`)
-- [ ] Implement scoped containers (child scopes for tests or feature modules)
+- [x] Implement scoped containers (child scopes for tests or feature modules)
 
 ## Testing Support
 - [x] Add `SpotTestHelper` with:
