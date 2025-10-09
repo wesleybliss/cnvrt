@@ -1,4 +1,5 @@
 import 'package:cnvrt/domain/di/disposable.dart';
+import 'package:cnvrt/domain/di/spot_container.dart';
 import 'package:cnvrt/domain/di/spot_exception.dart';
 import 'package:cnvrt/domain/di/spot_key.dart';
 import 'package:cnvrt/utils/logger.dart';
@@ -171,6 +172,7 @@ class SpotService<T> {
 /// - **Circular Dependency Detection**: Runtime detection with helpful error messages
 /// - **Testing Support**: Comprehensive utilities via [SpotTestHelper]
 /// - **Performance**: Singleton caching for faster repeated access
+/// - **Scoped Containers**: Isolated dependency scopes via [SpotContainer]
 /// 
 /// ## Registration
 /// 
@@ -235,6 +237,28 @@ class SpotService<T> {
 /// Spot.disposeAll();  // Cleanup on app shutdown
 /// ```
 /// 
+/// ## Scoped Containers
+/// 
+/// Create isolated dependency scopes for tests or feature modules:
+/// 
+/// ```dart
+/// // Global dependencies
+/// Spot.registerSingle<ISettings, Settings>((get) => Settings());
+/// 
+/// // Create test scope
+/// final testScope = Spot.createScope();
+/// testScope.registerSingle<ISettings, MockSettings>((get) => MockSettings());
+/// 
+/// // Use test scope (gets mock)
+/// final testSettings = testScope.spot<ISettings>();
+/// 
+/// // Global scope unchanged (gets real implementation)
+/// final globalSettings = spot<ISettings>();
+/// 
+/// // Cleanup test scope
+/// testScope.dispose();
+/// ```
+/// 
 /// ## Testing
 /// 
 /// Use [SpotTestHelper] for isolated test environments:
@@ -255,6 +279,7 @@ class SpotService<T> {
 /// - **Debugging**: [printRegistry] and [isRegistered] utilities
 /// - **Error Messages**: Detailed errors with registered type listings
 /// - **Circular Detection**: Clear error messages showing dependency cycles
+/// - **Scoped Containers**: Isolated scopes via [createScope]
 /// 
 /// See also:
 /// - [spot] for dependency resolution
@@ -263,6 +288,8 @@ class SpotService<T> {
 /// - [registerAsync] for async singleton registration
 /// - [Disposable] for lifecycle management
 /// - [SpotTestHelper] for testing utilities
+/// - [SpotContainer] for scoped containers
+/// - [createScope] for creating child scopes
 abstract class Spot {
   static final log = Logger('Spot');
 
@@ -743,6 +770,103 @@ abstract class Spot {
     registry.clear();
     _singletonCache.clear();  // Clear singleton cache
     if (logging) log.i('All services disposed');
+  }
+
+  /// Create a scoped container that inherits from the global Spot registry.
+  /// 
+  /// The scoped container:
+  /// - Can register its own dependencies that shadow global ones
+  /// - Falls back to global Spot registry for dependencies not registered locally
+  /// - Can be disposed independently without affecting global registry
+  /// - Supports nested scopes via [SpotContainer.createChild]
+  /// 
+  /// This is useful for:
+  /// - Test isolation (override dependencies without affecting production code)
+  /// - Feature-specific dependency trees
+  /// - Request-scoped dependencies (e.g., web request handlers)
+  /// - Temporary state that needs cleanup
+  /// 
+  /// Returns: A new [SpotContainer] that uses Spot's global registry as parent
+  /// 
+  /// Example:
+  /// ```dart
+  /// // Global dependencies
+  /// Spot.registerSingle<IApiClient, ApiClient>((get) => ApiClient());
+  /// 
+  /// // Create test scope
+  /// final testScope = Spot.createScope();
+  /// testScope.registerSingle<IApiClient, MockApiClient>(
+  ///   (get) => MockApiClient(),
+  /// );
+  /// 
+  /// // Test code uses test scope
+  /// final mockClient = testScope.spot<IApiClient>();  // Gets MockApiClient
+  /// 
+  /// // Production code uses global scope
+  /// final realClient = spot<IApiClient>();  // Gets ApiClient
+  /// 
+  /// // Cleanup test scope (doesn't affect global)
+  /// testScope.dispose();
+  /// 
+  /// // Nested scopes
+  /// final childScope = testScope.createChild();
+  /// childScope.registerSingle<ILogger, TestLogger>((get) => TestLogger());
+  /// // childScope inherits from testScope, which inherits from global
+  /// ```
+  /// 
+  /// See also:
+  /// - [SpotContainer] for scoped container implementation
+  /// - [SpotContainer.createChild] for creating nested scopes
+  static SpotContainer createScope() {
+    // Create a container that uses Spot's static registry/cache as parent
+    // This is a bit of a hack since Spot is static, but we can create a wrapper
+    return _GlobalSpotContainer();
+  }
+}
+
+/// Internal wrapper that makes Spot's static registry act as a parent container
+class _GlobalSpotContainer extends SpotContainer {
+  _GlobalSpotContainer() : super(parent: null);
+
+  @override
+  bool isRegistered<T>({String? name}) {
+    final key = SpotKey<T>(T, name);
+    
+    // Check local registry
+    if (registry.containsKey(key)) {
+      return true;
+    }
+    
+    // Check Spot's global registry
+    return Spot.isRegistered<T>(name: name);
+  }
+
+  @override
+  T spot<T>({String? name}) {
+    final key = SpotKey<T>(T, name);
+    
+    // Check local registry first
+    if (registry.containsKey(key)) {
+      return super.spot<T>(name: name);
+    }
+    
+    // Fall back to global Spot
+    if (logging) log.v('Falling back to global Spot for $key');
+    return Spot.spot<T>(name: name);
+  }
+
+  @override
+  Future<T> spotAsync<T>({String? name}) async {
+    final key = SpotKey<T>(T, name);
+    
+    // Check local registry first
+    if (registry.containsKey(key)) {
+      return await super.spotAsync<T>(name: name);
+    }
+    
+    // Fall back to global Spot
+    if (logging) log.v('Falling back to global Spot for async $key');
+    return await Spot.spotAsync<T>(name: name);
   }
 }
 
