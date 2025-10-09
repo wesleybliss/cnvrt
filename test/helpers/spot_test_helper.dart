@@ -1,4 +1,5 @@
 import 'package:cnvrt/domain/di/spot.dart';
+import 'package:cnvrt/domain/di/spot_key.dart';
 import 'package:cnvrt/domain/io/i_settings.dart';
 import 'package:cnvrt/io/settings.dart';
 
@@ -12,7 +13,7 @@ import 'package:cnvrt/io/settings.dart';
 /// - Dependency setup and teardown
 class SpotTestHelper {
   /// Saved registry state for restoration
-  static final _savedRegistry = <Type, SpotService>{};
+  static final _savedRegistry = <SpotKey, SpotService>{};
   static Settings defaultTestSettings = Settings(
   roundingDecimals: 2,
   accountForInflation: false,
@@ -100,20 +101,30 @@ class SpotTestHelper {
   /// Convenience method for registering mocks without specifying the concrete type.
   /// The mock is registered as both interface and concrete implementation.
   /// 
+  /// Parameters:
+  /// - [mock]: The mock instance to register
+  /// - [name]: Optional name qualifier for named instances
+  /// 
   /// Example:
   /// ```dart
   /// final mockSettings = MockSettings();
   /// SpotTestHelper.registerMock<ISettings>(mockSettings);
+  /// 
+  /// // Named mock
+  /// SpotTestHelper.registerMock<HttpClient>(mockClient, name: 'public');
   /// ```
-  static void registerMock<T>(T mock) {
-    Spot.registerSingle<T, T>((get) => mock);
+  static void registerMock<T>(T mock, {String? name}) {
+    Spot.registerSingle<T, T>((get) => mock, name: name);
   }
 
   /// Check if a type is registered in the DI container.
   /// 
   /// Wrapper around [Spot.isRegistered] for convenience.
-  static bool isRegistered<T>() {
-    return Spot.isRegistered<T>();
+  /// 
+  /// Parameters:
+  /// - [name]: Optional name qualifier for named instances
+  static bool isRegistered<T>({String? name}) {
+    return Spot.isRegistered<T>(name: name);
   }
 
   /// Get detailed registration information for a type.
@@ -126,24 +137,32 @@ class SpotTestHelper {
   /// 
   /// Useful for debugging test setup issues.
   /// 
+  /// Parameters:
+  /// - [name]: Optional name qualifier for named instances
+  /// 
   /// Example:
   /// ```dart
   /// print(SpotTestHelper.getRegistrationInfo<ISettings>());
   /// // Output: ISettings -> Settings [singleton] (initialized)
+  /// 
+  /// print(SpotTestHelper.getRegistrationInfo<HttpClient>(name: 'public'));
+  /// // Output: HttpClient(public) -> PublicHttpClient [singleton] (initialized)
   /// ```
-  static String getRegistrationInfo<T>() {
-    if (!Spot.registry.containsKey(T)) {
-      return '$T: NOT REGISTERED';
+  static String getRegistrationInfo<T>({String? name}) {
+    final key = SpotKey<T>(T, name);
+    
+    if (!Spot.registry.containsKey(key)) {
+      return '$key: NOT REGISTERED';
     }
 
-    final service = Spot.registry[T]!;
+    final service = Spot.registry[key]!;
     final typeStr = switch (service.type) {
       SpotType.singleton => 'singleton',
       SpotType.factory => 'factory',
       SpotType.asyncSingleton => 'async singleton',
     };
     final hasInstance = service.instance != null;
-    return '$T -> ${service.targetType} [$typeStr] ${hasInstance ? "(initialized)" : "(not initialized)"}';
+    return '$key -> ${service.targetType} [$typeStr] ${hasInstance ? "(initialized)" : "(not initialized)"}';
   }
 
   /// Run a test function with isolated DI state.

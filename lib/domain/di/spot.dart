@@ -1,5 +1,6 @@
 import 'package:cnvrt/domain/di/disposable.dart';
 import 'package:cnvrt/domain/di/spot_exception.dart';
+import 'package:cnvrt/domain/di/spot_key.dart';
 import 'package:cnvrt/utils/logger.dart';
 
 /// Factory function type for creating instances.
@@ -269,20 +270,25 @@ abstract class Spot {
   static bool logging = false;
 
   /// Registry of all types => dependencies
-  static final registry = <Type, SpotService>{};
+  /// Uses [SpotKey] to support both unnamed and named instances
+  static final registry = <SpotKey, SpotService>{};
 
   /// Cache for initialized singleton instances (performance optimization)
   /// Provides O(1) lookup for frequently accessed singletons
-  static final _singletonCache = <Type, dynamic>{};
+  /// Uses [SpotKey] to support both unnamed and named instances
+  static final _singletonCache = <SpotKey, dynamic>{};
 
   /// Track current resolution stack to detect circular dependencies
-  static final _resolutionStack = <Type>[];
+  static final _resolutionStack = <SpotKey>[];
 
   static bool get isEmpty => registry.isEmpty;
 
   /// Check if a type is registered without throwing an exception
   /// Useful for conditional logic and debugging
-  static bool isRegistered<T>() => registry.containsKey(T);
+  /// 
+  /// Parameters:
+  /// - [name]: Optional name qualifier for named instances
+  static bool isRegistered<T>({String? name}) => registry.containsKey(SpotKey<T>(T, name));
 
   /// Print all registered types with their details to the log
   /// Useful for debugging and inspecting the DI container state
@@ -296,7 +302,8 @@ abstract class Spot {
         SpotType.asyncSingleton => 'async singleton',
       };
       final hasInstance = service.instance != null ? '(initialized)' : '';
-      log.i('  ${entry.key} -> ${service.targetType} [$typeStr] $hasInstance');
+      final keyStr = entry.key.toString();  // Uses SpotKey.toString()
+      log.i('  $keyStr -> ${service.targetType} [$typeStr] $hasInstance');
     }
     log.i('=' * 50);
   }
@@ -313,12 +320,19 @@ abstract class Spot {
   /// Parameters:
   /// - [locator]: Factory function that creates instances. Use `get` parameter
   ///   to resolve dependencies.
+  /// - [name]: Optional name qualifier for named instances
   /// 
   /// Example:
   /// ```dart
   /// // Simple factory
   /// Spot.registerFactory<IRepository, Repository>(
   ///   (get) => Repository(),
+  /// );
+  /// 
+  /// // Named factory
+  /// Spot.registerFactory<HttpClient, PublicHttpClient>(
+  ///   (get) => PublicHttpClient(),
+  ///   name: 'public',
   /// );
   /// 
   /// // Factory with dependencies
@@ -333,14 +347,16 @@ abstract class Spot {
   /// See also:
   /// - [registerSingle] for singleton registration
   /// - [registerAsync] for async singleton registration
-  static void registerFactory<T, R extends T>(SpotGetter<R> locator) {
-    if (registry.containsKey(T) && logging) {
-      log.w('Overriding factory: $T with $R');
+  static void registerFactory<T, R extends T>(SpotGetter<R> locator, {String? name}) {
+    final key = SpotKey<T>(T, name);
+    
+    if (registry.containsKey(key) && logging) {
+      log.w('Overriding factory: $key with $R');
     }
 
-    registry[T] = SpotService<T>(SpotType.factory, locator as SpotGetter<T>, R);
+    registry[key] = SpotService<T>(SpotType.factory, locator as SpotGetter<T>, R);
 
-    if (logging) log.v('Registered factory $T -> $R');
+    if (logging) log.v('Registered factory $key -> $R');
   }
 
   /// Registers a singleton that returns the same instance on each resolution.
@@ -355,12 +371,19 @@ abstract class Spot {
   /// Parameters:
   /// - [locator]: Factory function called once to create the singleton.
   ///   Use `get` parameter to resolve dependencies.
+  /// - [name]: Optional name qualifier for named instances
   /// 
   /// Example:
   /// ```dart
   /// // Simple singleton
   /// Spot.registerSingle<ISettings, Settings>(
   ///   (get) => Settings(),
+  /// );
+  /// 
+  /// // Named singleton
+  /// Spot.registerSingle<Database, ProductionDatabase>(
+  ///   (get) => ProductionDatabase(),
+  ///   name: 'production',
   /// );
   /// 
   /// // Singleton with dependencies
@@ -376,14 +399,16 @@ abstract class Spot {
   /// - [registerFactory] for factory registration
   /// - [registerAsync] for async singleton registration
   /// - [dispose] to reset and recreate singletons
-  static void registerSingle<T, R extends T>(SpotGetter<R> locator) {
-    if (registry.containsKey(T) && logging) {
-      log.w('Overriding single: $T with $R');
+  static void registerSingle<T, R extends T>(SpotGetter<R> locator, {String? name}) {
+    final key = SpotKey<T>(T, name);
+    
+    if (registry.containsKey(key) && logging) {
+      log.w('Overriding single: $key with $R');
     }
 
-    registry[T] = SpotService<T>(SpotType.singleton, locator as SpotGetter<T>, R);
+    registry[key] = SpotService<T>(SpotType.singleton, locator as SpotGetter<T>, R);
 
-    if (logging) log.v('Registered singleton $T -> $R');
+    if (logging) log.v('Registered singleton $key -> $R');
   }
 
   /// Registers an async singleton with asynchronous initialization.
@@ -399,6 +424,7 @@ abstract class Spot {
   /// Parameters:
   /// - [locator]: Async factory function called once to create the singleton.
   ///   Use `get` parameter to resolve dependencies.
+  /// - [name]: Optional name qualifier for named instances
   /// 
   /// Example:
   /// ```dart
@@ -409,6 +435,12 @@ abstract class Spot {
   ///   await db.runMigrations();
   ///   return db;
   /// });
+  /// 
+  /// // Named async singleton
+  /// Spot.registerAsync<Cache, RemoteCache>(
+  ///   (get) async => await RemoteCache.connect(),
+  ///   name: 'remote',
+  /// );
   /// 
   /// // API client with token refresh
   /// Spot.registerAsync<IApiClient, ApiClient>((get) async {
@@ -424,31 +456,35 @@ abstract class Spot {
   /// See also:
   /// - [spotAsync] for async resolution
   /// - [registerSingle] for synchronous singletons
-  static void registerAsync<T, R extends T>(SpotAsyncGetter<R> locator) {
-    if (registry.containsKey(T) && logging) {
-      log.w('Overriding async singleton: $T with $R');
+  static void registerAsync<T, R extends T>(SpotAsyncGetter<R> locator, {String? name}) {
+    final key = SpotKey<T>(T, name);
+    
+    if (registry.containsKey(key) && logging) {
+      log.w('Overriding async singleton: $key with $R');
     }
 
-    registry[T] = SpotService<T>(
+    registry[key] = SpotService<T>(
       SpotType.asyncSingleton,
       null,
       R,
       asyncLocator: locator as SpotAsyncGetter<T>,
     );
 
-    if (logging) log.v('Registered async singleton $T -> $R');
+    if (logging) log.v('Registered async singleton $key -> $R');
   }
 
-  static SpotService<T> getRegistered<T>() {
-    if (!registry.containsKey(T)) {
-      final registeredTypes = registry.keys.map((t) => t.toString()).join(', ');
+  static SpotService<T> getRegistered<T>({String? name}) {
+    final key = SpotKey<T>(T, name);
+    
+    if (!registry.containsKey(key)) {
+      final registeredTypes = registry.keys.map((k) => k.toString()).join(', ');
       throw SpotException(
-        'Type $T is not registered in Spot container.\n'
+        'Type $key is not registered in Spot container.\n'
         'Registered types: ${registeredTypes.isNotEmpty ? registeredTypes : '(none)'}'
       );
     }
 
-    return registry[T]! as SpotService<T>;
+    return registry[key]! as SpotService<T>;
   }
 
   /// Resolves and returns an instance of type [T].
@@ -460,6 +496,9 @@ abstract class Spot {
   /// 
   /// Type Parameters:
   /// - [T]: The type to resolve (must be registered)
+  /// 
+  /// Parameters:
+  /// - [name]: Optional name qualifier for named instances
   /// 
   /// Returns: Instance of type [T]
   /// 
@@ -473,6 +512,10 @@ abstract class Spot {
   /// // Basic usage
   /// final settings = Spot.spot<ISettings>();
   /// final repo = spot<IRepository>();  // Global function
+  /// 
+  /// // Named instance
+  /// final publicClient = Spot.spot<HttpClient>(name: 'public');
+  /// final authClient = Spot.spot<HttpClient>(name: 'authenticated');
   /// 
   /// // In widget
   /// class MyWidget extends StatelessWidget {
@@ -488,17 +531,19 @@ abstract class Spot {
   /// See also:
   /// - [spotAsync] for async singletons
   /// - [isRegistered] to check registration status
-  static T spot<T>() {
+  static T spot<T>({String? name}) {
+    final key = SpotKey<T>(T, name);
+    
     // Fast path: check singleton cache first for performance
-    if (_singletonCache.containsKey(T)) {
-      if (logging) log.v('Cache hit for $T');
-      return _singletonCache[T] as T;
+    if (_singletonCache.containsKey(key)) {
+      if (logging) log.v('Cache hit for $key');
+      return _singletonCache[key] as T;
     }
 
-    if (!registry.containsKey(T)) {
-      final registeredTypes = registry.keys.map((t) => t.toString()).join(', ');
+    if (!registry.containsKey(key)) {
+      final registeredTypes = registry.keys.map((k) => k.toString()).join(', ');
       throw SpotException(
-        'Type $T is not registered in Spot container.\n'
+        'Type $key is not registered in Spot container.\n'
         'Registered types: ${registeredTypes.isNotEmpty ? registeredTypes : '(none)'}\n\n'
         'Did you forget to register it in SpotModule.registerDependencies()?\n'
         'Example: single<$T, ConcreteType>((get) => ConcreteType());'
@@ -506,29 +551,29 @@ abstract class Spot {
     }
 
     // Check for circular dependency
-    if (_resolutionStack.contains(T)) {
-      final cycle = [..._resolutionStack, T].map((t) => t.toString()).join(' -> ');
+    if (_resolutionStack.contains(key)) {
+      final cycle = [..._resolutionStack, key].map((k) => k.toString()).join(' -> ');
       throw SpotException(
         'Circular dependency detected: $cycle\n'
-        'Cannot resolve $T because it depends on itself (directly or indirectly).'
+        'Cannot resolve $key because it depends on itself (directly or indirectly).'
       );
     }
 
-    _resolutionStack.add(T);
+    _resolutionStack.add(key);
 
     try {
-      if (logging) log.v('Injecting $T -> ${registry[T]!.targetType}');
+      if (logging) log.v('Injecting $key -> ${registry[key]!.targetType}');
 
-      final service = registry[T]!;
+      final service = registry[key]!;
       final instance = service.locate();
       if (instance == null) {
-        throw SpotException('Class $T resolved to null');
+        throw SpotException('Class $key resolved to null');
       }
 
       // Cache initialized singletons for faster subsequent access
       if (service.type == SpotType.singleton && service.instance != null) {
-        _singletonCache[T] = instance;
-        if (logging) log.v('Cached singleton $T');
+        _singletonCache[key] = instance;
+        if (logging) log.v('Cached singleton $key');
       }
 
       return instance;
@@ -536,8 +581,8 @@ abstract class Spot {
       if (e is SpotException) {
         rethrow;  // Re-throw SpotException as-is
       }
-      log.e('Failed to locate class $T', e);
-      throw SpotException('Failed to resolve $T: ${e.toString()}');
+      log.e('Failed to locate class $key', e);
+      throw SpotException('Failed to resolve $key: ${e.toString()}');
     } finally {
       _resolutionStack.removeLast();
     }
@@ -553,6 +598,9 @@ abstract class Spot {
   /// Type Parameters:
   /// - [T]: The type to resolve (must be registered)
   /// 
+  /// Parameters:
+  /// - [name]: Optional name qualifier for named instances
+  /// 
   /// Returns: `Future<T>` that resolves to the instance
   /// 
   /// Throws:
@@ -564,6 +612,9 @@ abstract class Spot {
   /// // Resolve async singleton
   /// final db = await Spot.spotAsync<Database>();
   /// final api = await spotAsync<IApiClient>();
+  /// 
+  /// // Named instance
+  /// final remoteCache = await spotAsync<Cache>(name: 'remote');
   /// 
   /// // In async context
   /// Future<void> initApp() async {
@@ -582,46 +633,48 @@ abstract class Spot {
   /// See also:
   /// - [registerAsync] for async singleton registration
   /// - [spot] for synchronous resolution
-  static Future<T> spotAsync<T>() async {
+  static Future<T> spotAsync<T>({String? name}) async {
+    final key = SpotKey<T>(T, name);
+    
     // Fast path: check singleton cache first for performance
-    if (_singletonCache.containsKey(T)) {
-      if (logging) log.v('Cache hit for async $T');
-      return _singletonCache[T] as T;
+    if (_singletonCache.containsKey(key)) {
+      if (logging) log.v('Cache hit for async $key');
+      return _singletonCache[key] as T;
     }
 
-    if (!registry.containsKey(T)) {
-      final registeredTypes = registry.keys.map((t) => t.toString()).join(', ');
+    if (!registry.containsKey(key)) {
+      final registeredTypes = registry.keys.map((k) => k.toString()).join(', ');
       throw SpotException(
-        'Type $T is not registered in Spot container.\n'
+        'Type $key is not registered in Spot container.\n'
         'Registered types: ${registeredTypes.isNotEmpty ? registeredTypes : '(none)'}\n\n'
         'Did you forget to register it in SpotModule or with Spot.registerAsync()?'
       );
     }
 
     // Check for circular dependency
-    if (_resolutionStack.contains(T)) {
-      final cycle = [..._resolutionStack, T].map((t) => t.toString()).join(' -> ');
+    if (_resolutionStack.contains(key)) {
+      final cycle = [..._resolutionStack, key].map((k) => k.toString()).join(' -> ');
       throw SpotException(
         'Circular dependency detected: $cycle\n'
-        'Cannot resolve $T because it depends on itself (directly or indirectly).'
+        'Cannot resolve $key because it depends on itself (directly or indirectly).'
       );
     }
 
-    _resolutionStack.add(T);
+    _resolutionStack.add(key);
 
     try {
-      if (logging) log.v('Async injecting $T -> ${registry[T]!.targetType}');
+      if (logging) log.v('Async injecting $key -> ${registry[key]!.targetType}');
 
-      final service = registry[T]!;
+      final service = registry[key]!;
       final instance = await service.locateAsync();
       if (instance == null) {
-        throw SpotException('Class $T resolved to null');
+        throw SpotException('Class $key resolved to null');
       }
 
       // Cache initialized async singletons for faster subsequent access
       if (service.type == SpotType.asyncSingleton && service.instance != null) {
-        _singletonCache[T] = instance;
-        if (logging) log.v('Cached async singleton $T');
+        _singletonCache[key] = instance;
+        if (logging) log.v('Cached async singleton $key');
       }
 
       return instance;
@@ -629,8 +682,8 @@ abstract class Spot {
       if (e is SpotException) {
         rethrow;  // Re-throw SpotException as-is
       }
-      log.e('Failed to async locate class $T', e);
-      throw SpotException('Failed to async resolve $T: ${e.toString()}');
+      log.e('Failed to async locate class $key', e);
+      throw SpotException('Failed to async resolve $key: ${e.toString()}');
     } finally {
       _resolutionStack.removeLast();
     }
@@ -639,10 +692,13 @@ abstract class Spot {
   /// Convenience method for registering dependencies
   /// Alternatively, you can just call
   /// Spot.registerFactory & Spot.registerSingle directly
+  /// 
+  /// Note: Named instances are not supported via the init helper.
+  /// Use registerFactory/registerSingle/registerAsync directly with the name parameter.
   static void init(
     void Function(
-      void Function<T, R extends T>(SpotGetter<R> locator) factory,
-      void Function<T, R extends T>(SpotGetter<R> locator) single,
+      void Function<T, R extends T>(SpotGetter<R> locator, {String? name}) factory,
+      void Function<T, R extends T>(SpotGetter<R> locator, {String? name}) single,
     )
         initializer,
   ) =>
@@ -652,13 +708,18 @@ abstract class Spot {
   /// 
   /// If the instance implements [Disposable], its dispose() method will be called.
   /// The instance will be removed from the registry and cache, and recreated on next injection.
-  static void dispose<T>() {
-    if (registry.containsKey(T)) {
-      if (logging) log.v('Disposing $T');
-      registry[T]?.dispose();
-      registry.remove(T);
-      _singletonCache.remove(T);  // Clear from cache
-      if (logging) log.v('Disposed $T');
+  /// 
+  /// Parameters:
+  /// - [name]: Optional name qualifier for named instances
+  static void dispose<T>({String? name}) {
+    final key = SpotKey<T>(T, name);
+    
+    if (registry.containsKey(key)) {
+      if (logging) log.v('Disposing $key');
+      registry[key]?.dispose();
+      registry.remove(key);
+      _singletonCache.remove(key);  // Clear from cache
+      if (logging) log.v('Disposed $key');
     }
   }
 
@@ -689,23 +750,35 @@ abstract class Spot {
 /// 
 /// Shorthand for [Spot.spot].
 /// 
+/// Parameters:
+/// - [name]: Optional name qualifier for named instances
+/// 
 /// Example:
 /// ```dart
 /// final settings = spot<ISettings>();
 /// final repo = spot<IRepository>();
+/// 
+/// // Named instance
+/// final publicClient = spot<HttpClient>(name: 'public');
 /// ```
-T spot<T>() => Spot.spot<T>();
+T spot<T>({String? name}) => Spot.spot<T>(name: name);
 
 /// Global convenience function for resolving async dependencies.
 /// 
 /// Shorthand for [Spot.spotAsync].
 /// 
+/// Parameters:
+/// - [name]: Optional name qualifier for named instances
+/// 
 /// Example:
 /// ```dart
 /// final db = await spotAsync<Database>();
 /// final api = await spotAsync<IApiClient>();
+/// 
+/// // Named instance
+/// final remoteCache = await spotAsync<Cache>(name: 'remote');
 /// ```
-Future<T> spotAsync<T>() => Spot.spotAsync<T>();
+Future<T> spotAsync<T>({String? name}) => Spot.spotAsync<T>(name: name);
 
 /*mixin SpotDisposable<T extends StatefulWidget> on State<T> {
   final List<SpotService> services = [];
