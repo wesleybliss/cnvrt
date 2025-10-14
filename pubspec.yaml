@@ -46,7 +46,11 @@ dependencies:
 
   # Splash screen
   flutter_native_splash: ^2.4.5
-
+  
+  # Dependency Injection
+  spot:
+    path: ../spot
+  
   # Routing & navigation
   fluro: ^2.0.5
 

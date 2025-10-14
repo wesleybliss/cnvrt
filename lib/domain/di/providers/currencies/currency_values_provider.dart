@@ -2,7 +2,7 @@ import 'package:cnvrt/db/database.dart';
 import 'package:cnvrt/domain/di/providers/currencies/currencies_provider.dart';
 import 'package:cnvrt/domain/di/providers/currencies/sorted_currencies_provider.dart';
 import 'package:cnvrt/domain/di/providers/settings/settings_provider.dart';
-import 'package:cnvrt/domain/di/spot.dart';
+import 'package:spot/spot.dart';
 import 'package:cnvrt/domain/io/i_settings.dart';
 import 'package:cnvrt/io/settings.dart';
 import 'package:cnvrt/utils/currency_utils.dart';

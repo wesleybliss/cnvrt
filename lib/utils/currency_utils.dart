@@ -1,7 +1,7 @@
 import 'package:cnvrt/db/database.dart';
-import 'package:cnvrt/domain/di/spot.dart';
 import 'package:cnvrt/domain/io/i_settings.dart';
 import 'package:cnvrt/utils/logger.dart';
+import 'package:spot/spot.dart';
 
 List<String> inflatedCurrencies = ["COP", "IDR", "VND", "KRW", "IRR", "PYG", "CLP", "LAK", "LBP", "TRY"];
 

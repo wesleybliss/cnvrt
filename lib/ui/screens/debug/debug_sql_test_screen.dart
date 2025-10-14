@@ -1,10 +1,10 @@
 import 'package:cnvrt/db/database.dart' as db;
-import 'package:cnvrt/domain/di/spot.dart';
 import 'package:cnvrt/domain/io/repos/i_currencies_repo.dart';
 import 'package:cnvrt/utils/logger.dart';
 import 'package:drift/drift.dart' as drift;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:spot/spot.dart';
 
 class DebugSqlTestScreen extends ConsumerStatefulWidget {
   const DebugSqlTestScreen({super.key});
