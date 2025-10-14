@@ -123,8 +123,12 @@ class CurrenciesRepo extends ICurrenciesRepo {
         );*/
 
         // If the currency exists, retain its selected property
+        // Use Value.absent() for id to let SQLite match on the UNIQUE symbol constraint
         if (existingCurrency != null) {
-          companion = companion.copyWith(id: Value(existingCurrency.id), selected: Value(existingCurrency.selected));
+          companion = companion.copyWith(id: const Value.absent(), selected: Value(existingCurrency.selected));
+        } else {
+          // For new currencies, also use Value.absent() to let autoIncrement work
+          companion = companion.copyWith(id: const Value.absent());
         }
 
         // Use InsertMode.insertOrReplace for upsert behavior
