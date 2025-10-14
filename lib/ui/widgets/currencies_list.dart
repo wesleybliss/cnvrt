@@ -1,10 +1,10 @@
 import 'package:cnvrt/db/database.dart';
 import 'package:cnvrt/domain/di/providers/currencies/currencies_provider.dart';
-import 'package:cnvrt/domain/di/spot.dart';
 import 'package:cnvrt/domain/io/repos/i_currencies_repo.dart';
 import 'package:cnvrt/utils/logger.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:spot/spot.dart';
 
 class CurrenciesList extends ConsumerWidget {
   final List<Currency> currencies;

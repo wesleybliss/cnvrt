@@ -1,3 +1,5 @@
+import 'package:spot/spot.dart';
+
 /// Example demonstrating scoped containers in Spot DI framework
 /// 
 /// Scoped containers allow creating isolated dependency scopes that:
@@ -11,8 +13,6 @@
 /// - Feature modules (feature-specific dependencies)
 /// - Request-scoped dependencies (web request handlers)
 /// - Temporary state that needs cleanup
-
-import 'package:cnvrt/domain/di/spot.dart';
 
 // Example interfaces and implementations
 

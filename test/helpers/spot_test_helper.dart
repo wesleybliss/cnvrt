@@ -1,7 +1,6 @@
-import 'package:cnvrt/domain/di/spot.dart';
-import 'package:cnvrt/domain/di/spot_key.dart';
 import 'package:cnvrt/domain/io/i_settings.dart';
 import 'package:cnvrt/io/settings.dart';
+import 'package:spot/spot.dart';
 
 /// Comprehensive test helper for Spot DI container.
 /// 
