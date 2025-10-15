@@ -92,7 +92,7 @@ class _DebugScreenState extends ConsumerState<DebugScreen> {
         log.d('[Crashlytics Test] Error recorded successfully');
         log.d('[Crashlytics Test] Restart app to upload to Firebase');
         
-        if (mounted) {
+        if (context.mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text('Error logged! Crashlytics ${isEnabled ? "enabled" : "DISABLED"}. Restart app to send.'),

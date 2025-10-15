@@ -24,9 +24,8 @@ abstract class Utils {
   /// Checks if the system has dark mode enabled.
   /// This version does not require a context.
   /// For context usage, use Context.isSystemDarkMode()
-  /// @todo @deprecated .window is not recommended anymore
   static bool get isSystemDarkMode {
-    var brightness = SchedulerBinding.instance.window.platformBrightness;
+    var brightness = SchedulerBinding.instance.platformDispatcher.platformBrightness;
     return brightness == Brightness.dark;
   }
 

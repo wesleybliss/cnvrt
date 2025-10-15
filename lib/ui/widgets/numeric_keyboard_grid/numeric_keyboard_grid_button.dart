@@ -17,7 +17,7 @@ class NumericKeyboardGridButton extends StatelessWidget {
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.all(Radius.circular(0)),
         ),
-        backgroundColor: Theme.of(context).colorScheme.primary.withOpacity(0.2),
+        backgroundColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.2),
       ),
       onPressed: onPressed,
       onLongPress: onLongPress,
