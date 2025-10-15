@@ -1,3 +1,4 @@
+import 'package:cnvrt/domain/constants/constants.dart';
 import 'package:cnvrt/domain/di/providers/currencies/currencies_provider.dart';
 import 'package:cnvrt/domain/di/providers/currencies/currency_values_provider.dart';
 import 'package:cnvrt/domain/di/providers/currencies/sorted_currencies_provider.dart';
@@ -43,7 +44,8 @@ class CurrenciesInputsList extends ConsumerWidget {
                       contentPadding: const EdgeInsets.only(left: 16.0),
                       leading:
                           settings.showDragReorderHandles
-                              ? const Icon(Icons.drag_handle)
+                              ? Icon(Icons.drag_handle,
+                            color: Theme.of(context).colorScheme.onSurface.withAlpha(Constants.integers.currencyInputIconsAlpha))
                               : null,
                       title: CurrencyInputsListRow(
                         item: e,

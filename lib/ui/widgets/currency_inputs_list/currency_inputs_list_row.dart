@@ -1,4 +1,5 @@
 import 'package:cnvrt/db/database.dart';
+import 'package:cnvrt/domain/constants/constants.dart';
 import 'package:cnvrt/domain/extensions/extensions.dart';
 import 'package:cnvrt/ui/widgets/currency_inputs_list/currency_text_field.dart';
 import 'package:flutter/material.dart';
@@ -43,7 +44,10 @@ class CurrencyInputsListRow extends StatelessWidget {
         ),
         if (showCopyToClipboardButtons)
           IconButton(
-            icon: const Icon(Icons.content_copy),
+            icon: Icon(
+              Icons.content_copy,
+              color: Theme.of(context).colorScheme.onSurface.withAlpha(Constants.integers.currencyInputIconsAlpha),
+            ),
             padding: EdgeInsets.zero,
             constraints: const BoxConstraints(),
             onPressed: () {
