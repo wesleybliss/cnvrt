@@ -146,6 +146,12 @@ abstract class AppLocalizations {
   /// **'Units'**
   String get units;
 
+  /// No description provided for @fetchCurrencies.
+  ///
+  /// In en, this message translates to:
+  /// **'Fetch Currencies'**
+  String get fetchCurrencies;
+
   /// No description provided for @chooseYourFavoriteCurrencies.
   ///
   /// In en, this message translates to:

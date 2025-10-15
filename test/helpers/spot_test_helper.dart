@@ -141,10 +141,10 @@ class SpotTestHelper {
   /// 
   /// Example:
   /// ```dart
-  /// print(SpotTestHelper.getRegistrationInfo<ISettings>());
+  /// log.d(SpotTestHelper.getRegistrationInfo<ISettings>());
   /// // Output: ISettings -> Settings [singleton] (initialized)
   /// 
-  /// print(SpotTestHelper.getRegistrationInfo<HttpClient>(name: 'public'));
+  /// log.d(SpotTestHelper.getRegistrationInfo<HttpClient>(name: 'public'));
   /// // Output: HttpClient(public) -> PublicHttpClient [singleton] (initialized)
   /// ```
   static String getRegistrationInfo<T>({String? name}) {

@@ -33,6 +33,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get units => 'Units';
 
   @override
+  String get fetchCurrencies => 'Fetch Currencies';
+
+  @override
   String get chooseYourFavoriteCurrencies =>
       'Choose your favorite currencies.\\nThese will be pinned to the home screen.';
 

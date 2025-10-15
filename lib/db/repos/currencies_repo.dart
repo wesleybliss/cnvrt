@@ -97,7 +97,7 @@ class CurrenciesRepo extends ICurrenciesRepo {
         .insert(currency.toCompanion(false), mode: InsertMode.insertOrReplace);
 
     // Fetch the row (whether it was inserted or replaced)
-    return await (db.select(db.currencies)..where((tbl) => tbl.id.equals(insertedId ?? currency.id))).getSingle();
+    return await (db.select(db.currencies)..where((tbl) => tbl.id.equals(insertedId))).getSingle();
   }
 
   @override
@@ -139,7 +139,7 @@ class CurrenciesRepo extends ICurrenciesRepo {
         // Fetch the row (whether it was inserted or replaced)
         final Currency? upsertedRow =
             await (db.select(db.currencies)
-              ..where((tbl) => tbl.id.equals(insertedId ?? companion.id.value))).getSingleOrNull();
+              ..where((tbl) => tbl.id.equals(insertedId))).getSingleOrNull();
 
         log.d("upsertManyCompanions: upsertedRow: ${upsertedRow?.symbol}: ${upsertedRow?.id}");
 

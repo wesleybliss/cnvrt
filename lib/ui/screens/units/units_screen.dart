@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class UnitsScreen extends ConsumerWidget {
-  UnitsScreen({super.key});
+  const UnitsScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

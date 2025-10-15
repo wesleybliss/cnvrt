@@ -10,6 +10,7 @@
   "settings": "Settings",
   "currencies": "Currencies",
   "units": "Units",
+  "fetchCurrencies": "Fetch Currencies",
   "chooseYourFavoriteCurrencies": "Choose your favorite currencies.\\nThese will be pinned to the home screen.",
   "searchByNameOrSymbol": "Search by name or symbol (e.g. USD)",
   "noSelectedCurrencies": "You don't have any currencies selected yet. \nAdd some by clicking the button below.",

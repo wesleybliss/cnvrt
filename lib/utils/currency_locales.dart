@@ -5,8 +5,8 @@
 }*/
 
 // Example usage
-// print(formatCurrency('USD', 1234)); // "$1,234"
-// print(formatCurrency('JPY', 1234)); // "¥1,234"
+// log.d(formatCurrency('USD', 1234)); // "$1,234"
+// log.d(formatCurrency('JPY', 1234)); // "¥1,234"
 
 final Map<String, String> currencyLocales = {
   "COP": "es_CO", // Colombia

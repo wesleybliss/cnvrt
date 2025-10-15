@@ -2,7 +2,7 @@ import 'package:cnvrt/config/application.dart';
 import 'package:cnvrt/config/routing/routes.dart';
 import 'package:cnvrt/domain/di/providers/settings/settings_provider.dart';
 import 'package:cnvrt/io/settings.dart';
-import 'package:cnvrt/ui/screens/settings/widgets/ShowCountryFlagsSwitch.dart';
+import 'package:cnvrt/ui/screens/settings/widgets/show_country_flags_switch.dart';
 import 'package:cnvrt/ui/screens/settings/widgets/account_for_inflation_switch.dart';
 import 'package:cnvrt/ui/screens/settings/widgets/allow_decimal_input_switch.dart';
 import 'package:cnvrt/ui/screens/settings/widgets/language_dropdown.dart';
@@ -40,7 +40,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
         appVersion = 'Version ${info.version} (${info.buildNumber})';
       });
     }
-
+    
     @override
     void initState() {
       super.initState();

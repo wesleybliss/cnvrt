@@ -5,7 +5,7 @@ import 'package:cnvrt/ui/screens/debug/debug_convert_screen.dart';
 import 'package:cnvrt/ui/screens/debug/debug_screen.dart';
 import 'package:cnvrt/ui/screens/debug/debug_sql_test_screen.dart';
 import 'package:cnvrt/ui/screens/debug/debug_theme_screen.dart';
-import 'package:cnvrt/ui/screens/error/ErrorScreen.dart';
+import 'package:cnvrt/ui/screens/error/error_screen.dart';
 import 'package:cnvrt/ui/screens/home/home_screen.dart';
 import 'package:cnvrt/ui/screens/settings/inflation_help_screen.dart';
 import 'package:cnvrt/ui/screens/settings/settings_screen.dart';
@@ -21,12 +21,10 @@ Widget _render(
   String title, {
   bool allowBackNavigation = true,
   bool withScaffold = true,
-  bool withBottomBar = true,
 }) =>
     withScaffold
         ? Scaffold(
           appBar: Toolbar(title: title, allowBackNavigation: allowBackNavigation),
-          // bottomNavigationBar: withBottomBar ? const BottomNavbar() : null, // removed in favor of MainScreen
           body: child,
         )
         : child;

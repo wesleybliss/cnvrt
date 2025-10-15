@@ -33,6 +33,9 @@ class AppLocalizationsEs extends AppLocalizations {
   String get units => 'Unidades';
 
   @override
+  String get fetchCurrencies => 'Obtener Divisas';
+
+  @override
   String get chooseYourFavoriteCurrencies =>
       'Elige tus monedas favoritas.\\nEstas se mostrarán en la pantalla de inicio.';
 
