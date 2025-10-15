@@ -1,6 +1,6 @@
 import 'package:cnvrt/db/database.dart';
 import 'package:cnvrt/domain/constants/constants.dart';
-import 'package:spot_di/spot.dart';
+import 'package:spot_di/spot_di.dart';
 import 'package:cnvrt/domain/io/repos/i_currencies_repo.dart';
 import 'package:cnvrt/domain/io/services/i_currencies_service.dart';
 import 'package:cnvrt/domain/models/currency_response.dart';

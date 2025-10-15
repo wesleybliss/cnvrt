@@ -6,7 +6,7 @@ import 'package:cnvrt/ui/widgets/currency_inputs_list/currency_text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:spot_di/spot.dart';
+import 'package:spot_di/spot_di.dart';
 
 import '../helpers/spot_test_helper.dart';
 

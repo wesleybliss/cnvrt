@@ -4,7 +4,7 @@ import 'package:cnvrt/utils/logger.dart';
 import 'package:drift/drift.dart' as drift;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:spot_di/spot.dart';
+import 'package:spot_di/spot_di.dart';
 
 class DebugSqlTestScreen extends ConsumerStatefulWidget {
   const DebugSqlTestScreen({super.key});
