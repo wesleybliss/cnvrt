@@ -12,21 +12,15 @@ class CurrencyInputsListViewModelState {
   final Map<String, TextEditingController> controllers;
   final Map<String, FocusNode> focusNodes;
 
-  CurrencyInputsListViewModelState({
-    required this.controllers,
-    required this.focusNodes,
-  });
+  CurrencyInputsListViewModelState({required this.controllers, required this.focusNodes});
 }
 
-final currencyInputsListViewModelProvider = NotifierProvider<
-  CurrencyInputsListViewModel,
-  CurrencyInputsListViewModelState
->(() {
-  return CurrencyInputsListViewModel();
-});
+final currencyInputsListViewModelProvider =
+    NotifierProvider<CurrencyInputsListViewModel, CurrencyInputsListViewModelState>(() {
+      return CurrencyInputsListViewModel();
+    });
 
-class CurrencyInputsListViewModel
-    extends Notifier<CurrencyInputsListViewModelState> {
+class CurrencyInputsListViewModel extends Notifier<CurrencyInputsListViewModelState> {
   final log = Logger('CurrencyInputsListViewModel');
 
   @override
@@ -60,10 +54,7 @@ class CurrencyInputsListViewModel
 
     log.d('build() created controllers for: ${controllers.keys.join(", ")}');
 
-    return CurrencyInputsListViewModelState(
-      controllers: controllers,
-      focusNodes: focusNodes,
-    );
+    return CurrencyInputsListViewModelState(controllers: controllers, focusNodes: focusNodes);
   }
 
   /// Request focus on the first currency input
@@ -97,7 +88,11 @@ class CurrencyInputsListViewModel
     ref.read(focusedCurrencyInputSymbolProvider.notifier).setSymbol(symbol);
   }
 
-  void updateControllers(Map<String, double> currencyValues, String? focusedCurrencyInputSymbol, bool allowDecimalInput) {
+  void updateControllers(
+    Map<String, double> currencyValues,
+    String? focusedCurrencyInputSymbol,
+    bool allowDecimalInput,
+  ) {
     log.d('updateControllers\n${currencyValues.entries.toString()}');
 
     for (var entry in currencyValues.entries) {
@@ -105,11 +100,8 @@ class CurrencyInputsListViewModel
       // Use the double value for formatting
       final value = _formatCurrencyWithSettings(symbol, entry.value, allowDecimalInput);
 
-      log.d(
-        [
-          'DEBUG DEBUG DEBUG DEBUG: updateControllers $symbol => $value',
-        ].join('\n'),
-      );
+      // log.d('DEBUG DEBUG DEBUG DEBUG: updateControllers $symbol => $value');
+
       // Don't update the input field they've typed in
       if (focusedCurrencyInputSymbol == symbol) continue;
 
@@ -117,9 +109,7 @@ class CurrencyInputsListViewModel
         final controller = state.controllers[symbol]!;
         final valueAsString = value;
 
-        log.d(
-          'updateControllers $symbol => ${controller.text} -> $valueAsString',
-        );
+        log.d('updateControllers $symbol => ${controller.text} -> $valueAsString');
         // Update controller only if the value has changed
         if (controller.text != valueAsString) {
           controller.text = valueAsString;
@@ -134,10 +124,7 @@ class CurrencyInputsListViewModel
     final formatter = NumberFormat.currency(
       locale: currencyLocales[symbol] ?? 'en_US',
       symbol: '',
-      decimalDigits:
-          allowDecimalInput
-              ? 2
-              : 0, // Set to 0 for whole numbers, 2 for decimals
+      decimalDigits: allowDecimalInput ? 2 : 0, // Set to 0 for whole numbers, 2 for decimals
     );
 
     // Use the actual double value for formatting

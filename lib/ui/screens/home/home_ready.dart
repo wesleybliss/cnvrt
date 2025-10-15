@@ -57,7 +57,7 @@ class _HomeReadyState extends ConsumerState<HomeReady> {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          if (state.error != null) Text(state.error!),
+          if (state.error != null) Text(state.error!.toString()),
           Center(
             child: Text(AppLocalizations.of(context)!.noSelectedCurrencies),
           ),

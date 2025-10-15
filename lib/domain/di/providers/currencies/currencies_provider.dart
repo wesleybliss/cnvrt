@@ -11,7 +11,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class CurrenciesState {
   final List<Currency> currencies;
   final bool loading;
-  final String? error;
+  final Exception? error;
   final bool isFetching;
 
   CurrenciesState({List<Currency>? currencies, this.loading = false, this.error, this.isFetching = false})
@@ -71,7 +71,7 @@ class CurrenciesNotifier extends StateNotifier<CurrenciesState> {
       state = CurrenciesState(loading: false, isFetching: false, currencies: savedCurrencies);
     } catch (e) {
       log.e('error', e);
-      state = CurrenciesState(loading: false, isFetching: false, error: e.toString());
+      state = CurrenciesState(loading: false, isFetching: false, error: e as Exception);
     }
   }
 

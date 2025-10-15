@@ -111,7 +111,7 @@ class CurrenciesRepo extends ICurrenciesRepo {
       final List<Currency> upsertedRows = [];
 
       for (CurrenciesCompanion companion in companions) {
-        log.d("upsertManyCompanions: upserting ${companion.symbol.value}");
+        // log.d("upsertManyCompanions: upserting ${companion.symbol.value}");
 
         // Fetch the existing currency if it exists
         final existingCurrency =
@@ -134,14 +134,14 @@ class CurrenciesRepo extends ICurrenciesRepo {
         // Use InsertMode.insertOrReplace for upsert behavior
         final insertedId = await db.into(db.currencies).insert(companion, mode: InsertMode.insertOrReplace);
 
-        log.d("upsertManyCompanions: insertedId: $insertedId");
+        // log.d("upsertManyCompanions: insertedId: $insertedId");
 
         // Fetch the row (whether it was inserted or replaced)
         final Currency? upsertedRow =
             await (db.select(db.currencies)
               ..where((tbl) => tbl.id.equals(insertedId))).getSingleOrNull();
 
-        log.d("upsertManyCompanions: upsertedRow: ${upsertedRow?.symbol}: ${upsertedRow?.id}");
+        // log.d("upsertManyCompanions: upsertedRow: ${upsertedRow?.symbol}: ${upsertedRow?.id}");
 
         if (upsertedRow != null) {
           upsertedRows.add(upsertedRow);
@@ -149,9 +149,10 @@ class CurrenciesRepo extends ICurrenciesRepo {
       }
 
       final debugAllCurrencies = await (db.select(db.currencies)).get();
-      log.d(
+      /*log.d(
         "upsertManyCompanions: all currencies: ${debugAllCurrencies.map((e) => '${e.symbol}: (${e.selected})').join(', ')}",
-      );
+      );*/
+      log.d("upsertManyCompanions: all currencies (${debugAllCurrencies.length})");
 
       return upsertedRows;
     });
