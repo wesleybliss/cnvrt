@@ -28,32 +28,33 @@ class SettingsScreen extends ConsumerStatefulWidget {
 }
 
 class _SettingsScreenState extends ConsumerState<SettingsScreen> {
+  String appVersion = '0.0.0';
+  final Map<String, TextEditingController> controllers = {"roundingDecimalsController": TextEditingController()};
+
+  @override
+  void initState() {
+    super.initState();
+    fetchAppVersion();
+  }
+
+  @override
+  void dispose() {
+    for (var controller in controllers.values) {
+      controller.dispose();
+    }
+    super.dispose();
+  }
+
+  void fetchAppVersion() async {
+    final info = await PackageInfo.fromPlatform();
+    setState(() {
+      appVersion = 'Version ${info.version} (${info.buildNumber})';
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    String appVersion = '0.0.0';
     final settingsAsyncValue = ref.watch(settingsNotifierProvider);
-    final Map<String, TextEditingController> controllers = {"roundingDecimalsController": TextEditingController()};
-
-    void fetchAppVersion() async {
-      final info = await PackageInfo.fromPlatform();
-      setState(() {
-        appVersion = 'Version ${info.version} (${info.buildNumber})';
-      });
-    }
-    
-    @override
-    void initState() {
-      super.initState();
-      fetchAppVersion();
-    }
-
-    @override
-    void dispose() {
-      for (var controller in controllers.values) {
-        controller.dispose();
-      }
-      super.dispose();
-    }
 
     Widget renderBody(Settings settings) {
       final debugWidget =
