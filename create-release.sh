@@ -10,6 +10,7 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then
     flutter build apk --release && \
         firebase appdistribution:distribute \
             build/app/outputs/flutter-apk/app-release.apk \
-            --app '1:1021931476908:android:0ef35750044f283fef4c09'
+            --app '1:1021931476908:android:0ef35750044f283fef4c09' \
+            --groups 'alpha-testers'
     
 fi
