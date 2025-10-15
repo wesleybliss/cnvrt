@@ -10,6 +10,7 @@
     "settings": "Ajustes",
     "currencies": "Monedas",
     "units": "Unidades",
+    "fetchCurrencies": "Obtener Divisas",
     "chooseYourFavoriteCurrencies": "Elige tus monedas favoritas.\\nEstas se mostrarán en la pantalla de inicio.",
     "searchByNameOrSymbol": "Busca por nombre o símbolo (p. ej. USD)",
     "noSelectedCurrencies": "Aún no has seleccionado ninguna moneda.\nAñade algunas haciendo clic en el botón de abajo.",

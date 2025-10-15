@@ -5,7 +5,7 @@ import 'package:cnvrt/domain/di/providers/settings/settings_provider.dart';
 import 'package:cnvrt/domain/di/providers/settings/settings_selectors.dart';
 import 'package:cnvrt/l10n/app_localizations.dart';
 import 'package:cnvrt/ui/main_screen.dart';
-import 'package:cnvrt/ui/screens/error/ErrorScreen.dart';
+import 'package:cnvrt/ui/screens/error/error_screen.dart';
 import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

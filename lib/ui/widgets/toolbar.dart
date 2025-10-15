@@ -40,8 +40,6 @@ class Toolbar extends ConsumerWidget implements PreferredSizeWidget {
                 icon: const Icon(Icons.settings), // Settings icon
                 tooltip: 'Settings',
                 onPressed: () {
-                  // Handle settings action
-                  print('Settings pressed');
                   Application.router.navigateTo(context, Routes.settings);
                 },
               ),

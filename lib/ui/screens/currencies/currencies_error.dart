@@ -14,6 +14,18 @@ class CurrenciesError extends ConsumerWidget {
       ref.read(currenciesProvider.notifier).fetchCurrencies();
     }
 
-    return Center(child: Column(children: [Text('${AppLocalizations.of(context)!.error}: ${state.error}')]));
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text('${AppLocalizations.of(context)!.error}: ${state.error}'),
+          const SizedBox(height: 16),
+          ElevatedButton(
+            onPressed: onFetchCurrenciesClick,
+            child: Text(AppLocalizations.of(context)!.fetchCurrencies),
+          ),
+        ],
+      ),
+    );
   }
 }

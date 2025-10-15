@@ -37,7 +37,7 @@ List<Pair<String, Color>> buildColorsList(context) => [
   Pair("onTertiaryFixedVariant", Theme.of(context).colorScheme.onTertiaryFixedVariant),
   Pair("errorContainer", Theme.of(context).colorScheme.errorContainer),
   Pair("onErrorContainer", Theme.of(context).colorScheme.onErrorContainer),
-  Pair("surfaceVariant", Theme.of(context).colorScheme.surfaceVariant),
+  Pair("surfaceVariant", Theme.of(context).colorScheme.surfaceContainerHighest),
   Pair("surfaceDim", Theme.of(context).colorScheme.surfaceDim),
   Pair("surfaceBright", Theme.of(context).colorScheme.surfaceBright),
   Pair("surfaceContainerLowest", Theme.of(context).colorScheme.surfaceContainerLowest),
@@ -54,8 +54,8 @@ List<Pair<String, Color>> buildColorsList(context) => [
   Pair("onInverseSurface", Theme.of(context).colorScheme.onInverseSurface),
   Pair("inversePrimary", Theme.of(context).colorScheme.inversePrimary),
   Pair("surfaceTint", Theme.of(context).colorScheme.surfaceTint),
-  Pair("background", Theme.of(context).colorScheme.background),
-  Pair("onBackground", Theme.of(context).colorScheme.onBackground),
+  Pair("background", Theme.of(context).colorScheme.surface),
+  Pair("onBackground", Theme.of(context).colorScheme.onSurface),
 ];
 
 Widget buildCard(Pair<String, Color> item) => Card(

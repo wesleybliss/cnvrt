@@ -76,11 +76,11 @@ class _DebugScreenState extends ConsumerState<DebugScreen> {
         throw Exception('Testing');
       } catch (error, stackTrace) {
         log.i('Recording non-fatal test error to Crashlytics: $error');
-        print('[Crashlytics Test] Sending non-fatal error...');
+        log.d('[Crashlytics Test] Sending non-fatal error...');
         
         // Check if Crashlytics is enabled
         final isEnabled = FirebaseCrashlytics.instance.isCrashlyticsCollectionEnabled;
-        print('[Crashlytics Test] Crashlytics enabled: $isEnabled');
+        log.d('[Crashlytics Test] Crashlytics enabled: $isEnabled');
         
         await FirebaseCrashlytics.instance.recordError(
           error,
@@ -89,8 +89,8 @@ class _DebugScreenState extends ConsumerState<DebugScreen> {
           reason: 'Test non-fatal error from debug screen',
         );
         
-        print('[Crashlytics Test] Error recorded successfully');
-        print('[Crashlytics Test] Restart app to upload to Firebase');
+        log.d('[Crashlytics Test] Error recorded successfully');
+        log.d('[Crashlytics Test] Restart app to upload to Firebase');
         
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -105,7 +105,7 @@ class _DebugScreenState extends ConsumerState<DebugScreen> {
 
     void testFatalCrash() {
       log.w('Triggering fatal crash test - app will crash!');
-      print('[Crashlytics Test] Forcing fatal crash...');
+      log.d('[Crashlytics Test] Forcing fatal crash...');
       // This will cause an actual crash
       FirebaseCrashlytics.instance.crash();
     }

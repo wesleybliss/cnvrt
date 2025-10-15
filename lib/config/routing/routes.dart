@@ -1,7 +1,7 @@
 import 'package:cnvrt/config/routing/route_handlers.dart';
 import 'package:cnvrt/domain/constants/constants.dart';
 import 'package:cnvrt/domain/constants/routing.dart';
-import 'package:cnvrt/ui/screens/error/ErrorScreen.dart';
+import 'package:cnvrt/ui/screens/error/error_screen.dart';
 import 'package:cnvrt/utils/logger.dart';
 import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
