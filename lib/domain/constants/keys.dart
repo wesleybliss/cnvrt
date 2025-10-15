@@ -17,6 +17,7 @@ class ConstantsKeysSettings {
   final accountForInflation = "accountForInflation";
   final showCountryFlags = "showCountryFlags";
   final allowDecimalInput = "allowDecimalInput";
+  final disableCurrencyCaching = "disableCurrencyCaching";
 
   final developerModeActive = "developerModeActive";
 }

@@ -201,6 +201,33 @@ class _DebugScreenState extends ConsumerState<DebugScreen> {
               // Currency Actions Section
               buildSectionHeader(context, '💱 Currency Actions'),
               const SizedBox(height: 8),
+              
+              // Cache toggle
+              Card(
+                child: SwitchListTile(
+                  title: const Text('Disable Currency Caching'),
+                  subtitle: const Text('Force fresh API calls every time (for debugging)'),
+                  value: settings.disableCurrencyCaching,
+                  onChanged: (value) async {
+                    final notifier = ref.read(settingsNotifierProvider.notifier);
+                    await notifier.updateSettings(
+                      settings.copyWith(disableCurrencyCaching: value),
+                    );
+                    if (context.mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(value
+                              ? 'Caching disabled - will fetch fresh data on every launch'
+                              : 'Caching enabled - will use cached data'),
+                          duration: const Duration(seconds: 2),
+                        ),
+                      );
+                    }
+                  },
+                ),
+              ),
+              const SizedBox(height: 8),
+              
               ElevatedButton.icon(
                 onPressed: () => Application.router.navigateTo(context, Routes.currencies),
                 icon: const Icon(Icons.manage_search),
