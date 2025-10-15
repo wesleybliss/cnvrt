@@ -78,6 +78,16 @@ class CurrenciesNotifier extends StateNotifier<CurrenciesState> {
   Future<void> initializeCurrencies() async {
     final keys = Constants.keys.settings;
     final prefs = await SharedPreferences.getInstance();
+    
+    // Check if caching is disabled for debugging
+    final disableCache = prefs.getBool(keys.disableCurrencyCaching) ?? false;
+    if (disableCache) {
+      log.d('Currency caching is disabled - forcing fresh fetch');
+      await fetchCurrencies();
+      prefs.setString(keys.lastUpdated, DateTime.now().toIso8601String());
+      return;
+    }
+    
     final lastUpdatedValue = prefs.getString(keys.lastUpdated);
     final lastUpdated = lastUpdatedValue != null ? DateTime.parse(lastUpdatedValue) : null;
     final lastUpdatedDiff = lastUpdated == null ? 0 : DateTime.now().difference(lastUpdated).inHours;
