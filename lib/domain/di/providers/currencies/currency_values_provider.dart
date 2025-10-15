@@ -2,9 +2,6 @@ import 'package:cnvrt/db/database.dart';
 import 'package:cnvrt/domain/di/providers/currencies/currencies_provider.dart';
 import 'package:cnvrt/domain/di/providers/currencies/sorted_currencies_provider.dart';
 import 'package:cnvrt/domain/di/providers/settings/settings_provider.dart';
-import 'package:spot/spot.dart';
-import 'package:cnvrt/domain/io/i_settings.dart';
-import 'package:cnvrt/io/settings.dart';
 import 'package:cnvrt/utils/currency_utils.dart';
 import 'package:cnvrt/utils/logger.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -17,18 +14,7 @@ class CurrencyValuesNotifier extends StateNotifier<Map<String, double>> {
     : super(
         // Initialize with the selected currencies and default values (e.g., 0.0)
         {for (var currency in initialCurrencies) currency.symbol: 0.0},
-      ) {
-    // Listen to settings changes and update the Spot DI singleton
-    // This keeps the singleton in sync with the Riverpod provider
-    ref.listen<AsyncValue<Settings>>(settingsNotifierProvider, (previous, next) {
-      next.whenData((settings) {
-        // Update the Spot DI singleton with the new settings
-        Spot.dispose<ISettings>();
-        Spot.registerSingle<ISettings, Settings>((get) => settings);
-        log.d('Updated Spot DI Settings singleton: accountForInflation=${settings.accountForInflation}');
-      });
-    });
-  }
+      );
 
   void clearValues() {
     for (var currency in state.keys) {
@@ -41,11 +27,18 @@ class CurrencyValuesNotifier extends StateNotifier<Map<String, double>> {
     final raw = removeAllButLastDecimal(text);
     final double value = double.tryParse(raw) ?? 0.0;
     final sortedCurrencies = ref.read(sortedCurrenciesProvider);
+    final settings = ref.read(settingsNotifierProvider).value;
+
+    // If settings haven't loaded yet, use default values to prevent crashes
+    if (settings == null) {
+      log.w('Settings not loaded yet, skipping conversion');
+      return state;
+    }
 
     // log.d('convertCurrencies: RAW: $text -> $raw -> ${sortedCurrencies.join(', ')}');
 
-    // Get the updated currency values)
-    state = convertCurrencies(symbol, value, sortedCurrencies);
+    // Get the updated currency values
+    state = convertCurrencies(symbol, value, sortedCurrencies, settings);
 
     return state;
   }

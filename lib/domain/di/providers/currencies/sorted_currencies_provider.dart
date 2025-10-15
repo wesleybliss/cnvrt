@@ -1,38 +1,19 @@
 import 'package:cnvrt/db/database.dart';
 import 'package:cnvrt/domain/di/providers/currencies/currencies_provider.dart';
+import 'package:cnvrt/utils/logger.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-final sortedCurrenciesProvider = StateNotifierProvider<SortedCurrenciesNotifier, List<Currency>>((ref) {
-  // Initialize with the selected currencies
+// Derived provider that automatically updates when selectedCurrenciesProvider changes
+final sortedCurrenciesProvider = Provider<List<Currency>>((ref) {
+  final log = Logger('sortedCurrenciesProvider');
   final selectedCurrencies = ref.watch(selectedCurrenciesProvider);
-  return SortedCurrenciesNotifier(selectedCurrencies, ref);
+  
+  final sorted = List<Currency>.from(selectedCurrencies)..sort((a, b) {
+    final orderComparison = a.order.compareTo(b.order);
+    if (orderComparison != 0) return orderComparison;
+    return a.symbol.compareTo(b.symbol);
+  });
+  
+  log.d('sorted currencies: ${sorted.map((e) => e.symbol).join(", ")}');
+  return sorted;
 });
-
-class SortedCurrenciesNotifier extends StateNotifier<List<Currency>> {
-  final Ref ref;
-
-  SortedCurrenciesNotifier(List<Currency> initialCurrencies, this.ref)
-    : super(
-        List.from(initialCurrencies)..sort((a, b) {
-          final orderComparison = a.order.compareTo(b.order);
-          if (orderComparison != 0) return orderComparison;
-          return a.symbol.compareTo(b.symbol);
-        }),
-      );
-
-  void reorder(int oldIndex, int newIndex) {
-    if (newIndex > oldIndex) newIndex -= 1;
-
-    final item = state.removeAt(oldIndex);
-    state.insert(newIndex, item);
-
-    // Update order properties
-    for (int i = 0; i < state.length; i++) {
-      final updatedCurrency = state[i].copyWith(order: i);
-      state[i] = updatedCurrency;
-
-      // Persist changes to disk
-      ref.read(currenciesProvider.notifier).setCurrency(updatedCurrency);
-    }
-  }
-}

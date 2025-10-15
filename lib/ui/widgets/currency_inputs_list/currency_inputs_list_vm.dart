@@ -1,3 +1,4 @@
+import 'package:cnvrt/db/database.dart';
 import 'package:cnvrt/domain/di/providers/currencies/currencies_provider.dart';
 import 'package:cnvrt/domain/di/providers/currencies/currency_values_provider.dart';
 import 'package:cnvrt/domain/di/providers/currencies/sorted_currencies_provider.dart';
@@ -31,9 +32,8 @@ class CurrencyInputsListViewModel
 
   @override
   CurrencyInputsListViewModelState build() {
-    // Initialize controllers for the initial list of currencies
-    // This will be updated when sortedCurrenciesProvider changes in the UI
-    final sortedCurrencies = ref.read(sortedCurrenciesProvider);
+    // Watch sortedCurrenciesProvider so this rebuilds when currencies change
+    final sortedCurrencies = ref.watch(sortedCurrenciesProvider);
     final controllers = <String, TextEditingController>{};
     final focusNodes = <String, FocusNode>{};
 
@@ -58,6 +58,8 @@ class CurrencyInputsListViewModel
         focusNode.dispose();
       }
     });
+
+    log.d('build() created controllers for: ${controllers.keys.join(", ")}');
 
     return CurrencyInputsListViewModelState(
       controllers: controllers,
@@ -163,6 +165,17 @@ class CurrencyInputsListViewModel
   }
 
   void onReorderCurrency(int oldIndex, int newIndex) {
-    ref.read(sortedCurrenciesProvider.notifier).reorder(oldIndex, newIndex);
+    if (newIndex > oldIndex) newIndex -= 1;
+
+    final sortedCurrencies = ref.read(sortedCurrenciesProvider);
+    final reordered = List<Currency>.from(sortedCurrencies);
+    final item = reordered.removeAt(oldIndex);
+    reordered.insert(newIndex, item);
+
+    // Update order properties and persist to disk
+    for (int i = 0; i < reordered.length; i++) {
+      final updatedCurrency = reordered[i].copyWith(order: i);
+      ref.read(currenciesProvider.notifier).setCurrency(updatedCurrency);
+    }
   }
 }
