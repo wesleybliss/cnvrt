@@ -44,6 +44,8 @@ class CurrencyInputsListRow extends StatelessWidget {
         if (showCopyToClipboardButtons)
           IconButton(
             icon: const Icon(Icons.content_copy),
+            padding: EdgeInsets.zero,
+            constraints: const BoxConstraints(),
             onPressed: () {
               context.copyToClipboard(controller?.text ?? '');
             },

@@ -40,6 +40,7 @@ class CurrenciesInputsList extends ConsumerWidget {
                   .map(
                     (e) => ListTile(
                       key: ValueKey(e.symbol),
+                      contentPadding: const EdgeInsets.only(left: 16.0),
                       leading:
                           settings.showDragReorderHandles
                               ? const Icon(Icons.drag_handle)
