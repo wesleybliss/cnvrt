@@ -7,7 +7,7 @@ import 'package:cnvrt/domain/io/services/currencies_service.dart';
 import 'package:cnvrt/domain/io/services/i_currencies_service.dart';
 import 'package:cnvrt/io/settings.dart';
 import 'package:dio/dio.dart';
-import 'package:spot/spot.dart';
+import 'package:spot_di/spot.dart';
 
 abstract class SpotModule {
   static void registerDependencies() {

@@ -4,7 +4,7 @@ import 'package:cnvrt/domain/io/repos/i_currencies_repo.dart';
 import 'package:cnvrt/utils/logger.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:spot/spot.dart';
+import 'package:spot_di/spot.dart';
 
 class CurrenciesList extends ConsumerWidget {
   final List<Currency> currencies;

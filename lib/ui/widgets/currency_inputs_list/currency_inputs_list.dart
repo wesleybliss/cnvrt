@@ -1,3 +1,4 @@
+import 'package:cnvrt/domain/di/providers/currencies/currencies_provider.dart';
 import 'package:cnvrt/domain/di/providers/currencies/currency_values_provider.dart';
 import 'package:cnvrt/domain/di/providers/currencies/sorted_currencies_provider.dart';
 import 'package:cnvrt/domain/di/providers/settings/settings_provider.dart';
@@ -19,10 +20,12 @@ class CurrenciesInputsList extends ConsumerWidget {
     final settingsAsyncValue = ref.watch(settingsNotifierProvider);
     final sortedCurrencies = ref.watch(sortedCurrenciesProvider);
     final viewModelState = ref.watch(currencyInputsListViewModelProvider);
+    final focusedCurrencyInputSymbol = ref.watch(focusedCurrencyInputSymbolProvider);
 
     // Automatically call `updateControllers` when `currencyValuesProvider` changes
     ref.listen<Map<String, double>>(currencyValuesProvider, (_, next) {
-      viewModel.updateControllers(next);
+      final allowDecimalInput = ref.read(settingsNotifierProvider).value?.allowDecimalInput ?? false;
+      viewModel.updateControllers(next, focusedCurrencyInputSymbol, allowDecimalInput);
     });
 
     return settingsAsyncValue.when(

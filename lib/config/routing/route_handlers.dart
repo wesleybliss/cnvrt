@@ -61,7 +61,26 @@ Handler paramsHandlerFor(ParamsHandler childFn, String Function(BuildContext) ti
   );
 }
 
-final errorHandler = handlerFor(const ErrorScreen(message: '@todo Error'), (context) => Constants.strings.appName);
+final errorHandler = Handler(
+  handlerFunc: (BuildContext? context, Map<String, dynamic> params) {
+    if (context == null) {
+      throw Exception("Context is required for localization.");
+    }
+    
+    // Extract error message from URL params (comes as List<String> from Fluro)
+    final messageParam = params['message'];
+    final message = messageParam is List ? messageParam.first : messageParam?.toString();
+    
+    // Create exception from message if provided
+    final errorArg = message != null ? Exception(message) : null;
+    final title = Constants.strings.appName;
+    
+    return _render(
+      ErrorScreen(error: errorArg, stackTrace: null),
+      title,
+    );
+  },
+);
 //final splashHandler = handlerFor(SplashScreen(), RouteWrapper.none);
 
 final debugHandler = handlerFor(const DebugScreen(), (context) => "Debug");

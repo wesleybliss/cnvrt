@@ -88,24 +88,6 @@ class CurrencyInputsListViewModel
     ref.read(currencyValuesProvider.notifier).clearValues();
   }
 
-  String _formatCurrency(String symbol, double value) {
-    // Access settings to determine if decimals are allowed
-    final allowDecimalInput =
-        ref.read(settingsNotifierProvider).value?.allowDecimalInput ?? false;
-
-    final formatter = NumberFormat.currency(
-      locale: currencyLocales[symbol] ?? 'en_US',
-      symbol: '',
-      decimalDigits:
-          allowDecimalInput
-              ? 2
-              : 0, // Set to 0 for whole numbers, 2 for decimals
-    );
-
-    // Use the actual double value for formatting
-    return formatter.format(value).trim();
-  }
-
   void onFocusChanged(String symbol) {
     state.controllers[symbol]?.clear();
 
@@ -116,17 +98,13 @@ class CurrencyInputsListViewModel
     ref.read(focusedCurrencyInputSymbolProvider.notifier).setSymbol(symbol);
   }
 
-  void updateControllers(Map<String, double> currencyValues) {
+  void updateControllers(Map<String, double> currencyValues, String? focusedCurrencyInputSymbol, bool allowDecimalInput) {
     log.d('updateControllers\n${currencyValues.entries.toString()}');
-
-    final focusedCurrencyInputSymbol = ref.read(
-      focusedCurrencyInputSymbolProvider,
-    );
 
     for (var entry in currencyValues.entries) {
       final symbol = entry.key;
       // Use the double value for formatting
-      final value = _formatCurrency(symbol, entry.value);
+      final value = _formatCurrencyWithSettings(symbol, entry.value, allowDecimalInput);
 
       log.d(
         [
@@ -151,6 +129,20 @@ class CurrencyInputsListViewModel
         log.e('Currency not found: $symbol in ${state.controllers.keys}');
       }
     }
+  }
+
+  String _formatCurrencyWithSettings(String symbol, double value, bool allowDecimalInput) {
+    final formatter = NumberFormat.currency(
+      locale: currencyLocales[symbol] ?? 'en_US',
+      symbol: '',
+      decimalDigits:
+          allowDecimalInput
+              ? 2
+              : 0, // Set to 0 for whole numbers, 2 for decimals
+    );
+
+    // Use the actual double value for formatting
+    return formatter.format(value).trim();
   }
 
   void onTextChanged(String symbol, String text) {

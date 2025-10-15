@@ -999,7 +999,7 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.10.1"
-  spot:
+  spot_di:
     dependency: "direct main"
     description:
       path: "../spot"
