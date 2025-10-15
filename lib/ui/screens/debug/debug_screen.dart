@@ -9,7 +9,7 @@ import 'package:collection/collection.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:spot/spot.dart';
+import 'package:spot_di/spot.dart';
 
 class DebugScreen extends ConsumerStatefulWidget {
   const DebugScreen({super.key});
@@ -243,6 +243,60 @@ class _DebugScreenState extends ConsumerState<DebugScreen> {
               OutlinedButton(
                 onPressed: debugDumpAllCurrencies,
                 child: const Text('Dump All Currencies to Console'),
+              ),
+              const SizedBox(height: 24),
+
+              // Error Screen Testing Section
+              buildSectionHeader(context, '❌ Error Screen Testing'),
+              const SizedBox(height: 8),
+              ElevatedButton.icon(
+                onPressed: () {
+                  // Create a test exception with stack trace
+                  try {
+                    throw Exception('This is a test error for the error screen');
+                  } catch (error, stackTrace) {
+                    // Navigate to error screen with the exception
+                    Application.router.navigateTo(
+                      context,
+                      '${Routes.error}?test=true',
+                      routeSettings: RouteSettings(
+                        arguments: {
+                          'error': error as Exception,
+                          'stackTrace': stackTrace,
+                        },
+                      ),
+                    );
+                  }
+                },
+                icon: const Icon(Icons.error_outline),
+                label: const Text('Test Error Screen'),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.purple,
+                  foregroundColor: Colors.white,
+                ),
+              ),
+              const SizedBox(height: 24),
+
+              // Error Screen Testing Section
+              buildSectionHeader(context, '❌ Error Screen Testing'),
+              const SizedBox(height: 8),
+              ElevatedButton.icon(
+                onPressed: () {
+                  // Navigate to error screen with a test error message
+                  final errorMessage = Uri.encodeComponent(
+                    'This is a test error for the error screen',
+                  );
+                  Application.router.navigateTo(
+                    context,
+                    '${Routes.error}?message=$errorMessage',
+                  );
+                },
+                icon: const Icon(Icons.error_outline),
+                label: const Text('Test Error Screen'),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.purple,
+                  foregroundColor: Colors.white,
+                ),
               ),
               const SizedBox(height: 24),
 

@@ -1,5 +1,7 @@
 import 'package:cnvrt/config/routing/route_handlers.dart';
+import 'package:cnvrt/domain/constants/constants.dart';
 import 'package:cnvrt/domain/constants/routing.dart';
+import 'package:cnvrt/ui/screens/error/ErrorScreen.dart';
 import 'package:cnvrt/utils/logger.dart';
 import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
@@ -13,6 +15,7 @@ class Routes {
   static const String debugSqlTest = '/debug-sql-test';
 
   static const String home = '/';
+  static const String error = '/error';
   static const String settings = '/settings';
   static const String inflationHelp = '/settings/inflation-help';
   static const String currencies = '/currencies';
@@ -33,9 +36,12 @@ class Routes {
 
     router.notFoundHandler = Handler(
       handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
-        log.w('ROUTE NOT FOUND');
-        // return loginHandler.handlerFunc(context, params);
-        return errorHandler.handlerFunc(context, params);
+        log.w('ROUTE NOT FOUND: ${context?.settings?.name}');
+        final error = Exception('Route not found: ${context?.settings?.name}');
+        return Scaffold(
+          appBar: AppBar(title: Text(Constants.strings.appName)),
+          body: ErrorScreen(error: error, stackTrace: null),
+        );
       },
     );
 
@@ -45,6 +51,7 @@ class Routes {
     define(debugSqlTest, debugSqlTestHandler, TransitionType.fadeIn);
 
     define(home, homeHandler, TransitionType.fadeIn);
+    define(error, errorHandler, TransitionType.fadeIn);
     define(settings, settingsHandler, TransitionType.fadeIn);
     define(inflationHelp, inflationHelpHandler, TransitionType.fadeIn);
     define(currencies, currenciesHandler, TransitionType.fadeIn);
