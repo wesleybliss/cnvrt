@@ -1,7 +1,6 @@
 import 'package:cnvrt/db/database.dart';
 import 'package:cnvrt/io/settings.dart';
 import 'package:cnvrt/utils/currency_utils.dart';
-import 'package:cnvrt/utils/logger.dart';
 import 'package:flutter_test/flutter_test.dart';
 import '../helpers/spot_test_helper.dart';
 
@@ -145,13 +144,13 @@ void main() {
       final convertedValue1 = convertCurrencies('COP', 4, [
         const Currency(id: 1, symbol: 'COP', name: 'Colombian Peso', rate: rate, selected: true, order: 0),
         const Currency(id: 2, symbol: 'USD', name: 'US Dollar', rate: 1.0, selected: true, order: 1),
-      ]);
+      ], Settings(accountForInflation: false));
       expect(convertedValue1['USD'], equals(0.0)); // 4 COP without inflation is very small in USD
 
       final convertedValue2 = convertCurrencies('COP', rate, [
         const Currency(id: 1, symbol: 'COP', name: 'Colombian Peso', rate: rate, selected: true, order: 0),
         const Currency(id: 2, symbol: 'USD', name: 'US Dollar', rate: 1.0, selected: true, order: 1),
-      ]);
+      ], Settings(accountForInflation: false));
       expect(convertedValue2['USD'], equals(1.0));
 
       SpotTestHelper.setupTestDependencies(); // Reset to default after test
@@ -174,7 +173,7 @@ void main() {
         const Currency(id: 3, symbol: 'GBP', name: 'British Pound', rate: 0.73, selected: true, order: 2),
       ];
 
-      final result = convertCurrencies('USD', 100.0, currencies);
+      final result = convertCurrencies('USD', 100.0, currencies, Settings());
 
       expect(result['USD'], equals(100.0));
       expect(result['EUR'], equals(85.0));
@@ -188,7 +187,7 @@ void main() {
         const Currency(id: 3, symbol: 'GBP', name: 'British Pound', rate: 0.73, selected: true, order: 2),
       ];
 
-      final result = convertCurrencies('EUR', 85.0, currencies);
+      final result = convertCurrencies('EUR', 85.0, currencies, Settings());
 
       expect(result['USD'], equals(100.0));
       expect(result['EUR'], equals(85.0));
@@ -202,7 +201,7 @@ void main() {
         const Currency(id: 3, symbol: 'JPY', name: 'Japanese Yen', rate: 110.0, selected: true, order: 2),
       ];
 
-      final result = convertCurrencies('EUR', 85.0, currencies);
+      final result = convertCurrencies('EUR', 85.0, currencies, Settings());
 
       expect(result['EUR'], equals(85.0));
       expect(result['GBP'], equals(73.0));
@@ -216,7 +215,7 @@ void main() {
         const Currency(id: 2, symbol: 'USD', name: 'US Dollar', rate: 1.0, selected: true, order: 1),
       ];
       
-      final result = convertCurrencies('COP', copPerUsd, currencies);
+      final result = convertCurrencies('COP', copPerUsd, currencies, Settings());
       expect(result['COP'], equals(copPerUsd));
       expect(result['USD'], equals(1.0));
     });
@@ -238,7 +237,10 @@ void main() {
       ];
       
       // User types "4" in COP field
-      final result = convertCurrencies('COP', 4, currencies);
+      final result = convertCurrencies('COP', 4, currencies, Settings(
+        roundingDecimals: 2,
+        accountForInflation: true,
+      ));
       
       // 4 gets inflated to 4000 COP
       // 4000 COP / 4115.61 ≈ 0.97 USD
@@ -256,7 +258,7 @@ void main() {
         const Currency(id: 2, symbol: 'EUR', name: 'Euro', rate: 0.846, selected: true, order: 1),
       ];
 
-      final result = convertCurrencies('USD', 100.0, currencies);
+      final result = convertCurrencies('USD', 100.0, currencies, Settings(roundingDecimals: 4));
 
       expect(result['EUR'], equals(84.6));
     });
@@ -275,7 +277,10 @@ void main() {
       ];
 
       // Input 1.5 COP: "1.5" has commaIndex=-1, decimalIndex=1, sum=0 (NOT > 0), so no inflation multiplier
-      final result = convertCurrencies('COP', 1.5, currencies);
+      final result = convertCurrencies('COP', 1.5, currencies, Settings(
+        roundingDecimals: 2,
+        accountForInflation: true,
+      ));
 
       // 1.5 COP / 4000 = 0.000375 USD
       expect(result['USD'], equals(0.0)); // Rounded to 2 decimals
@@ -296,7 +301,10 @@ void main() {
       ];
 
       // Input 1.5 COP without inflation should stay as 1.5
-      final result = convertCurrencies('COP', 1.5, currencies);
+      final result = convertCurrencies('COP', 1.5, currencies, Settings(
+        roundingDecimals: 2,
+        accountForInflation: false,
+      ));
 
       // 1.5 COP / 4000 = 0.000375 USD
       expect(result['USD'], equals(0.0)); // Rounded to 2 decimals
@@ -309,7 +317,7 @@ void main() {
         const Currency(id: 2, symbol: 'EUR', name: 'Euro', rate: 0.85, selected: true, order: 1),
       ];
 
-      final result = convertCurrencies('USD', 0.0, currencies);
+      final result = convertCurrencies('USD', 0.0, currencies, Settings());
 
       expect(result['USD'], equals(0.0));
       expect(result['EUR'], equals(0.0));
@@ -321,7 +329,7 @@ void main() {
         const Currency(id: 2, symbol: 'EUR', name: 'Euro', rate: 0.85, selected: true, order: 1),
       ];
 
-      final result = convertCurrencies('USD', 1000000.0, currencies);
+      final result = convertCurrencies('USD', 1000000.0, currencies, Settings());
 
       expect(result['USD'], equals(1000000.0));
       expect(result['EUR'], equals(850000.0));
@@ -335,7 +343,7 @@ void main() {
         const Currency(id: 4, symbol: 'JPY', name: 'Japanese Yen', rate: 110.0, selected: true, order: 3),
       ];
 
-      final result = convertCurrencies('USD', 100.0, currencies);
+      final result = convertCurrencies('USD', 100.0, currencies, Settings());
 
       expect(result.keys, containsAll(['USD', 'EUR', 'GBP', 'JPY']));
       expect(result.keys.length, equals(4));

@@ -1,7 +1,6 @@
 import 'package:cnvrt/db/database.dart';
-import 'package:cnvrt/domain/io/i_settings.dart';
+import 'package:cnvrt/io/settings.dart';
 import 'package:cnvrt/utils/logger.dart';
-import 'package:spot/spot.dart';
 
 List<String> inflatedCurrencies = ["COP", "IDR", "VND", "KRW", "IRR", "PYG", "CLP", "LAK", "LBP", "TRY"];
 
@@ -27,10 +26,8 @@ double getInflatedCurrencyValue(String symbol, double value, {bool accountForInf
 
 /// Converts the input value to the currency of the symbol, using USD as the base.
 /// Returns a map of symbol to converted value.
-Map<String, double> convertCurrencies(String symbol, double inputValue, List<Currency> currencies) {
+Map<String, double> convertCurrencies(String symbol, double inputValue, List<Currency> currencies, Settings settings) {
   final log = Logger('convertCurrencies');
-
-  final settings = spot<ISettings>();
 
   // Find the currency that was changed
   final Currency changedCurrency = currencies.firstWhere((it) => it.symbol == symbol);
