@@ -55,11 +55,10 @@ class _$NumericUnitsStateModelCWProxyImpl
 
   @override
   NumericUnitsStateModel convertReversedFn(
-          int Function(int) convertReversedFn) =>
-      this(convertReversedFn: convertReversedFn);
+    int Function(int) convertReversedFn,
+  ) => this(convertReversedFn: convertReversedFn);
 
   @override
-
   /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `NumericUnitsStateModel(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
   ///
   /// Usage
@@ -86,14 +85,16 @@ class _$NumericUnitsStateModelCWProxyImpl
           ? _value.direction
           // ignore: cast_nullable_to_non_nullable
           : direction as NumericUnitsConversionDirection,
-      convertNormalFn: convertNormalFn == const $CopyWithPlaceholder()
-          ? _value.convertNormalFn
-          // ignore: cast_nullable_to_non_nullable
-          : convertNormalFn as int Function(int),
-      convertReversedFn: convertReversedFn == const $CopyWithPlaceholder()
-          ? _value.convertReversedFn
-          // ignore: cast_nullable_to_non_nullable
-          : convertReversedFn as int Function(int),
+      convertNormalFn:
+          convertNormalFn == const $CopyWithPlaceholder()
+              ? _value.convertNormalFn
+              // ignore: cast_nullable_to_non_nullable
+              : convertNormalFn as int Function(int),
+      convertReversedFn:
+          convertReversedFn == const $CopyWithPlaceholder()
+              ? _value.convertReversedFn
+              // ignore: cast_nullable_to_non_nullable
+              : convertReversedFn as int Function(int),
     );
   }
 }
@@ -206,8 +207,12 @@ class NumericUnitsStateFamily extends Family<NumericUnitsStateModel> {
 }
 
 /// See also [NumericUnitsState].
-class NumericUnitsStateProvider extends AutoDisposeNotifierProviderImpl<
-    NumericUnitsState, NumericUnitsStateModel> {
+class NumericUnitsStateProvider
+    extends
+        AutoDisposeNotifierProviderImpl<
+          NumericUnitsState,
+          NumericUnitsStateModel
+        > {
   /// See also [NumericUnitsState].
   NumericUnitsStateProvider({
     int source = -1,
@@ -217,27 +222,28 @@ class NumericUnitsStateProvider extends AutoDisposeNotifierProviderImpl<
     NumericUnitsConversionDirection direction =
         NumericUnitsConversionDirection.normal,
   }) : this._internal(
-          () => NumericUnitsState()
-            ..source = source
-            ..target = target
-            ..convertNormalFn = convertNormalFn
-            ..convertReversedFn = convertReversedFn
-            ..direction = direction,
-          from: numericUnitsStateProvider,
-          name: r'numericUnitsStateProvider',
-          debugGetCreateSourceHash:
-              const bool.fromEnvironment('dart.vm.product')
-                  ? null
-                  : _$numericUnitsStateHash,
-          dependencies: NumericUnitsStateFamily._dependencies,
-          allTransitiveDependencies:
-              NumericUnitsStateFamily._allTransitiveDependencies,
-          source: source,
-          target: target,
-          convertNormalFn: convertNormalFn,
-          convertReversedFn: convertReversedFn,
-          direction: direction,
-        );
+         () =>
+             NumericUnitsState()
+               ..source = source
+               ..target = target
+               ..convertNormalFn = convertNormalFn
+               ..convertReversedFn = convertReversedFn
+               ..direction = direction,
+         from: numericUnitsStateProvider,
+         name: r'numericUnitsStateProvider',
+         debugGetCreateSourceHash:
+             const bool.fromEnvironment('dart.vm.product')
+                 ? null
+                 : _$numericUnitsStateHash,
+         dependencies: NumericUnitsStateFamily._dependencies,
+         allTransitiveDependencies:
+             NumericUnitsStateFamily._allTransitiveDependencies,
+         source: source,
+         target: target,
+         convertNormalFn: convertNormalFn,
+         convertReversedFn: convertReversedFn,
+         direction: direction,
+       );
 
   NumericUnitsStateProvider._internal(
     super._createNotifier, {
@@ -277,12 +283,13 @@ class NumericUnitsStateProvider extends AutoDisposeNotifierProviderImpl<
     return ProviderOverride(
       origin: this,
       override: NumericUnitsStateProvider._internal(
-        () => create()
-          ..source = source
-          ..target = target
-          ..convertNormalFn = convertNormalFn
-          ..convertReversedFn = convertReversedFn
-          ..direction = direction,
+        () =>
+            create()
+              ..source = source
+              ..target = target
+              ..convertNormalFn = convertNormalFn
+              ..convertReversedFn = convertReversedFn
+              ..direction = direction,
         from: from,
         name: null,
         dependencies: null,
@@ -299,7 +306,7 @@ class NumericUnitsStateProvider extends AutoDisposeNotifierProviderImpl<
 
   @override
   AutoDisposeNotifierProviderElement<NumericUnitsState, NumericUnitsStateModel>
-      createElement() {
+  createElement() {
     return _NumericUnitsStateProviderElement(this);
   }
 
@@ -347,8 +354,12 @@ mixin NumericUnitsStateRef
 }
 
 class _NumericUnitsStateProviderElement
-    extends AutoDisposeNotifierProviderElement<NumericUnitsState,
-        NumericUnitsStateModel> with NumericUnitsStateRef {
+    extends
+        AutoDisposeNotifierProviderElement<
+          NumericUnitsState,
+          NumericUnitsStateModel
+        >
+    with NumericUnitsStateRef {
   _NumericUnitsStateProviderElement(super.provider);
 
   @override
@@ -365,5 +376,6 @@ class _NumericUnitsStateProviderElement
   NumericUnitsConversionDirection get direction =>
       (origin as NumericUnitsStateProvider).direction;
 }
+
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
