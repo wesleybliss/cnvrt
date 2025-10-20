@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:cnvrt/l10n/app_localizations.dart';
 
 class NoInternetError extends StatelessWidget {
   final VoidCallback onRetryClick;
@@ -22,11 +23,16 @@ class NoInternetError extends StatelessWidget {
         ),
         Padding(
           padding: const EdgeInsets.only(left: 16, right: 16),
-          // align this text centered
-          child: Text('Cnvrt could not connect.\nCheck your internet connection.', textAlign: TextAlign.center),
+          child: Text(
+            AppLocalizations.of(context)!.noInternetMessage,
+            textAlign: TextAlign.center,
+          ),
         ),
         SizedBox(height: MediaQuery.of(context).size.height * 0.05),
-        ElevatedButton(onPressed: onRetryClick, child: const Text('TRY AGAIN')),
+        ElevatedButton(
+          onPressed: onRetryClick,
+          child: Text(AppLocalizations.of(context)!.tryAgain.toUpperCase()),
+        ),
       ],
     );
   }

@@ -391,6 +391,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Enable accounting for inflation to make entering currencies with large inflated rates automatically multiply by 1,000 for easier input.\n\nFor example, if 5,000.00 COP = \$1 USD, you can just enter 5 COP and it will treat it as 5,000.00 for convenience.'**
   String get inflationHelpContent;
+
+  /// No description provided for @unableToRefreshCurrencies.
+  ///
+  /// In en, this message translates to:
+  /// **'Unable to refresh currency data'**
+  String get unableToRefreshCurrencies;
+
+  /// No description provided for @retry.
+  ///
+  /// In en, this message translates to:
+  /// **'Retry'**
+  String get retry;
+
+  /// No description provided for @dismiss.
+  ///
+  /// In en, this message translates to:
+  /// **'Dismiss'**
+  String get dismiss;
+
+  /// No description provided for @noInternetTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'No Internet Connection'**
+  String get noInternetTitle;
+
+  /// No description provided for @noInternetMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Cnvrt could not connect.\nCheck your internet connection.'**
+  String get noInternetMessage;
+
+  /// No description provided for @tryAgain.
+  ///
+  /// In en, this message translates to:
+  /// **'Try Again'**
+  String get tryAgain;
 }
 
 class _AppLocalizationsDelegate
