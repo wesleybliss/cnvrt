@@ -67,11 +67,14 @@ android {
             // TODO: Add your own signing config for the release build.
             // Signing with the debug keys for now, so `flutter run --release` works.
             signingConfig = signingConfigs.getByName("debug")
+            applicationIdSuffix = ".debug"
+            resValue("string", "app_name", "CNVRT-D")
         }
         release {
             // TODO: Add your own signing config for the release build.
             // Signing with the debug keys for now, so `flutter run --release` works.
             signingConfig = signingConfigs.getByName("release")
+            resValue("string", "app_name", "CNVRT")
         }
     }
     

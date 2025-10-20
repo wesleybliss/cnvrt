@@ -1,5 +1,6 @@
 import 'package:cnvrt/config/application.dart';
 import 'package:cnvrt/config/routing/routes.dart';
+import 'package:cnvrt/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -30,7 +31,7 @@ class Toolbar extends ConsumerWidget implements PreferredSizeWidget {
             : [
               IconButton(
                 icon: const Icon(Icons.favorite), // Heart icon for favorites
-                tooltip: 'Favorites',
+                tooltip: AppLocalizations.of(context)!.favorites,
                 onPressed: () {
                   Application.router.navigateTo(context, Routes.currencies);
                 },
@@ -38,7 +39,7 @@ class Toolbar extends ConsumerWidget implements PreferredSizeWidget {
               const ToolbarThemeToggle(),
               IconButton(
                 icon: const Icon(Icons.settings), // Settings icon
-                tooltip: 'Settings',
+                tooltip: AppLocalizations.of(context)!.settings,
                 onPressed: () {
                   Application.router.navigateTo(context, Routes.settings);
                 },
