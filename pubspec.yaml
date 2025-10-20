@@ -48,8 +48,9 @@ dependencies:
   flutter_native_splash: ^2.4.5
   
   # Dependency Injection
-  spot_di:
-    path: ../spot
+  spot_di: ^1.0.1
+#  spot_di:
+#    path: ../spot
   
   # Routing & navigation
   fluro: ^2.0.5
