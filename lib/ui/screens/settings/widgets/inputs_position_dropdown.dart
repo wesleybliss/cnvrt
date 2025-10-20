@@ -12,10 +12,10 @@ class InputsPositionDropdown extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final dropdown = DropdownButton(
       value: value,
-      items: const [
-        DropdownMenuItem(value: "top", child: Text("Top")),
-        DropdownMenuItem(value: "center", child: Text("Center")),
-        DropdownMenuItem(value: "bottom", child: Text("Bottom")),
+      items: [
+        DropdownMenuItem(value: "top", child: Text(AppLocalizations.of(context)!.top)),
+        DropdownMenuItem(value: "center", child: Text(AppLocalizations.of(context)!.center)),
+        DropdownMenuItem(value: "bottom", child: Text(AppLocalizations.of(context)!.bottom)),
       ],
       onChanged: (String? value) {
         ref.read(settingsNotifierProvider.notifier).setInputsPosition(value ?? "center");

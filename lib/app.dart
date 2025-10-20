@@ -76,11 +76,11 @@ class SimpleCurrencyApp extends ConsumerWidget {
     }
 
     if (themeAsyncValue is AsyncError) {
-      return Text('Error: ${themeAsyncValue.error}');
+      return Text('${AppLocalizations.of(context)!.error}: ${themeAsyncValue.error}');
     }
 
     if (settingsAsyncValue is AsyncError) {
-      return Text('Error: ${settingsAsyncValue.error}');
+      return Text('${AppLocalizations.of(context)!.error}: ${settingsAsyncValue.error}');
     }
 
     final theme = themeAsyncValue.value!;

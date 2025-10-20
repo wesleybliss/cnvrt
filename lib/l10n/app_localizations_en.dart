@@ -27,6 +27,33 @@ class AppLocalizationsEn extends AppLocalizations {
   String get system => 'System';
 
   @override
+  String get dark => 'Dark';
+
+  @override
+  String get light => 'Light';
+
+  @override
+  String get top => 'Top';
+
+  @override
+  String get center => 'Center';
+
+  @override
+  String get bottom => 'Bottom';
+
+  @override
+  String get sixHours => '6 hours';
+
+  @override
+  String get twelveHours => '12 hours';
+
+  @override
+  String get twentyFourHours => '24 hours';
+
+  @override
+  String get copiedToClipboard => 'Copied to clipboard';
+
+  @override
   String get favorites => 'Favorites';
 
   @override

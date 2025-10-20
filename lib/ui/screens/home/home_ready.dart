@@ -73,7 +73,7 @@ class _HomeReadyState extends ConsumerState<HomeReady> {
 
     return settingsAsyncValue.when(
       loading: () => const CircularProgressIndicator(),
-      error: (error, stackTrace) => Text('Error: $error'),
+      error: (error, stackTrace) => Text('${AppLocalizations.of(context)!.error}: $error'),
       data: (settings) {
         return Column(
           mainAxisAlignment:

@@ -10,6 +10,7 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:spot_di/spot_di.dart';
+import 'package:cnvrt/l10n/app_localizations.dart';
 
 class DebugScreen extends ConsumerStatefulWidget {
   const DebugScreen({super.key});
@@ -392,7 +393,7 @@ class _DebugScreenState extends ConsumerState<DebugScreen> {
 
     return settingsAsyncValue.when(
       loading: () => const CircularProgressIndicator(),
-      error: (error, stackTrace) => Text('Error: $error'),
+      error: (error, stackTrace) => Text('${AppLocalizations.of(context)!.error}: $error'),
       data: (settings) {
         return renderBody(settings);
       },

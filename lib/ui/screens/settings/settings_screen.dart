@@ -11,6 +11,7 @@ import 'package:cnvrt/ui/widgets/tap_counter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:cnvrt/l10n/app_localizations.dart';
 
 import 'widgets/inputs_position_dropdown.dart';
 import 'widgets/round_decimals_to_input.dart';
@@ -100,7 +101,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
 
     return settingsAsyncValue.when(
       loading: () => const CircularProgressIndicator(),
-      error: (error, stackTrace) => Text('Error: $error'),
+      error: (error, stackTrace) => Text('${AppLocalizations.of(context)!.error}: $error'),
       data: (settings) {
         // Set initial values
         controllers["roundingDecimalsController"]?.text = settings.roundingDecimals.toString();

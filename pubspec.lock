@@ -997,9 +997,10 @@ packages:
   spot_di:
     dependency: "direct main"
     description:
-      path: "../spot"
-      relative: true
-    source: path
+      name: spot_di
+      sha256: "94c60d7fa2cc692eb04e3efc88a762e113565a40a576c4958016f9e428fc35b8"
+      url: "https://pub.dev"
+    source: hosted
     version: "1.0.1"
   sprintf:
     dependency: transitive

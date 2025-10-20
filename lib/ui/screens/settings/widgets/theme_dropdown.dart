@@ -12,10 +12,10 @@ class ThemeDropdown extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final dropdown = DropdownButton(
       value: value,
-      items: const [
-        DropdownMenuItem(value: "dark", child: Text("Dark")),
-        DropdownMenuItem(value: "light", child: Text("Light")),
-        DropdownMenuItem(value: "system", child: Text("System")),
+      items: [
+        DropdownMenuItem(value: "dark", child: Text(AppLocalizations.of(context)!.dark)),
+        DropdownMenuItem(value: "light", child: Text(AppLocalizations.of(context)!.light)),
+        DropdownMenuItem(value: "system", child: Text(AppLocalizations.of(context)!.system)),
       ],
       onChanged: (String? value) {
         ref.read(settingsNotifierProvider.notifier).setTheme(value ?? "system");

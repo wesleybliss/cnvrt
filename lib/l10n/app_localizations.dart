@@ -134,6 +134,60 @@ abstract class AppLocalizations {
   /// **'System'**
   String get system;
 
+  /// No description provided for @dark.
+  ///
+  /// In en, this message translates to:
+  /// **'Dark'**
+  String get dark;
+
+  /// No description provided for @light.
+  ///
+  /// In en, this message translates to:
+  /// **'Light'**
+  String get light;
+
+  /// No description provided for @top.
+  ///
+  /// In en, this message translates to:
+  /// **'Top'**
+  String get top;
+
+  /// No description provided for @center.
+  ///
+  /// In en, this message translates to:
+  /// **'Center'**
+  String get center;
+
+  /// No description provided for @bottom.
+  ///
+  /// In en, this message translates to:
+  /// **'Bottom'**
+  String get bottom;
+
+  /// No description provided for @sixHours.
+  ///
+  /// In en, this message translates to:
+  /// **'6 hours'**
+  String get sixHours;
+
+  /// No description provided for @twelveHours.
+  ///
+  /// In en, this message translates to:
+  /// **'12 hours'**
+  String get twelveHours;
+
+  /// No description provided for @twentyFourHours.
+  ///
+  /// In en, this message translates to:
+  /// **'24 hours'**
+  String get twentyFourHours;
+
+  /// No description provided for @copiedToClipboard.
+  ///
+  /// In en, this message translates to:
+  /// **'Copied to clipboard'**
+  String get copiedToClipboard;
+
   /// No description provided for @favorites.
   ///
   /// In en, this message translates to:

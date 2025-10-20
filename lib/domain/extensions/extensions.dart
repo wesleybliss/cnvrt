@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:cnvrt/l10n/app_localizations.dart';
 
 extension ContextExtensions on BuildContext {
   
@@ -9,7 +10,7 @@ extension ContextExtensions on BuildContext {
     
     if (showSnackBar) {
       ScaffoldMessenger.of(this).showSnackBar(
-        const SnackBar(content: Text('Copied to clipboard')),
+        SnackBar(content: Text(AppLocalizations.of(this)!.copiedToClipboard)),
       );
     }
     

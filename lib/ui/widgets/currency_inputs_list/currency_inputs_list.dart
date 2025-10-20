@@ -7,6 +7,7 @@ import 'package:cnvrt/ui/widgets/currency_inputs_list/currency_inputs_list_row.d
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cnvrt/ui/widgets/currency_inputs_list/currency_inputs_list_vm.dart'; // Import your new ViewModel
+import 'package:cnvrt/l10n/app_localizations.dart';
 
 class CurrenciesInputsList extends ConsumerWidget {
   // Since the data comes from providers, the constructor might not need
@@ -31,7 +32,7 @@ class CurrenciesInputsList extends ConsumerWidget {
 
     return settingsAsyncValue.when(
       loading: () => const CircularProgressIndicator(),
-      error: (error, stackTrace) => Text('Error: $error'),
+      error: (error, stackTrace) => Text('${AppLocalizations.of(context)!.error}: $error'),
       data: (settings) {
         return ReorderableListView(
           shrinkWrap: true,

@@ -12,10 +12,10 @@ class UpdateFrequencyInHoursDropdown extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final dropdown = DropdownButton(
       value: value,
-      items: const [
-        DropdownMenuItem(value: 6, child: Text("6 hours")),
-        DropdownMenuItem(value: 12, child: Text("12 hours")),
-        DropdownMenuItem(value: 24, child: Text("24 hours")),
+      items: [
+        DropdownMenuItem(value: 6, child: Text(AppLocalizations.of(context)!.sixHours)),
+        DropdownMenuItem(value: 12, child: Text(AppLocalizations.of(context)!.twelveHours)),
+        DropdownMenuItem(value: 24, child: Text(AppLocalizations.of(context)!.twentyFourHours)),
       ],
       onChanged: (int? value) {
         ref.read(settingsNotifierProvider.notifier).setUpdateFrequencyInHours(value ?? 12);
