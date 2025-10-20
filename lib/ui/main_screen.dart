@@ -1,6 +1,7 @@
 import 'package:cnvrt/config/application.dart';
 import 'package:cnvrt/config/routing/routes.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -12,7 +13,6 @@ class MainScreen extends StatefulWidget {
 class MainScreenState extends State<MainScreen> {
   int _selectedIndex = 0;
   final List<GlobalKey<NavigatorState>> _navigatorKeys = [GlobalKey<NavigatorState>(), GlobalKey<NavigatorState>()];
-  DateTime? _lastBackPressTime;
 
   List<String> get _tabRoutes => [Routes.home, Routes.units];
 
@@ -47,13 +47,6 @@ class MainScreenState extends State<MainScreen> {
       currentNavigator.pop();
       return false;
     }
-
-    final now = DateTime.now();
-    if (_lastBackPressTime == null || now.difference(_lastBackPressTime!) > const Duration(seconds: 2)) {
-      _lastBackPressTime = now;
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Press back again to exit')));
-      return false;
-    }
     return true;
   }
 
@@ -64,8 +57,8 @@ class MainScreenState extends State<MainScreen> {
       onPopInvokedWithResult: (didPop, result) async {
         if (didPop) return;
         final shouldPop = await _handlePop();
-        if (shouldPop && context.mounted) {
-          Navigator.of(context).pop();
+        if (shouldPop) {
+          SystemNavigator.pop();
         }
       },
       child: Scaffold(
