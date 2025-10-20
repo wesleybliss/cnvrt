@@ -169,4 +169,23 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get inflationHelpContent =>
       'Enable accounting for inflation to make entering currencies with large inflated rates automatically multiply by 1,000 for easier input.\n\nFor example, if 5,000.00 COP = \$1 USD, you can just enter 5 COP and it will treat it as 5,000.00 for convenience.';
+
+  @override
+  String get unableToRefreshCurrencies => 'Unable to refresh currency data';
+
+  @override
+  String get retry => 'Retry';
+
+  @override
+  String get dismiss => 'Dismiss';
+
+  @override
+  String get noInternetTitle => 'No Internet Connection';
+
+  @override
+  String get noInternetMessage =>
+      'Cnvrt could not connect.\nCheck your internet connection.';
+
+  @override
+  String get tryAgain => 'Try Again';
 }

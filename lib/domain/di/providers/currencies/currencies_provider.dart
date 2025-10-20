@@ -1,5 +1,7 @@
 import 'package:cnvrt/db/database.dart';
 import 'package:cnvrt/domain/constants/constants.dart';
+import 'package:cnvrt/utils/crashlytics_utils.dart';
+import 'package:cnvrt/utils/network_utils.dart';
 import 'package:spot_di/spot_di.dart';
 import 'package:cnvrt/domain/io/repos/i_currencies_repo.dart';
 import 'package:cnvrt/domain/io/services/i_currencies_service.dart';
@@ -13,9 +15,32 @@ class CurrenciesState {
   final bool loading;
   final Exception? error;
   final bool isFetching;
+  final bool hasNetworkError;
 
-  CurrenciesState({List<Currency>? currencies, this.loading = false, this.error, this.isFetching = false})
-    : currencies = currencies ?? List.empty();
+  CurrenciesState({
+    List<Currency>? currencies,
+    this.loading = false,
+    this.error,
+    this.isFetching = false,
+    this.hasNetworkError = false,
+  }) : currencies = currencies ?? List.empty();
+
+  CurrenciesState copyWith({
+    List<Currency>? currencies,
+    bool? loading,
+    Exception? error,
+    bool? isFetching,
+    bool? hasNetworkError,
+    bool clearError = false,
+  }) {
+    return CurrenciesState(
+      currencies: currencies ?? this.currencies,
+      loading: loading ?? this.loading,
+      error: clearError ? null : (error ?? this.error),
+      isFetching: isFetching ?? this.isFetching,
+      hasNetworkError: hasNetworkError ?? this.hasNetworkError,
+    );
+  }
 }
 
 class CurrenciesNotifier extends StateNotifier<CurrenciesState> {
@@ -27,23 +52,23 @@ class CurrenciesNotifier extends StateNotifier<CurrenciesState> {
 
   void setCurrency(Currency currency) {
     final next = state.currencies.map((e) => e.id == currency.id ? currency : e).toList();
-    state = CurrenciesState(currencies: next);
+    state = state.copyWith(currencies: next);
     currenciesRepo.create(currency);
   }
 
   Future<void> clearCurrencies() async {
     await currenciesRepo.deleteAll();
-    state = CurrenciesState(currencies: [], loading: false);
+    state = state.copyWith(currencies: [], loading: false);
   }
 
   Future<List<Currency>> readCurrencies({bool showLoading = true}) async {
     if (showLoading) {
-      state = CurrenciesState(loading: true);
+      state = state.copyWith(loading: true);
     }
 
     final items = await currenciesRepo.findAllOrderedByOrder();
 
-    state = CurrenciesState(currencies: items, loading: false);
+    state = state.copyWith(currencies: items, loading: false);
 
     // log.d('readCurrencies:\n${items.map((e) => '${e.symbol}: (${e.selected})').join('\n')}');
     log.d('readCurrencies: ${items.length}');
@@ -54,7 +79,11 @@ class CurrenciesNotifier extends StateNotifier<CurrenciesState> {
   Future<void> fetchCurrencies() async {
     if (state.loading) return;
 
-    state = CurrenciesState(loading: true, isFetching: true, currencies: state.currencies);
+    state = state.copyWith(
+      loading: true,
+      isFetching: true,
+      currencies: state.currencies,
+    );
 
     try {
       final CurrencyResponse? res = await currenciesService.fetchCurrencies();
@@ -63,15 +92,54 @@ class CurrenciesNotifier extends StateNotifier<CurrenciesState> {
 
       log.d("fetchCurrencies: upserting ${data.length} currencies");
 
-      // await currenciesRepo.deleteAll();
-
       // Update currencies without destroying locally saved data, like selected state
       final savedCurrencies = await currenciesRepo.upsertManyCompanions(data);
 
-      state = CurrenciesState(loading: false, isFetching: false, currencies: savedCurrencies);
-    } catch (e) {
-      log.e('error', e);
-      state = CurrenciesState(loading: false, isFetching: false, error: e as Exception);
+      // Success: clear any error states
+      state = state.copyWith(
+        loading: false,
+        isFetching: false,
+        currencies: savedCurrencies,
+        hasNetworkError: false,
+        clearError: true,
+      );
+    } catch (e, st) {
+      final isConnectivity = isConnectivityError(e);
+      final hasCache = state.currencies.isNotEmpty;
+
+      if (isConnectivity) {
+        log.w('Network connectivity issue: ${toStringSafe(e, maxLength: 200)}');
+        
+        if (hasCache) {
+          // User has cached data, just flag the network error
+          state = state.copyWith(
+            loading: false,
+            isFetching: false,
+            hasNetworkError: true,
+            clearError: true,
+          );
+        } else {
+          // No cached data, set error for full-screen error display
+          state = state.copyWith(
+            loading: false,
+            isFetching: false,
+            hasNetworkError: true,
+            error: e as Exception,
+          );
+        }
+        return;
+      }
+
+      // Non-connectivity errors: report to Crashlytics and show error
+      log.e('Non-connectivity error fetching currencies', e);
+      await recordNonConnectivityError(e, st);
+      
+      state = state.copyWith(
+        loading: false,
+        isFetching: false,
+        error: e as Exception,
+        hasNetworkError: false,
+      );
     }
   }
 

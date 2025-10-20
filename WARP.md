@@ -186,9 +186,32 @@ The app uses a **custom service locator pattern** called "Spot":
 - Prefer const constructors where possible for performance
 
 ### Error Handling
-- Dedicated error screens/widgets for specific scenarios
+
+The app distinguishes between **connectivity errors** (user's network issues) and **API/application errors** (server or app bugs):
+
+**Connectivity Errors** (handled gracefully):
+- Detected via `isConnectivityError()` in `lib/utils/network_utils.dart`
+- Includes: connection timeouts, DNS failures, socket exceptions, TLS handshake errors
+- **With cached data**: Shows dismissable snackbar + auto-retry every 3 seconds
+- **Without cached data**: Shows full-screen "No Internet" error with manual retry
+- **Not reported to Crashlytics** (user's network is beyond our control)
+- **Automatic retry**: Service layer retries 3 times with 1s, 2s, 3s backoff delays
+
+**API/Application Errors** (treated as bugs):
+- HTTP error responses (4xx, 5xx)
+- Parsing errors, unexpected exceptions
+- Shows full-screen error screen
+- **Always reported to Firebase Crashlytics** for investigation
+
+**Key utilities**:
+- `lib/utils/network_utils.dart`: Error detection (`isConnectivityError`, `isHttpApiError`, `toStringSafe`)
+- `lib/utils/crashlytics_utils.dart`: Filtered error reporting (`recordNonConnectivityError`)
+- `lib/domain/io/services/currencies_service.dart`: Automatic retry with backoff (adjust delays here)
+
+**Implementation details**:
 - Use try-catch in async operations, log errors with custom Logger
 - Display user-friendly error messages, log technical details
+- Dedicated error screens/widgets for specific scenarios
 
 ### Types
 - Use strong typing with explicit types
@@ -252,6 +275,8 @@ dart run build_runner build --delete-conflicting-outputs
 - Check if API server is running on port 3002
 - Verify ADB port forwarding: `adb reverse tcp:3002 tcp:3002`
 - Check network logs in debug console
+- If seeing snackbar about network issues with cached currencies: This is expected behavior when network is unavailable but cached data exists
+- If seeing full-screen "No Internet" error: This means no cached data exists yet, fix network and tap Retry
 
 **State not updating:**
 - Ensure Riverpod providers are being watched with `ref.watch()`, not `ref.read()` in build methods
@@ -259,3 +284,10 @@ dart run build_runner build --delete-conflicting-outputs
 
 **Generated files out of sync:**
 - Delete `.dart_tool` and run `dart run build_runner build --delete-conflicting-outputs`
+
+**Testing network error handling:**
+- Simulate connectivity failure by stopping API server or disabling network
+- With cached currencies: Should see dismissable snackbar with Retry/Dismiss, auto-retry after 3s
+- Fresh app install without network: Should see full-screen NoInternetError with Retry button
+- Simulate API 500 error: Should see generic ErrorScreen and error reported to Crashlytics
+- Check logs: Connectivity errors logged as warnings, API errors as errors

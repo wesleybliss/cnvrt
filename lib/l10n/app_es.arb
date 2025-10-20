@@ -50,5 +50,11 @@
     "showCountryFlagsDescription": "Muestra banderas de países junto a los símbolos de moneda",
     "allowDecimalInputDescription": "Permite ingresar puntos decimales en los campos de entrada",
     "inflationHelpTitle": "Tener en cuenta la inflación",
-    "inflationHelpContent": "Habilita la contabilización de inflación para facilitar la entrada de monedas con tasas infladas grandes, multiplicando automáticamente por 1.000.\n\nPor ejemplo, si 5.000,00 COP = $1 USD, solo necesitas ingresar 5 COP y se tratará como 5.000,00 para mayor comodidad."
+    "inflationHelpContent": "Habilita la contabilización de inflación para facilitar la entrada de monedas con tasas infladas grandes, multiplicando automáticamente por 1.000.\n\nPor ejemplo, si 5.000,00 COP = $1 USD, solo necesitas ingresar 5 COP y se tratará como 5.000,00 para mayor comodidad.",
+    "unableToRefreshCurrencies": "No se pueden actualizar los datos de moneda",
+    "retry": "Reintentar",
+    "dismiss": "Descartar",
+    "noInternetTitle": "Sin conexión a Internet",
+    "noInternetMessage": "Cnvrt no pudo conectarse.\nVerifica tu conexión a Internet.",
+    "tryAgain": "Intentar de Nuevo"
 }
