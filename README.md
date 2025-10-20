@@ -2,6 +2,7 @@
 
 A simple currency conversion app.
 
+[![Flutter CI/CD](https://github.com/wesleybliss/cnvrt/actions/workflows/ci-cd.yml/badge.svg)](https://github.com/wesleybliss/cnvrt/actions/workflows/ci-cd.yml)
 
 ## Getting Started
 
@@ -16,28 +17,6 @@ A simple currency conversion app.
 
 ## TODO
 
-* [x] Remember theme preference for subsequent launches
-* [x] Show flag next to currency symbol on inputs
 * [ ] Common denominations screen? (e.g. 50k COP = $usd, 100k, etc)
 * [ ] Ability to perform basic math operations
-* [ ] Translations
-
-
-### Settings
-
-* [x] Show "drag to reorder" handles
-* [x] Show copy to clipboard buttons
-* [x] Show full currency name label
-* [x] Position of inputs (top, middle, bottom)
-* [x] Show currency rate (all, selected, none)
-
-### Converters
-
-* [x] Temperature F to/from C
-* [x] Distance Miles to/from Kilometers
-* [x] Weight from Pounds to/from Kilograms
-* [x] Volume from Gallons to/from Liters
-* [x] Speed from MPH to/from KPH
-* [x] Area from Square Feet to/from Square Meters
-
-flutter gen-l10n
+* [ ] More translations
