@@ -1,4 +1,8 @@
 name: Flutter CI/CD
+
+permissions:
+  contents: write
+
 on:
   push:
     branches: [master, develop]  # Add 'develop' here
@@ -65,6 +69,34 @@ jobs:
             ls -alh build/app/outputs/flutter-apk
             build/app/outputs/flutter-apk/cnvrt-${{ github.ref_name }}.apk
             build/app/outputs/flutter-apk/cnvrt-${{ github.ref_name }}.apk.sha1
+
+      # Prepare release tag (master-only)
+      - name: Prepare release tag
+        if: success() && github.ref_name == 'master'
+        run: |
+          set -euo pipefail
+          # Generate date-based tag (UTC)
+          TAG="v$(date -u +'%Y.%m.%d')"
+          echo "RELEASE_TAG=$TAG" >> "$GITHUB_ENV"
+          echo "RELEASE_NAME=CNVRT $TAG" >> "$GITHUB_ENV"
+          echo "Generated release tag: $TAG"
+
+      # Create GitHub Release (master-only)
+      - name: Create GitHub Release
+        if: success() && github.ref_name == 'master'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ env.RELEASE_TAG }}
+          name: ${{ env.RELEASE_NAME }}
+          draft: false
+          prerelease: false
+          make_latest: true
+          fail_on_unmatched_files: true
+          files: |
+            build/app/outputs/flutter-apk/cnvrt-${{ github.ref_name }}.apk
+            build/app/outputs/flutter-apk/cnvrt-${{ github.ref_name }}.apk.sha1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       # Deploy to Google Play Store
       # - name: Deploy to Play Store (master)
