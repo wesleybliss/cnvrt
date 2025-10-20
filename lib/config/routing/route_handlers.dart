@@ -13,6 +13,7 @@ import 'package:cnvrt/ui/screens/units/units_screen.dart';
 import 'package:cnvrt/ui/widgets/toolbar.dart';
 import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 typedef ParamsHandler = Widget Function(Map<String, dynamic> params);
 
@@ -86,7 +87,20 @@ final debugThemeHandler = handlerFor(const DebugThemeScreen(), (context) => "Deb
 final debugConvertHandler = handlerFor(const DebugConvertScreen(), (context) => "Debug Convert");
 final debugSqlTestHandler = handlerFor(const DebugSqlTestScreen(), (context) => "Debug Sql Test");
 
-final homeHandler = handlerFor(const HomeScreen(), (context) => Constants.strings.appName);
+final homeHandler = Handler(
+  handlerFunc: (context, params) {
+    if (context == null) {
+      throw Exception("Context is required for localization.");
+    }
+    return FutureBuilder<PackageInfo>(
+      future: PackageInfo.fromPlatform(),
+      builder: (context, snapshot) {
+        final title = snapshot.data?.appName ?? Constants.strings.appName;
+        return _render(const HomeScreen(), title, allowBackNavigation: true);
+      },
+    );
+  },
+);
 final settingsHandler = handlerFor(const SettingsScreen(), (context) => AppLocalizations.of(context)!.settings);
 final inflationHelpHandler = handlerFor(const InflationHelpScreen(), (context) => AppLocalizations.of(context)!.inflationHelpTitle);
 final currenciesHandler = handlerFor(const CurrenciesScreen(), (context) => AppLocalizations.of(context)!.currencies, allowBackNavigation: false);

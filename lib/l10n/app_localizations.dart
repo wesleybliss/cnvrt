@@ -110,6 +110,12 @@ abstract class AppLocalizations {
   /// **'Error'**
   String get error;
 
+  /// No description provided for @unexpectedErrorOccurred.
+  ///
+  /// In en, this message translates to:
+  /// **'An unexpected error occurred.'**
+  String get unexpectedErrorOccurred;
+
   /// No description provided for @theme.
   ///
   /// In en, this message translates to:
@@ -127,6 +133,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'System'**
   String get system;
+
+  /// No description provided for @favorites.
+  ///
+  /// In en, this message translates to:
+  /// **'Favorites'**
+  String get favorites;
 
   /// No description provided for @settings.
   ///
@@ -151,6 +163,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Fetch Currencies'**
   String get fetchCurrencies;
+
+  /// No description provided for @fetchingCurrencies.
+  ///
+  /// In en, this message translates to:
+  /// **'Fetching Currencies'**
+  String get fetchingCurrencies;
 
   /// No description provided for @chooseYourFavoriteCurrencies.
   ///

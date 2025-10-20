@@ -107,6 +107,7 @@ dev_dependencies:
   custom_lint: ^0.7.0
   riverpod_lint: ^2.6.3
   riverpod_generator: ^2.6.3
+  flutter_launcher_icons: ^0.13.1
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -182,3 +183,10 @@ flutter_native_splash:
     # Disable icon background to prevent circular shape
     icon_background_color: "#d4d4d4"
     icon_background_color_dark: "#2e2e2e"
+
+# Launcher icon configuration
+# Note: Debug flavor icons are configured in flutter_launcher_icons-debug.yaml
+# Run: dart run flutter_launcher_icons -f flutter_launcher_icons-debug.yaml
+flutter_launcher_icons:
+  android: false
+  ios: false

@@ -25,7 +25,7 @@ class _ErrorScreenState extends State<ErrorScreen> {
 
   Future<void> sendCrashReport() async {
     if (widget.error == null) {
-      log.d('[Crashlytics Test] No error to report');
+      log.d('sendCrashReport(): No error to report');
       return;
     }
 
@@ -36,8 +36,8 @@ class _ErrorScreenState extends State<ErrorScreen> {
       fatal: false,
     );
 
-    log.d('[Crashlytics Test] Error recorded successfully (if not connectivity)');
-    log.d('[Crashlytics Test] Restart app to upload to Firebase');
+    log.d('sendCrashReport(): Error recorded successfully (if not connectivity)');
+    log.d('sendCrashReport(): Restart app to upload to Firebase');
   }
 
   @override
@@ -49,7 +49,7 @@ class _ErrorScreenState extends State<ErrorScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              widget.error?.toString() ?? 'An unknown error occurred.',
+              AppLocalizations.of(context)!.unexpectedErrorOccurred,
               textAlign: TextAlign.center,
             ),
             if (widget.onRetry != null) ...[

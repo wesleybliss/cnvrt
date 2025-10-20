@@ -15,6 +15,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get error => 'Error';
 
   @override
+  String get unexpectedErrorOccurred => 'An unexpected error occurred.';
+
+  @override
   String get theme => 'Theme';
 
   @override
@@ -22,6 +25,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get system => 'System';
+
+  @override
+  String get favorites => 'Favorites';
 
   @override
   String get settings => 'Settings';
@@ -34,6 +40,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get fetchCurrencies => 'Fetch Currencies';
+
+  @override
+  String get fetchingCurrencies => 'Fetching Currencies';
 
   @override
   String get chooseYourFavoriteCurrencies =>
