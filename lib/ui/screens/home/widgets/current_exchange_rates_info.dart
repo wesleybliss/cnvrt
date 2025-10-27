@@ -1,4 +1,5 @@
 import 'package:cnvrt/db/database.dart';
+import 'package:cnvrt/l10n/app_localizations.dart';
 import 'package:cnvrt/utils/conditionally_visible.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -58,7 +59,7 @@ class CurrentExchangeRatesInfo extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
-            focusedCurrency != null ? "EXCHANGE RATE" : "",
+            focusedCurrency != null ? AppLocalizations.of(context)!.exchangeRate.toUpperCase() : "",
             textAlign: TextAlign.center,
             style: Theme.of(context).textTheme.labelLarge?.copyWith(
               color: Theme.of(context).colorScheme.onSurface.withAlpha(125),

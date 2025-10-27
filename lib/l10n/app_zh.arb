@@ -40,6 +40,7 @@
   "accountForInflation": "考虑通货膨胀",
   "showCountryFlags": "显示国旗",
   "allowDecimalInput": "允许小数输入",
+  "exchangeRate": "汇率",
   "all": "全部",
   "selected": "已选",
   "none":  "无",

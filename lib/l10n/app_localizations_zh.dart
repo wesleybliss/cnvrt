@@ -123,6 +123,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get allowDecimalInput => '允许小数输入';
 
   @override
+  String get exchangeRate => '汇率';
+
+  @override
   String get all => '全部';
 
   @override

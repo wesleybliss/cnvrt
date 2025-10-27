@@ -128,6 +128,9 @@ class AppLocalizationsIt extends AppLocalizations {
   String get allowDecimalInput => 'Consenti input decimale';
 
   @override
+  String get exchangeRate => 'Tasso di cambio';
+
+  @override
   String get all => 'Tutto';
 
   @override

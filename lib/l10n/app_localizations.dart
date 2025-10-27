@@ -330,6 +330,12 @@ abstract class AppLocalizations {
   /// **'Allow decimal input'**
   String get allowDecimalInput;
 
+  /// No description provided for @exchangeRate.
+  ///
+  /// In en, this message translates to:
+  /// **'Exchange Rate'**
+  String get exchangeRate;
+
   /// No description provided for @all.
   ///
   /// In en, this message translates to:

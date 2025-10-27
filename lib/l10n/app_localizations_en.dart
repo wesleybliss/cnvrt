@@ -125,6 +125,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get allowDecimalInput => 'Allow decimal input';
 
   @override
+  String get exchangeRate => 'Exchange Rate';
+
+  @override
   String get all => 'All';
 
   @override
