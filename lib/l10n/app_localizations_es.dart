@@ -235,4 +235,16 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get tryAgain => 'Intentar de Nuevo';
+
+  @override
+  String get languageEnglish => 'Inglés';
+
+  @override
+  String get languageSpanish => 'Español';
+
+  @override
+  String get languageItalian => 'Italiano';
+
+  @override
+  String get languageChinese => 'Chino';
 }

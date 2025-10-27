@@ -215,4 +215,16 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get tryAgain => '重试';
+
+  @override
+  String get languageEnglish => '英语';
+
+  @override
+  String get languageSpanish => '西班牙语';
+
+  @override
+  String get languageItalian => '意大利语';
+
+  @override
+  String get languageChinese => '中文';
 }

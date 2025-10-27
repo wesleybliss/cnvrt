@@ -70,5 +70,9 @@
   "dismiss": "Dismiss",
   "noInternetTitle": "No Internet Connection",
   "noInternetMessage": "Cnvrt could not connect.\nCheck your internet connection.",
-  "tryAgain": "Try Again"
+  "tryAgain": "Try Again",
+  "languageEnglish": "English",
+  "languageSpanish": "Spanish",
+  "languageItalian": "Italian",
+  "languageChinese": "Chinese"
 }

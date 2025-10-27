@@ -235,4 +235,16 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get tryAgain => 'Riprova';
+
+  @override
+  String get languageEnglish => 'Inglese';
+
+  @override
+  String get languageSpanish => 'Spagnolo';
+
+  @override
+  String get languageItalian => 'Italiano';
+
+  @override
+  String get languageChinese => 'Cinese';
 }

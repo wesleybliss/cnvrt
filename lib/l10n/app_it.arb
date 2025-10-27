@@ -70,5 +70,9 @@
   "dismiss": "Chiudi",
   "noInternetTitle": "Nessuna Connessione Internet",
   "noInternetMessage": "Cnvrt non è riuscito a connettersi.\\nControlla la tua connessione internet.",
-  "tryAgain": "Riprova"
+  "tryAgain": "Riprova",
+  "languageEnglish": "Inglese",
+  "languageSpanish": "Spagnolo",
+  "languageItalian": "Italiano",
+  "languageChinese": "Cinese"
 }
