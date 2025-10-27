@@ -19,6 +19,7 @@
   "copiedToClipboard": "Copied to clipboard",
   "favorites": "Favorites",
   "settings": "Settings",
+  "currency": "Currency",
   "currencies": "Currencies",
   "units": "Units",
   "fetchCurrencies": "Fetch Currencies",

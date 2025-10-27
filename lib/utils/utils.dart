@@ -29,13 +29,6 @@ abstract class Utils {
     return brightness == Brightness.dark;
   }
 
-  /*static void changeAppTitle(String title) {
-    SystemChrome.setApplicationSwitcherDescription(ApplicationSwitcherDescription(
-      label: 'Dynamic web app title',
-      primaryColor: Theme.of(Keys.navigatorKey.currentContext!).primaryColor.value,
-    ));
-  }*/
-
   static void noop() {}
 
   static Future sleep(int seconds) => Future.delayed(Duration(seconds: seconds));

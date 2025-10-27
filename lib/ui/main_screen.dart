@@ -1,5 +1,6 @@
 import 'package:cnvrt/config/application.dart';
 import 'package:cnvrt/config/routing/routes.dart';
+import 'package:cnvrt/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -69,12 +70,12 @@ class MainScreenState extends State<MainScreen> {
             NavigationDestination(
               icon: Icon(Icons.attach_money),
               selectedIcon: Icon(Icons.attach_money, color: Theme.of(context).colorScheme.inversePrimary),
-              label: 'Currency',
+              label: AppLocalizations.of(context)!.currency,
             ),
             NavigationDestination(
               icon: Icon(Icons.straighten),
               selectedIcon: Icon(Icons.straighten, color: Theme.of(context).colorScheme.inversePrimary),
-              label: 'Units',
+              label: AppLocalizations.of(context)!.units,
             ),
           ],
           selectedIndex: _selectedIndex,

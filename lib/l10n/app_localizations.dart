@@ -200,6 +200,12 @@ abstract class AppLocalizations {
   /// **'Settings'**
   String get settings;
 
+  /// No description provided for @currency.
+  ///
+  /// In en, this message translates to:
+  /// **'Currency'**
+  String get currency;
+
   /// No description provided for @currencies.
   ///
   /// In en, this message translates to:
