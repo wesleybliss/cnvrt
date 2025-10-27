@@ -1,6 +1,6 @@
 # cnvrt
 
-A simple currency conversion app.
+A simple conversion app for currencies and other units.
 
 [![Flutter CI/CD](https://github.com/wesleybliss/cnvrt/actions/workflows/ci-cd.yml/badge.svg)](https://github.com/wesleybliss/cnvrt/actions/workflows/ci-cd.yml)
 
@@ -20,3 +20,5 @@ A simple currency conversion app.
 * [ ] Common denominations screen? (e.g. 50k COP = $usd, 100k, etc)
 * [ ] Ability to perform basic math operations
 * [ ] More translations
+* [ ] More unit types (data storage, cooking, etc)
+* [ ] Alternate FOSS flavor without Google or Firebase dependencies
