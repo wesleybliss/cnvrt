@@ -14,10 +14,9 @@ final settingsNotifierProvider =
     AutoDisposeAsyncNotifierProvider<SettingsNotifier, Settings>.internal(
       SettingsNotifier.new,
       name: r'settingsNotifierProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product')
-              ? null
-              : _$settingsNotifierHash,
+      debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$settingsNotifierHash,
       dependencies: null,
       allTransitiveDependencies: null,
     );

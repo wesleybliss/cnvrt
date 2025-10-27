@@ -85,16 +85,14 @@ class _$NumericUnitsStateModelCWProxyImpl
           ? _value.direction
           // ignore: cast_nullable_to_non_nullable
           : direction as NumericUnitsConversionDirection,
-      convertNormalFn:
-          convertNormalFn == const $CopyWithPlaceholder()
-              ? _value.convertNormalFn
-              // ignore: cast_nullable_to_non_nullable
-              : convertNormalFn as int Function(int),
-      convertReversedFn:
-          convertReversedFn == const $CopyWithPlaceholder()
-              ? _value.convertReversedFn
-              // ignore: cast_nullable_to_non_nullable
-              : convertReversedFn as int Function(int),
+      convertNormalFn: convertNormalFn == const $CopyWithPlaceholder()
+          ? _value.convertNormalFn
+          // ignore: cast_nullable_to_non_nullable
+          : convertNormalFn as int Function(int),
+      convertReversedFn: convertReversedFn == const $CopyWithPlaceholder()
+          ? _value.convertReversedFn
+          // ignore: cast_nullable_to_non_nullable
+          : convertReversedFn as int Function(int),
     );
   }
 }
@@ -222,19 +220,17 @@ class NumericUnitsStateProvider
     NumericUnitsConversionDirection direction =
         NumericUnitsConversionDirection.normal,
   }) : this._internal(
-         () =>
-             NumericUnitsState()
-               ..source = source
-               ..target = target
-               ..convertNormalFn = convertNormalFn
-               ..convertReversedFn = convertReversedFn
-               ..direction = direction,
+         () => NumericUnitsState()
+           ..source = source
+           ..target = target
+           ..convertNormalFn = convertNormalFn
+           ..convertReversedFn = convertReversedFn
+           ..direction = direction,
          from: numericUnitsStateProvider,
          name: r'numericUnitsStateProvider',
-         debugGetCreateSourceHash:
-             const bool.fromEnvironment('dart.vm.product')
-                 ? null
-                 : _$numericUnitsStateHash,
+         debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+             ? null
+             : _$numericUnitsStateHash,
          dependencies: NumericUnitsStateFamily._dependencies,
          allTransitiveDependencies:
              NumericUnitsStateFamily._allTransitiveDependencies,
@@ -283,13 +279,12 @@ class NumericUnitsStateProvider
     return ProviderOverride(
       origin: this,
       override: NumericUnitsStateProvider._internal(
-        () =>
-            create()
-              ..source = source
-              ..target = target
-              ..convertNormalFn = convertNormalFn
-              ..convertReversedFn = convertReversedFn
-              ..direction = direction,
+        () => create()
+          ..source = source
+          ..target = target
+          ..convertNormalFn = convertNormalFn
+          ..convertReversedFn = convertReversedFn
+          ..direction = direction,
         from: from,
         name: null,
         dependencies: null,
