@@ -26,7 +26,7 @@ The app supports two build flavors:
 
 ```bash
 # Quick build using the provided script
-./build-foss-release.sh
+./bin/build-foss-release.sh
 
 # Or manually
 flutter build apk --flavor foss --dart-define=FOSS_BUILD=true --release
