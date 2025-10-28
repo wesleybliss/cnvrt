@@ -242,4 +242,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get languageChinese => 'Chinese';
+
+  @override
+  String get languageKorean => 'Korean';
 }

@@ -8,6 +8,7 @@ import 'package:intl/intl.dart' as intl;
 import 'app_localizations_en.dart';
 import 'app_localizations_es.dart';
 import 'app_localizations_it.dart';
+import 'app_localizations_ko.dart';
 import 'app_localizations_zh.dart';
 
 // ignore_for_file: type=lint
@@ -99,6 +100,7 @@ abstract class AppLocalizations {
     Locale('en'),
     Locale('es'),
     Locale('it'),
+    Locale('ko'),
     Locale('zh'),
   ];
 
@@ -539,6 +541,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Chinese'**
   String get languageChinese;
+
+  /// No description provided for @languageKorean.
+  ///
+  /// In en, this message translates to:
+  /// **'Korean'**
+  String get languageKorean;
 }
 
 class _AppLocalizationsDelegate
@@ -552,7 +560,7 @@ class _AppLocalizationsDelegate
 
   @override
   bool isSupported(Locale locale) =>
-      <String>['en', 'es', 'it', 'zh'].contains(locale.languageCode);
+      <String>['en', 'es', 'it', 'ko', 'zh'].contains(locale.languageCode);
 
   @override
   bool shouldReload(_AppLocalizationsDelegate old) => false;
@@ -567,6 +575,8 @@ AppLocalizations lookupAppLocalizations(Locale locale) {
       return AppLocalizationsEs();
     case 'it':
       return AppLocalizationsIt();
+    case 'ko':
+      return AppLocalizationsKo();
     case 'zh':
       return AppLocalizationsZh();
   }

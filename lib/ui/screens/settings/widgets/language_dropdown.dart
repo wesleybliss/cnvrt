@@ -20,6 +20,8 @@ class LanguageDropdown extends ConsumerWidget {
         return l10n.languageItalian;
       case 'zh':
         return l10n.languageChinese;
+      case 'ko':
+        return l10n.languageKorean;
       default:
         // Fallback to existing map or the code itself
         return languageNamesMap[languageCode] ?? languageCode;

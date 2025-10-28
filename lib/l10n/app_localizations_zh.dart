@@ -227,4 +227,7 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get languageChinese => '中文';
+
+  @override
+  String get languageKorean => '韩语';
 }
