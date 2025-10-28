@@ -13,11 +13,40 @@ class MainScreen extends StatefulWidget {
 
 class MainScreenState extends State<MainScreen> {
   int _selectedIndex = 0;
+  late final PageController _pageController;
   final List<GlobalKey<NavigatorState>> _navigatorKeys = [GlobalKey<NavigatorState>(), GlobalKey<NavigatorState>()];
 
   List<String> get _tabRoutes => [Routes.home, Routes.units];
 
+  @override
+  void initState() {
+    super.initState();
+    _pageController = PageController(initialPage: _selectedIndex);
+  }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
+
   void _onItemTapped(int index) {
+    // If we're switching to a different tab, reset the previous tab's Navigator stack
+    if (_selectedIndex != index) {
+      final previousNavigator = _navigatorKeys[_selectedIndex].currentState;
+      if (previousNavigator != null) {
+        // Pop all routes until we're back to the root of the previous tab
+        previousNavigator.popUntil((route) => route.isFirst);
+      }
+    }
+    _pageController.animateToPage(
+      index,
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeInOut,
+    );
+  }
+
+  void _onPageChanged(int index) {
     // If we're switching to a different tab, reset the previous tab's Navigator stack
     if (_selectedIndex != index) {
       final previousNavigator = _navigatorKeys[_selectedIndex].currentState;
@@ -31,9 +60,8 @@ class MainScreenState extends State<MainScreen> {
     });
   }
 
-  Widget _buildOffstageNavigator(int index) {
-    return Offstage(
-      offstage: _selectedIndex != index,
+  Widget _buildNavigator(int index) {
+    return _KeepAlivePage(
       child: Navigator(
         key: _navigatorKeys[index],
         onGenerateRoute: Application.router.generator,
@@ -63,7 +91,14 @@ class MainScreenState extends State<MainScreen> {
         }
       },
       child: Scaffold(
-        body: Stack(children: [_buildOffstageNavigator(0), _buildOffstageNavigator(1)]),
+        body: PageView(
+          controller: _pageController,
+          onPageChanged: _onPageChanged,
+          children: [
+            _buildNavigator(0),
+            _buildNavigator(1),
+          ],
+        ),
         bottomNavigationBar: NavigationBar(
           labelBehavior: NavigationDestinationLabelBehavior.alwaysHide,
           destinations: [
@@ -85,5 +120,26 @@ class MainScreenState extends State<MainScreen> {
         ),
       ),
     );
+  }
+}
+
+// Helper widget to keep pages alive in PageView
+class _KeepAlivePage extends StatefulWidget {
+  const _KeepAlivePage({required this.child});
+
+  final Widget child;
+
+  @override
+  State<_KeepAlivePage> createState() => _KeepAlivePageState();
+}
+
+class _KeepAlivePageState extends State<_KeepAlivePage> with AutomaticKeepAliveClientMixin {
+  @override
+  bool get wantKeepAlive => true;
+
+  @override
+  Widget build(BuildContext context) {
+    super.build(context);
+    return widget.child;
   }
 }

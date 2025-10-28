@@ -42,6 +42,12 @@ class _ErrorScreenState extends State<ErrorScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // Try to get localization safely, fall back to English if not available
+    // This allows ErrorScreen to work as a global error widget
+    final localizations = AppLocalizations.of(context);
+    final errorMessage = localizations?.unexpectedErrorOccurred ?? 'An unexpected error occurred';
+    final retryText = localizations?.retry.toUpperCase() ?? 'RETRY';
+    
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -49,16 +55,14 @@ class _ErrorScreenState extends State<ErrorScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              AppLocalizations.of(context)!.unexpectedErrorOccurred,
+              errorMessage,
               textAlign: TextAlign.center,
             ),
             if (widget.onRetry != null) ...[
               const SizedBox(height: 24),
               ElevatedButton(
                 onPressed: widget.onRetry,
-                child: Text(
-                  AppLocalizations.of(context)?.retry.toUpperCase() ?? 'RETRY',
-                ),
+                child: Text(retryText),
               ),
             ],
           ],
