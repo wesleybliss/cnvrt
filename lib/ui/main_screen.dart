@@ -63,12 +63,10 @@ class MainScreenState extends State<MainScreen> {
   }
 
   Widget _buildNavigator(int index) {
-    return _KeepAlivePage(
-      child: Navigator(
-        key: _navigatorKeys[index],
-        onGenerateRoute: Application.router.generator,
-        initialRoute: _tabRoutes[index],
-      ),
+    return _NavigatorPage(
+      key: ValueKey('nav_$index'),
+      navigatorKey: _navigatorKeys[index],
+      initialRoute: _tabRoutes[index],
     );
   }
 
@@ -131,23 +129,39 @@ class MainScreenState extends State<MainScreen> {
   }
 }
 
-// Helper widget to keep pages alive in PageView
-class _KeepAlivePage extends StatefulWidget {
-  const _KeepAlivePage({required this.child});
+// Wrapper widget that keeps Navigator alive in PageView
+class _NavigatorPage extends StatefulWidget {
+  const _NavigatorPage({
+    super.key,
+    required this.navigatorKey,
+    required this.initialRoute,
+  });
 
-  final Widget child;
+  final GlobalKey<NavigatorState> navigatorKey;
+  final String initialRoute;
 
   @override
-  State<_KeepAlivePage> createState() => _KeepAlivePageState();
+  State<_NavigatorPage> createState() => _NavigatorPageState();
 }
 
-class _KeepAlivePageState extends State<_KeepAlivePage> with AutomaticKeepAliveClientMixin {
+class _NavigatorPageState extends State<_NavigatorPage> with AutomaticKeepAliveClientMixin {
   @override
   bool get wantKeepAlive => true;
 
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    return widget.child;
+    return Navigator(
+      key: widget.navigatorKey,
+      onGenerateRoute: (settings) {
+        final routeName = settings.name == Navigator.defaultRouteName
+            ? widget.initialRoute
+            : settings.name;
+        return Application.router.generator(
+          RouteSettings(name: routeName, arguments: settings.arguments),
+        );
+      },
+    );
   }
 }
+
