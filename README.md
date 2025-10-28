@@ -38,7 +38,6 @@ For detailed information about FOSS builds, see [docs/FOSS_BUILDS.md](docs/FOSS_
 
 * [ ] Common denominations screen? (e.g. 50k COP = $usd, 100k, etc)
 * [ ] Ability to perform basic math operations
-* [ ] Pull to refresh anywhere in the main screen
 * [ ] More useful tablet layout
 * [ ] More unit types (data storage, cooking, etc)
-* [x] Alternate FOSS flavor without Google or Firebase dependencies
+* [ ] Back button on secondary screens should go back to home (UX improvement)
