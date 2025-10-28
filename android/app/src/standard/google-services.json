@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "1021931476908",
+    "project_id": "cnvrt-dc3f2",
+    "storage_bucket": "cnvrt-dc3f2.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1021931476908:android:0ef35750044f283fef4c09",
+        "android_client_info": {
+          "package_name": "com.gammagamma.cnvrt"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCrhH3FBqaGVC3ymhxRX_4_phmBAGJmkk0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1021931476908:android:84ab51e685bfe46eef4c09",
+        "android_client_info": {
+          "package_name": "com.gammagamma.cnvrt.debug"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCrhH3FBqaGVC3ymhxRX_4_phmBAGJmkk0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

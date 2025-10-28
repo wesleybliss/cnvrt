@@ -15,10 +15,29 @@ A simple conversion app for currencies and other units.
 7. Run the app
 
 
+## Build Variants
+
+The app supports two build flavors:
+
+- **Standard**: Full-featured build with Firebase Crashlytics for error reporting. Suitable for Google Play Store and Apple App Store.
+- **FOSS**: Free and Open Source Software build that excludes all proprietary libraries (Firebase, Google Services). Suitable for F-Droid and other FOSS app stores.
+
+### Building FOSS Variant
+
+```bash
+# Quick build using the provided script
+./build-foss-release.sh
+
+# Or manually
+flutter build apk --flavor foss --dart-define=FOSS_BUILD=true --release
+```
+
+For detailed information about FOSS builds, see [docs/FOSS_BUILDS.md](docs/FOSS_BUILDS.md).
+
 ## TODO
 
 * [ ] Common denominations screen? (e.g. 50k COP = $usd, 100k, etc)
 * [ ] Ability to perform basic math operations
 * [ ] More translations
 * [ ] More unit types (data storage, cooking, etc)
-* [ ] Alternate FOSS flavor without Google or Firebase dependencies
+* [x] Alternate FOSS flavor without Google or Firebase dependencies
