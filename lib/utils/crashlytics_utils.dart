@@ -1,6 +1,7 @@
+import 'package:cnvrt/config/flavor.dart';
 import 'package:cnvrt/utils/logger.dart';
 import 'package:cnvrt/utils/network_utils.dart';
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart' if (dart.library.js) 'firebase_stub.dart';
 
 final _log = Logger('CrashlyticsUtils');
 
@@ -11,6 +12,12 @@ Future<void> recordNonConnectivityError(
   StackTrace stackTrace, {
   bool fatal = false,
 }) async {
+  // Skip for FOSS builds
+  if (!FlavorConfig.isFirebaseEnabled) {
+    _log.d('Skipping Crashlytics report for FOSS build');
+    return;
+  }
+  
   // Don't report connectivity errors to Crashlytics
   if (isConnectivityError(error)) {
     _log.d('Skipping Crashlytics report for connectivity error: ${toStringSafe(error, maxLength: 200)}');

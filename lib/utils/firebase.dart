@@ -1,20 +1,32 @@
 import 'dart:async';
 import 'dart:io';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
 
-import '../firebase_options.dart';
+import '../config/flavor.dart';
 import 'logger.dart';
+
+// Conditional imports - only import Firebase for standard builds
+import 'package:firebase_core/firebase_core.dart' if (dart.library.js) 'firebase_stub.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart' if (dart.library.js) 'firebase_stub.dart';
+import '../firebase_options.dart' if (dart.library.js) 'firebase_stub.dart';
 
 /// Initializes Firebase and Crashlytics with error handling
 Future<void> initializeFirebase() async {
   final log = Logger('utils/firebase');
   
   log.d('[Firebase] Starting initialization...');
+  log.d('[Firebase] Build flavor: ${FlavorConfig.flavorName}');
   log.d('[Firebase] kDebugMode = $kDebugMode');
   log.d('[Firebase] kReleaseMode = $kReleaseMode');
   log.d('[Firebase] Platform: ${Platform.operatingSystem}');
+  
+  // Skip Firebase for FOSS builds
+  if (!FlavorConfig.isFirebaseEnabled) {
+    log.d('[Firebase] FOSS build detected - Firebase features are disabled');
+    log.d('[Firebase] Skipping Firebase initialization');
+    log.d('[Firebase] App will run without Firebase features (Crashlytics, etc.)');
+    return;
+  }
   
   // Firebase Core doesn't support Linux natively
   // Skip Firebase initialization on Linux

@@ -6,10 +6,6 @@ plugins {
     id("kotlin-android")
     // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id("dev.flutter.flutter-gradle-plugin")
-    // START: FlutterFire Configuration
-    id("com.google.gms.google-services")
-    id("com.google.firebase.crashlytics")
-    // END: FlutterFire Configuration
 }
 
 val keystoreProperties = Properties()
@@ -62,6 +58,21 @@ android {
         }
     }
 
+    flavorDimensions += "distribution"
+    
+    productFlavors {
+        create("standard") {
+            dimension = "distribution"
+            // Standard flavor includes all features (Firebase, etc.)
+        }
+        
+        create("foss") {
+            dimension = "distribution"
+            // FOSS flavor excludes proprietary libraries like Firebase
+            // Suitable for F-Droid and other FOSS app stores
+        }
+    }
+
     buildTypes {
         debug {
             // TODO: Add your own signing config for the release build.
@@ -82,4 +93,12 @@ android {
 
 flutter {
     source = "../.."
+}
+
+// Apply Firebase plugins only if google-services.json exists in standard flavor
+// FOSS builds don't have this file
+val googleServicesFile = file("src/standard/google-services.json")
+if (googleServicesFile.exists()) {
+    apply(plugin = "com.google.gms.google-services")
+    apply(plugin = "com.google.firebase.crashlytics")
 }

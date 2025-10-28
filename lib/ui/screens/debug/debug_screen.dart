@@ -1,4 +1,5 @@
 import 'package:cnvrt/config/application.dart';
+import 'package:cnvrt/config/flavor.dart';
 import 'package:cnvrt/config/routing/routes.dart';
 import 'package:cnvrt/domain/di/providers/currencies/currencies_provider.dart';
 import 'package:cnvrt/domain/di/providers/settings/settings_provider.dart';
@@ -6,7 +7,7 @@ import 'package:cnvrt/domain/io/repos/i_currencies_repo.dart';
 import 'package:cnvrt/io/settings.dart';
 import 'package:cnvrt/utils/logger.dart';
 import 'package:collection/collection.dart';
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart' if (dart.library.js) '../../../utils/firebase_stub.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:spot_di/spot_di.dart';
@@ -73,6 +74,18 @@ class _DebugScreenState extends ConsumerState<DebugScreen> {
 
     // Crashlytics test functions
     void testNonFatalError() async {
+      if (!FlavorConfig.isFirebaseEnabled) {
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Crashlytics not available in FOSS build'),
+              duration: Duration(seconds: 2),
+            ),
+          );
+        }
+        return;
+      }
+      
       try {
         throw Exception('Testing');
       } catch (error, stackTrace) {
@@ -105,6 +118,18 @@ class _DebugScreenState extends ConsumerState<DebugScreen> {
     }
 
     void testFatalCrash() {
+      if (!FlavorConfig.isFirebaseEnabled) {
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Crashlytics not available in FOSS build'),
+              duration: Duration(seconds: 2),
+            ),
+          );
+        }
+        return;
+      }
+      
       log.w('Triggering fatal crash test - app will crash!');
       log.d('[Crashlytics Test] Forcing fatal crash...');
       // This will cause an actual crash
@@ -279,37 +304,6 @@ class _DebugScreenState extends ConsumerState<DebugScreen> {
               const SizedBox(height: 8),
               ElevatedButton.icon(
                 onPressed: () {
-                  // Create a test exception with stack trace
-                  try {
-                    throw Exception('This is a test error for the error screen');
-                  } catch (error, stackTrace) {
-                    // Navigate to error screen with the exception
-                    Application.router.navigateTo(
-                      context,
-                      '${Routes.error}?test=true',
-                      routeSettings: RouteSettings(
-                        arguments: {
-                          'error': error as Exception,
-                          'stackTrace': stackTrace,
-                        },
-                      ),
-                    );
-                  }
-                },
-                icon: const Icon(Icons.error_outline),
-                label: const Text('Test Error Screen'),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.purple,
-                  foregroundColor: Colors.white,
-                ),
-              ),
-              const SizedBox(height: 24),
-
-              // Error Screen Testing Section
-              buildSectionHeader(context, '❌ Error Screen Testing'),
-              const SizedBox(height: 8),
-              ElevatedButton.icon(
-                onPressed: () {
                   // Navigate to error screen with a test error message
                   final errorMessage = Uri.encodeComponent(
                     'This is a test error for the error screen',
@@ -328,63 +322,65 @@ class _DebugScreenState extends ConsumerState<DebugScreen> {
               ),
               const SizedBox(height: 24),
 
-              // Crashlytics Section
-              buildSectionHeader(context, '🔥 Firebase Crashlytics'),
-              const SizedBox(height: 8),
-              ElevatedButton.icon(
-                onPressed: testNonFatalError,
-                icon: const Icon(Icons.bug_report),
-                label: const Text('Test Non-Fatal Error'),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.orange,
-                  foregroundColor: Colors.white,
-                ),
-              ),
-              const SizedBox(height: 8),
-              ElevatedButton.icon(
-                onPressed: testFatalCrash,
-                icon: const Icon(Icons.warning),
-                label: const Text('Test Fatal Crash (App Will Close!)'),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.red,
-                  foregroundColor: Colors.white,
-                ),
-              ),
-              const SizedBox(height: 8),
-              Card(
-                color: Theme.of(context).colorScheme.surfaceContainerHighest,
-                child: Padding(
-                  padding: const EdgeInsets.all(12.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Testing Instructions:',
-                        style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                              fontWeight: FontWeight.bold,
-                            ),
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        '• Non-Fatal: Logs error, restart app to upload',
-                        style: Theme.of(context).textTheme.bodySmall,
-                      ),
-                      Text(
-                        '• Fatal Crash: App crashes immediately, report sent on next launch',
-                        style: Theme.of(context).textTheme.bodySmall,
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        'Check Firebase Console in 5-10 minutes after test.',
-                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                              fontStyle: FontStyle.italic,
-                            ),
-                      ),
-                    ],
+              // Crashlytics Section - only show for standard builds
+              if (FlavorConfig.isFirebaseEnabled) ...[
+                buildSectionHeader(context, '🔥 Firebase Crashlytics'),
+                const SizedBox(height: 8),
+                ElevatedButton.icon(
+                  onPressed: testNonFatalError,
+                  icon: const Icon(Icons.bug_report),
+                  label: const Text('Test Non-Fatal Error'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.orange,
+                    foregroundColor: Colors.white,
                   ),
                 ),
-              ),
-              const SizedBox(height: 24),
+                const SizedBox(height: 8),
+                ElevatedButton.icon(
+                  onPressed: testFatalCrash,
+                  icon: const Icon(Icons.warning),
+                  label: const Text('Test Fatal Crash (App Will Close!)'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.red,
+                    foregroundColor: Colors.white,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Card(
+                  color: Theme.of(context).colorScheme.surfaceContainerHighest,
+                  child: Padding(
+                    padding: const EdgeInsets.all(12.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Testing Instructions:',
+                          style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                                fontWeight: FontWeight.bold,
+                              ),
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          '• Non-Fatal: Logs error, restart app to upload',
+                          style: Theme.of(context).textTheme.bodySmall,
+                        ),
+                        Text(
+                          '• Fatal Crash: App crashes immediately, report sent on next launch',
+                          style: Theme.of(context).textTheme.bodySmall,
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          'Check Firebase Console in 5-10 minutes after test.',
+                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                fontStyle: FontStyle.italic,
+                              ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 24),
+              ],
             ],
           ),
         ),
