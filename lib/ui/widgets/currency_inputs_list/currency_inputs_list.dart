@@ -36,31 +36,42 @@ class CurrenciesInputsList extends ConsumerWidget {
       data: (settings) {
         return ReorderableListView(
           shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          buildDefaultDragHandles: false,
           onReorder: viewModel.onReorderCurrency,
           children:
               sortedCurrencies
+                  .asMap()
+                  .entries
                   .map(
-                    (e) => ListTile(
-                      key: ValueKey(e.symbol),
-                      contentPadding: const EdgeInsets.only(left: 16.0),
-                      leading:
-                          settings.showDragReorderHandles
-                              ? Icon(Icons.drag_handle,
-                            color: Theme.of(context).colorScheme.onSurface.withAlpha(Constants.integers.currencyInputIconsAlpha))
-                              : null,
-                      title: CurrencyInputsListRow(
-                        item: e,
-                        controller: viewModelState.controllers[e.symbol],
-                        focusNode: viewModelState.focusNodes[e.symbol],
-                        onTextChanged: viewModel.onTextChanged,
-                        useLargeInputs: settings.useLargeInputs,
-                        showCopyToClipboardButtons:
-                            settings.showCopyToClipboardButtons,
-                        showFullCurrencyNameLabel:
-                            settings.showFullCurrencyNameLabel,
-                        showCountryFlags: settings.showCountryFlags,
-                      ),
-                    ),
+                    (entry) {
+                      final index = entry.key;
+                      final e = entry.value;
+                      return ListTile(
+                        key: ValueKey(e.symbol),
+                        contentPadding: const EdgeInsets.only(left: 16.0),
+                        leading:
+                            settings.showDragReorderHandles
+                                ? ReorderableDragStartListener(
+                                    index: index,
+                                    child: Icon(Icons.drag_handle,
+                                      color: Theme.of(context).colorScheme.onSurface.withAlpha(Constants.integers.currencyInputIconsAlpha)),
+                                  )
+                                : null,
+                        title: CurrencyInputsListRow(
+                          item: e,
+                          controller: viewModelState.controllers[e.symbol],
+                          focusNode: viewModelState.focusNodes[e.symbol],
+                          onTextChanged: viewModel.onTextChanged,
+                          useLargeInputs: settings.useLargeInputs,
+                          showCopyToClipboardButtons:
+                              settings.showCopyToClipboardButtons,
+                          showFullCurrencyNameLabel:
+                              settings.showFullCurrencyNameLabel,
+                          showCountryFlags: settings.showCountryFlags,
+                        ),
+                      );
+                    },
                   )
                   .toList(),
         );

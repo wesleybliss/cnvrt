@@ -127,19 +127,32 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   Widget build(BuildContext context) {
     final state = ref.watch(currenciesProvider);
 
+    final child = state.loading
+        ? state.currencies.isNotEmpty
+            ? const HomeReady()
+            : HomeLoading(isFetching: state.isFetching)
+        : state.error != null
+        ? const HomeError()
+        : const HomeReady();
+
     return RefreshIndicator(
       onRefresh: () async {
         _snackbarDismissedManually = false;
         ref.read(currenciesProvider.notifier).fetchCurrencies();
       },
-      child:
-          state.loading
-              ? state.currencies.isNotEmpty
-                  ? const HomeReady()
-                  : HomeLoading(isFetching: state.isFetching)
-              : state.error != null
-              ? const HomeError()
-              : const HomeReady(),
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          return SingleChildScrollView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            child: ConstrainedBox(
+              constraints: BoxConstraints(
+                minHeight: constraints.maxHeight,
+              ),
+              child: child,
+            ),
+          );
+        },
+      ),
     );
   }
 }
