@@ -122,6 +122,7 @@ li { margin: 4px 0; }
   box-shadow: var(--shadow);
 }
 .badges { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 6px; }
+.badges img { width: auto; min-width: 100px; height: auto; min-height: 25px; max-height: 30px; }
 
 .card {
   background: var(--card);
