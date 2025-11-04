@@ -42,33 +42,55 @@ jobs:
           echo "${{ secrets.GOOGLE_SERVICES_JSON }}" | base64 -d > android/app/google-services.json
 #          echo "${{ secrets.GOOGLE_SERVICES_PLIST }}" | base64 -d > ios/Runner/GoogleService-Info.plist
       
-      # Conditional build based on branch
-#      - name: Build APK
-#        run: |
-#          if [ "${{ github.ref_name }}" = "master" ]; then
-#            flutter build apk --release
-#            mv build/app/outputs/flutter-apk/app-release.apk build/app/outputs/flutter-apk/cnvrt-release.apk
-#            mv build/app/outputs/flutter-apk/app-release.apk.sha1 build/app/outputs/flutter-apk/cnvrt-release.apk.sha1
-#          else
-#            flutter build apk --release
-#            mv build/app/outputs/flutter-apk/app-release.apk build/app/outputs/flutter-apk/cnvrt-develop.apk
-#            mv build/app/outputs/flutter-apk/app-release.apk.sha1 build/app/outputs/flutter-apk/cnvrt-develop.apk.sha1
-#          fi
-      
-      - name: Build APK
+      # Sanitize branch name for filenames
+      - name: Prepare branch name
         run: |
-          flutter build apk --release
-          mv build/app/outputs/flutter-apk/app-release.apk build/app/outputs/flutter-apk/cnvrt-${{ github.ref_name }}.apk
-          mv build/app/outputs/flutter-apk/app-release.apk.sha1 build/app/outputs/flutter-apk/cnvrt-${{ github.ref_name }}.apk.sha1
+          BRANCH="$GITHUB_REF_NAME"
+          SAFE=$(echo "$BRANCH" | tr '/ ' '-' | tr -cd '[:alnum.]._-')
+          echo "BRANCH=$SAFE" >> $GITHUB_ENV
+          echo "Using branch name: $SAFE"
+      
+      # Build both flavors (standard and foss)
+      - name: Build APKs (standard + foss)
+        run: |
+          flutter build apk --release --flavor standard
+          flutter build apk --release --flavor foss
+      
+      - name: Rename APKs and create checksums
+        run: |
+          set -euo pipefail
+          
+          # Locate the built APKs (Flutter output)
+          STD_APK="build/app/outputs/flutter-apk/app-standard-release.apk"
+          FOSS_APK="build/app/outputs/flutter-apk/app-foss-release.apk"
+          
+          if [ ! -f "$STD_APK" ] || [ ! -f "$FOSS_APK" ]; then
+            echo "Error: Could not locate both flavor APKs. Available APKs:"
+            find build/app/outputs -type f -name "*.apk" 2>/dev/null || echo "No APKs found"
+            exit 1
+          fi
+          
+          # Rename APKs
+          mv "$STD_APK" "cnvrt-${{ env.BRANCH }}.apk"
+          mv "$FOSS_APK" "cnvrt-${{ env.BRANCH }}-foss.apk"
+          
+          # Generate SHA1 checksums
+          sha1sum "cnvrt-${{ env.BRANCH }}.apk" > "cnvrt-${{ env.BRANCH }}.apk.sha1"
+          sha1sum "cnvrt-${{ env.BRANCH }}-foss.apk" > "cnvrt-${{ env.BRANCH }}-foss.apk.sha1"
+          
+          # List generated files
+          ls -lh cnvrt-*.apk*
 
-      # Upload artifact after build
-      - uses: actions/upload-artifact@v4
+      # Upload both flavor APKs as artifacts
+      - name: Upload APK artifacts
+        uses: actions/upload-artifact@v4
         with:
-          name: app-${{ github.ref_name }}  # app-master or app-develop
+          name: cnvrt-apks-${{ env.BRANCH }}
           path: |
-            ls -alh build/app/outputs/flutter-apk
-            build/app/outputs/flutter-apk/cnvrt-${{ github.ref_name }}.apk
-            build/app/outputs/flutter-apk/cnvrt-${{ github.ref_name }}.apk.sha1
+            cnvrt-${{ env.BRANCH }}.apk
+            cnvrt-${{ env.BRANCH }}.apk.sha1
+            cnvrt-${{ env.BRANCH }}-foss.apk
+            cnvrt-${{ env.BRANCH }}-foss.apk.sha1
 
       # Prepare release tag (master-only)
       - name: Prepare release tag
@@ -81,7 +103,7 @@ jobs:
           echo "RELEASE_NAME=CNVRT $TAG" >> "$GITHUB_ENV"
           echo "Generated release tag: $TAG"
 
-      # Create GitHub Release (master-only)
+      # Create GitHub Release with both flavors (master-only)
       - name: Create GitHub Release
         if: success() && github.ref_name == 'master'
         uses: softprops/action-gh-release@v2
@@ -93,8 +115,10 @@ jobs:
           make_latest: true
           fail_on_unmatched_files: true
           files: |
-            build/app/outputs/flutter-apk/cnvrt-${{ github.ref_name }}.apk
-            build/app/outputs/flutter-apk/cnvrt-${{ github.ref_name }}.apk.sha1
+            cnvrt-${{ env.BRANCH }}.apk
+            cnvrt-${{ env.BRANCH }}.apk.sha1
+            cnvrt-${{ env.BRANCH }}-foss.apk
+            cnvrt-${{ env.BRANCH }}-foss.apk.sha1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
