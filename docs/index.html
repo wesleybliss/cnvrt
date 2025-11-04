@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="CNVRT - A fast, privacy-friendly converter for currencies and common units with full offline support">
+  <meta name="keywords" content="currency converter, unit converter, flutter, offline, privacy, FOSS, open source">
+  <meta name="author" content="Wesley Bliss">
+  <meta name="robots" content="index,follow">
+  
+  <!-- Open Graph -->
+  <meta property="og:title" content="CNVRT - Currency and Unit Converter">
+  <meta property="og:description" content="A fast, privacy-friendly converter for currencies and common units with full offline support">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://wesleybliss.github.io/cnvrt/">
+  <meta property="og:image" content="https://wesleybliss.github.io/cnvrt/assets/icon.png">
+  <meta property="og:site_name" content="CNVRT">
+  
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="CNVRT - Currency and Unit Converter">
+  <meta name="twitter:description" content="A fast, privacy-friendly converter for currencies and common units with full offline support">
+  <meta name="twitter:image" content="https://wesleybliss.github.io/cnvrt/assets/icon.png">
+  
+  <meta name="theme-color" content="#4ea1ff">
+  <link rel="icon" type="image/png" href="assets/icon.png">
+  <link rel="stylesheet" href="styles.css">
+  <title>CNVRT - Currency and Unit Converter</title>
+</head>
+<body>
+  <header class="site-header">
+    <nav class="container nav">
+      <div class="brand">
+        <img src="assets/icon.png" alt="CNVRT Logo" class="logo">
+        <span>CNVRT</span>
+      </div>
+      <div class="spacer"></div>
+      <a href="index.html" class="active">Home</a>
+      <a href="architecture.html">Architecture</a>
+      <a href="contributing.html">Contributing</a>
+      <a href="foss-builds.html">FOSS Builds</a>
+      <a href="https://github.com/wesleybliss/cnvrt" target="_blank" rel="noopener">GitHub</a>
+    </nav>
+  </header>
+
+  <main class="container">
+    <div class="hero">
+      <img src="assets/icon.png" alt="CNVRT App Icon">
+      <div>
+        <h1>CNVRT</h1>
+        <p>A fast, privacy-friendly converter for currencies and common units with full offline support</p>
+        <div class="badges">
+          <a href="https://github.com/wesleybliss/cnvrt/actions/workflows/ci-cd.yml" target="_blank" rel="noopener">
+            <img src="https://github.com/wesleybliss/cnvrt/actions/workflows/ci-cd.yml/badge.svg" alt="CI/CD Status">
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <section>
+      <h2>About</h2>
+      <p>
+        CNVRT is a Flutter-based conversion application designed for speed, privacy, and offline resilience. 
+        It provides real-time currency exchange rates with local caching for offline use, along with common 
+        unit conversions. The app follows clean architecture principles with a domain/io/ui separation pattern 
+        and uses Riverpod for state management.
+      </p>
+    </section>
+
+    <section>
+      <h2>Key Features</h2>
+      <div class="grid cols-2">
+        <div class="card">
+          <h3>Currency Conversion</h3>
+          <ul class="feature-list">
+            <li>Real-time exchange rates for global currencies</li>
+            <li>Offline mode with local caching</li>
+            <li>Automatic refresh (configurable)</li>
+            <li>Network resilience with fallback to cached data</li>
+            <li>Optional inflation adjustment</li>
+          </ul>
+        </div>
+        
+        <div class="card">
+          <h3>Unit Conversion</h3>
+          <ul class="feature-list">
+            <li>Temperature (°C, °F, K)</li>
+            <li>Distance (km, miles)</li>
+            <li>Speed (kph, mph)</li>
+            <li>Weight (kg, lbs)</li>
+            <li>Area (m², ft²)</li>
+            <li>Volume (L, gal)</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>User Experience</h3>
+        <ul class="feature-list">
+          <li>Multi-language support (English, Spanish, Italian, Korean, Chinese)</li>
+          <li>Light, dark, and system theme options</li>
+          <li>Adjustable decimal precision (0-8 places)</li>
+          <li>Drag-to-reorder currencies</li>
+          <li>Country flags display</li>
+          <li>Copy-to-clipboard functionality</li>
+          <li>Data persistence for preferences</li>
+        </ul>
+      </div>
+    </section>
+
+    <section>
+      <h2>Technology Stack</h2>
+      <div class="card">
+        <table>
+          <thead>
+            <tr>
+              <th>Component</th>
+              <th>Technology</th>
+              <th>Purpose</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Framework</strong></td>
+              <td>Flutter & Dart</td>
+              <td>Cross-platform UI development</td>
+            </tr>
+            <tr>
+              <td><strong>State Management</strong></td>
+              <td>Riverpod</td>
+              <td>Reactive state with code generation</td>
+            </tr>
+            <tr>
+              <td><strong>Database</strong></td>
+              <td>Drift</td>
+              <td>Type-safe SQLite with reactive queries</td>
+            </tr>
+            <tr>
+              <td><strong>Routing</strong></td>
+              <td>Fluro</td>
+              <td>Declarative navigation</td>
+            </tr>
+            <tr>
+              <td><strong>Networking</strong></td>
+              <td>Dio</td>
+              <td>HTTP client for API requests</td>
+            </tr>
+            <tr>
+              <td><strong>DI</strong></td>
+              <td>spot_di</td>
+              <td>Dependency injection with thread safety</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section>
+      <h2>Quick Start</h2>
+      <div class="card">
+        <h3>Prerequisites</h3>
+        <ul>
+          <li>Flutter SDK ^3.8.1 (<a href="https://docs.flutter.dev/get-started/install" target="_blank" rel="noopener">Install Flutter</a>)</li>
+          <li>Android Studio with Android SDK (for Android development)</li>
+          <li>Xcode (for iOS development, macOS only)</li>
+        </ul>
+
+        <h3>Installation</h3>
+        <pre><code># Clone the repository
+git clone https://github.com/wesleybliss/cnvrt.git
+cd cnvrt
+
+# Verify Flutter installation
+flutter doctor -v
+
+# Install dependencies
+flutter clean
+flutter pub get
+
+# Generate code (Riverpod providers, Drift database, etc.)
+flutter pub run build_runner build --delete-conflicting-outputs
+
+# Run the app
+flutter run</code></pre>
+
+        <h3>Development Commands</h3>
+        <pre><code># Clean and reinstall dependencies
+flutter clean && flutter pub get
+
+# Generate code (one-time)
+flutter pub run build_runner build
+
+# Watch for changes (continuous generation)
+flutter pub run build_runner watch
+
+# Run static analysis
+flutter analyze
+
+# Run tests
+flutter test
+
+# Build release APK
+flutter build apk --release</code></pre>
+      </div>
+    </section>
+
+    <section>
+      <h2>Build Variants</h2>
+      <div class="card">
+        <p>
+          CNVRT supports two build flavors to accommodate different distribution channels:
+        </p>
+        <table>
+          <thead>
+            <tr>
+              <th>Feature</th>
+              <th>Standard</th>
+              <th>FOSS</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Firebase Crashlytics</td>
+              <td>✅</td>
+              <td>❌</td>
+            </tr>
+            <tr>
+              <td>Google Services</td>
+              <td>✅</td>
+              <td>❌</td>
+            </tr>
+            <tr>
+              <td>Distribution</td>
+              <td>Play Store, App Store</td>
+              <td>F-Droid, GitHub</td>
+            </tr>
+            <tr>
+              <td>Privacy</td>
+              <td>Remote error reporting</td>
+              <td>Local logging only</td>
+            </tr>
+          </tbody>
+        </table>
+        <p>
+          Learn more about FOSS builds in the <a href="foss-builds.html">FOSS Builds documentation</a>.
+        </p>
+      </div>
+    </section>
+
+    <section>
+      <h2>Documentation</h2>
+      <div class="grid cols-3">
+        <div class="card">
+          <h3>Architecture</h3>
+          <p>Learn about the technical architecture, code style guidelines, and project structure.</p>
+          <p><a href="architecture.html">View Architecture →</a></p>
+        </div>
+        
+        <div class="card">
+          <h3>Contributing</h3>
+          <p>Guidelines for contributing to the project, including setup, workflow, and coding standards.</p>
+          <p><a href="contributing.html">View Guide →</a></p>
+        </div>
+        
+        <div class="card">
+          <h3>FOSS Builds</h3>
+          <p>Documentation on building FOSS-compliant variants for F-Droid and other open-source stores.</p>
+          <p><a href="foss-builds.html">View FOSS Docs →</a></p>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Get Involved</h2>
+      <div class="card">
+        <p>
+          CNVRT is open source and welcomes contributions! Whether you want to report a bug, 
+          suggest a feature, or contribute code, we'd love to hear from you.
+        </p>
+        <ul>
+          <li><a href="https://github.com/wesleybliss/cnvrt" target="_blank" rel="noopener">View on GitHub</a></li>
+          <li><a href="https://github.com/wesleybliss/cnvrt/issues" target="_blank" rel="noopener">Report an Issue</a></li>
+          <li><a href="contributing.html">Contributing Guide</a></li>
+        </ul>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>
+        © 2024 CNVRT Project · 
+        <a href="https://github.com/wesleybliss/cnvrt" target="_blank" rel="noopener">GitHub Repository</a> · 
+        Available in Standard and FOSS variants
+      </p>
+    </div>
+  </footer>
+</body>
+</html>

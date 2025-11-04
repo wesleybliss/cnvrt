@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Contributing guidelines for CNVRT - setup, workflow, and coding standards">
+  <meta name="keywords" content="contributing, open source, flutter development, code style, pull request guidelines">
+  <meta name="author" content="Wesley Bliss">
+  <meta name="robots" content="index,follow">
+  
+  <!-- Open Graph -->
+  <meta property="og:title" content="Contributing - CNVRT">
+  <meta property="og:description" content="Contributing guidelines for CNVRT - setup, workflow, and coding standards">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://wesleybliss.github.io/cnvrt/contributing.html">
+  <meta property="og:image" content="https://wesleybliss.github.io/cnvrt/assets/icon.png">
+  
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Contributing - CNVRT">
+  <meta name="twitter:description" content="Contributing guidelines for CNVRT - setup, workflow, and coding standards">
+  <meta name="twitter:image" content="https://wesleybliss.github.io/cnvrt/assets/icon.png">
+  
+  <meta name="theme-color" content="#4ea1ff">
+  <link rel="icon" type="image/png" href="assets/icon.png">
+  <link rel="stylesheet" href="styles.css">
+  <title>Contributing - CNVRT</title>
+</head>
+<body>
+  <header class="site-header">
+    <nav class="container nav">
+      <div class="brand">
+        <img src="assets/icon.png" alt="CNVRT Logo" class="logo">
+        <span>CNVRT</span>
+      </div>
+      <div class="spacer"></div>
+      <a href="index.html">Home</a>
+      <a href="architecture.html">Architecture</a>
+      <a href="contributing.html" class="active">Contributing</a>
+      <a href="foss-builds.html">FOSS Builds</a>
+      <a href="https://github.com/wesleybliss/cnvrt" target="_blank" rel="noopener">GitHub</a>
+    </nav>
+  </header>
+
+  <main class="container">
+    <h1>Contributing to CNVRT</h1>
+    <p>
+      Contributions are welcome! Whether you want to report a bug, suggest a feature, 
+      or contribute code, we'd love to hear from you.
+    </p>
+
+    <section>
+      <h2>Prerequisites</h2>
+      <div class="card">
+        <p>Before you begin, make sure you have the following installed:</p>
+        <ul class="feature-list">
+          <li>Flutter SDK ^3.8.1 (<a href="https://docs.flutter.dev/get-started/install" target="_blank" rel="noopener">Installation Guide</a>)</li>
+          <li>Dart SDK ^3.8.1 (bundled with Flutter)</li>
+          <li>Android Studio with Android SDK (for Android builds)</li>
+          <li>Xcode (for iOS builds, macOS only)</li>
+          <li>Git</li>
+          <li>A code editor (Android Studio, VS Code, IntelliJ IDEA)</li>
+        </ul>
+      </div>
+    </section>
+
+    <section>
+      <h2>Development Setup</h2>
+      <div class="card">
+        <h3>1. Fork and Clone</h3>
+        <pre><code># Fork the repository on GitHub, then clone your fork
+git clone https://github.com/YOUR_USERNAME/cnvrt.git
+cd cnvrt
+
+# Add upstream remote
+git remote add upstream https://github.com/wesleybliss/cnvrt.git</code></pre>
+
+        <h3>2. Verify Environment</h3>
+        <pre><code># Check Flutter installation
+flutter doctor -v
+
+# Resolve any issues reported by flutter doctor
+flutter doctor --android-licenses  # Accept Android licenses if needed</code></pre>
+
+        <h3>3. Install Dependencies</h3>
+        <pre><code># Clean and install dependencies
+flutter clean
+flutter pub get
+
+# Generate code (Riverpod providers, Drift database, etc.)
+flutter pub run build_runner build --delete-conflicting-outputs</code></pre>
+
+        <h3>4. Run the App</h3>
+        <pre><code># Connect a device or start an emulator, then:
+flutter run
+
+# Or run with a specific flavor
+flutter run --flavor standard</code></pre>
+      </div>
+    </section>
+
+    <section>
+      <h2>Contribution Workflow</h2>
+      <div class="card">
+        <h3>1. Create a Branch</h3>
+        <p>Create a feature branch from <code>master</code> for your work:</p>
+        <pre><code># For new features
+git checkout -b feature/your-feature-name
+
+# For bug fixes
+git checkout -b fix/issue-description
+
+# For documentation
+git checkout -b docs/what-you-are-documenting</code></pre>
+
+        <h3>2. Make Your Changes</h3>
+        <ul>
+          <li>Keep changes focused and atomic</li>
+          <li>Follow the project's architecture and code style (see <a href="architecture.html">Architecture</a>)</li>
+          <li>Write or update tests where applicable</li>
+          <li>Update documentation if you're changing functionality</li>
+        </ul>
+
+        <h3>3. Test Your Changes</h3>
+        <pre><code># Run linting
+flutter analyze
+
+# Run tests
+flutter test
+
+# Test the app manually on device/emulator
+flutter run</code></pre>
+
+        <h3>4. Commit Your Changes</h3>
+        <p>Use <a href="https://www.conventionalcommits.org/" target="_blank" rel="noopener">Conventional Commits</a> format:</p>
+        <pre><code># Examples:
+git commit -m "feat: add currency search functionality"
+git commit -m "fix: resolve crash when converting with empty input"
+git commit -m "docs: update README with new features"
+git commit -m "refactor: extract currency list into separate widget"</code></pre>
+
+        <p><strong>Commit message types:</strong></p>
+        <ul>
+          <li><code>feat:</code> New feature</li>
+          <li><code>fix:</code> Bug fix</li>
+          <li><code>docs:</code> Documentation changes</li>
+          <li><code>refactor:</code> Code refactoring</li>
+          <li><code>test:</code> Adding or updating tests</li>
+          <li><code>chore:</code> Maintenance tasks</li>
+          <li><code>style:</code> Code style changes (formatting, etc.)</li>
+        </ul>
+
+        <h3>5. Push and Create Pull Request</h3>
+        <pre><code># Push your branch
+git push origin feature/your-feature-name
+
+# Then create a pull request on GitHub</code></pre>
+      </div>
+    </section>
+
+    <section>
+      <h2>Code Style Guidelines</h2>
+      <div class="card">
+        <p>Follow the architecture and code style documented in <a href="architecture.html">Architecture</a>. Key points:</p>
+        
+        <h3>Naming Conventions</h3>
+        <ul>
+          <li><strong>PascalCase:</strong> Classes and widgets (<code>CurrencyConverter</code>)</li>
+          <li><strong>camelCase:</strong> Variables and functions (<code>fetchExchangeRates</code>)</li>
+          <li><strong>snake_case:</strong> File names (<code>currency_converter.dart</code>)</li>
+          <li><strong>Prefix 'I':</strong> Interfaces (<code>ISettings</code>)</li>
+        </ul>
+
+        <h3>Code Organization</h3>
+        <ul>
+          <li>Group imports: package imports first, then project imports</li>
+          <li>Use composition over inheritance for widgets</li>
+          <li>Keep widgets small and focused</li>
+          <li>Use strong typing with required parameters</li>
+          <li>Create dedicated error screens/widgets for different scenarios</li>
+        </ul>
+
+        <h3>Linting</h3>
+        <p>The project uses <code>flutter_lints</code> and <code>riverpod_lint</code>. Ensure your code passes:</p>
+        <pre><code>flutter analyze</code></pre>
+      </div>
+    </section>
+
+    <section>
+      <h2>Testing Requirements</h2>
+      <div class="card">
+        <ul class="feature-list">
+          <li>Include unit tests for business logic and utilities</li>
+          <li>Add widget tests for UI components where practical</li>
+          <li>Ensure all tests pass before submitting: <code>flutter test</code></li>
+          <li>Test manually on both Android and iOS if possible</li>
+          <li>Test both Standard and FOSS build flavors if your changes affect them</li>
+        </ul>
+
+        <h3>Running Tests</h3>
+        <pre><code># Run all tests
+flutter test
+
+# Run a specific test file
+flutter test test/widget_test.dart
+
+# Run tests with coverage
+flutter test --coverage</code></pre>
+      </div>
+    </section>
+
+    <section>
+      <h2>Pull Request Guidelines</h2>
+      <div class="card">
+        <h3>Before Submitting</h3>
+        <ul class="feature-list">
+          <li>Ensure <code>flutter analyze</code> passes with no errors</li>
+          <li>Ensure <code>flutter test</code> passes</li>
+          <li>Update documentation if you've changed functionality</li>
+          <li>Test your changes thoroughly</li>
+          <li>Rebase on latest <code>master</code> if needed</li>
+        </ul>
+
+        <h3>PR Description</h3>
+        <p>Provide a clear description of your changes:</p>
+        <ul>
+          <li><strong>What:</strong> What does this PR do?</li>
+          <li><strong>Why:</strong> Why is this change needed?</li>
+          <li><strong>How:</strong> How did you implement it?</li>
+          <li><strong>Testing:</strong> How did you test it?</li>
+          <li><strong>Screenshots:</strong> Include screenshots/recordings for UI changes</li>
+          <li><strong>Issues:</strong> Link related issues (e.g., "Closes #123")</li>
+        </ul>
+
+        <h3>After Submitting</h3>
+        <ul>
+          <li>Wait for CI checks to pass</li>
+          <li>Respond to review feedback promptly</li>
+          <li>Make requested changes in new commits (don't force-push)</li>
+          <li>Once approved, a maintainer will merge your PR</li>
+        </ul>
+      </div>
+    </section>
+
+    <section>
+      <h2>Development Setup Checklist</h2>
+      <div class="card">
+        <p>Use this checklist to verify your environment is ready:</p>
+        <ul class="feature-list">
+          <li>Flutter SDK installed and <code>flutter doctor</code> passes</li>
+          <li>Dependencies installed: <code>flutter pub get</code></li>
+          <li>Code generation running: <code>flutter pub run build_runner build</code></li>
+          <li>Linting passes: <code>flutter analyze</code></li>
+          <li>Tests pass: <code>flutter test</code></li>
+          <li>App runs successfully: <code>flutter run</code></li>
+        </ul>
+      </div>
+    </section>
+
+    <section>
+      <h2>Need Help?</h2>
+      <div class="card">
+        <p>If you have questions or need help:</p>
+        <ul>
+          <li>Check the <a href="architecture.html">Architecture documentation</a></li>
+          <li>Review existing code for examples</li>
+          <li>Open an issue on <a href="https://github.com/wesleybliss/cnvrt/issues" target="_blank" rel="noopener">GitHub</a></li>
+          <li>Ask in your pull request</li>
+        </ul>
+      </div>
+    </section>
+
+    <section>
+      <h2>Code of Conduct</h2>
+      <div class="card">
+        <p>
+          Please be respectful and constructive in your interactions with other contributors. 
+          We aim to create a welcoming and inclusive environment for everyone.
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>
+        © 2024 CNVRT Project · 
+        <a href="https://github.com/wesleybliss/cnvrt" target="_blank" rel="noopener">GitHub Repository</a> · 
+        Available in Standard and FOSS variants
+      </p>
+    </div>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="FOSS Builds documentation for CNVRT - F-Droid compatible builds without proprietary dependencies">
+  <meta name="keywords" content="FOSS, F-Droid, open source, privacy, Flutter, Android">
+  <meta name="author" content="Wesley Bliss">
+  <meta name="robots" content="index,follow">
+  
+  <!-- Open Graph -->
+  <meta property="og:title" content="FOSS Builds - CNVRT">
+  <meta property="og:description" content="FOSS Builds documentation for CNVRT - F-Droid compatible builds without proprietary dependencies">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://wesleybliss.github.io/cnvrt/foss-builds.html">
+  <meta property="og:image" content="https://wesleybliss.github.io/cnvrt/assets/icon.png">
+  
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="FOSS Builds - CNVRT">
+  <meta name="twitter:description" content="FOSS Builds documentation for CNVRT - F-Droid compatible builds without proprietary dependencies">
+  <meta name="twitter:image" content="https://wesleybliss.github.io/cnvrt/assets/icon.png">
+  
+  <meta name="theme-color" content="#4ea1ff">
+  <link rel="icon" type="image/png" href="assets/icon.png">
+  <link rel="stylesheet" href="styles.css">
+  <title>FOSS Builds - CNVRT</title>
+</head>
+<body>
+  <header class="site-header">
+    <nav class="container nav">
+      <div class="brand">
+        <img src="assets/icon.png" alt="CNVRT Logo" class="logo">
+        <span>CNVRT</span>
+      </div>
+      <div class="spacer"></div>
+      <a href="index.html">Home</a>
+      <a href="architecture.html">Architecture</a>
+      <a href="contributing.html">Contributing</a>
+      <a href="foss-builds.html" class="active">FOSS Builds</a>
+      <a href="https://github.com/wesleybliss/cnvrt" target="_blank" rel="noopener">GitHub</a>
+    </nav>
+  </header>
+
+  <main class="container">
+    <h1>FOSS Builds Documentation</h1>
+    
+    <section>
+      <h2>Overview</h2>
+      <div class="card">
+        <p>
+          CNVRT supports building FOSS (Free and Open Source Software) variants that exclude proprietary libraries. 
+          This makes the app suitable for distribution through F-Droid and other FOSS app stores.
+        </p>
+        <p>
+          The FOSS flavor excludes all proprietary dependencies while maintaining full functionality through 
+          local alternatives. Error logging still works locally through the app's logger.
+        </p>
+      </div>
+    </section>
+
+    <section>
+      <h2>Build Flavors</h2>
+      
+      <div class="card">
+        <h3>1. Standard (Default)</h3>
+        <ul class="feature-list">
+          <li>Includes all features</li>
+          <li>Uses Firebase Crashlytics for error reporting</li>
+          <li>Suitable for Google Play Store and Apple App Store</li>
+        </ul>
+        <p><strong>Build command:</strong></p>
+        <pre><code>flutter build apk --flavor standard --release</code></pre>
+      </div>
+
+      <div class="card">
+        <h3>2. FOSS</h3>
+        <ul class="feature-list">
+          <li>Excludes all proprietary libraries (Firebase, Google Services)</li>
+          <li>Fully FOSS-compliant</li>
+          <li>Suitable for F-Droid and other FOSS app stores</li>
+          <li>No telemetry or remote crash reporting</li>
+        </ul>
+        <p><strong>Build command:</strong></p>
+        <pre><code>flutter build apk --flavor foss --dart-define=FOSS_BUILD=true --release</code></pre>
+      </div>
+    </section>
+
+    <section>
+      <h2>What's Different in FOSS Builds?</h2>
+      <div class="card">
+        <p>The FOSS flavor excludes:</p>
+        <table>
+          <thead>
+            <tr>
+              <th>Feature</th>
+              <th>Standard</th>
+              <th>FOSS</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Firebase Core</td>
+              <td>✅ Included</td>
+              <td>❌ Excluded</td>
+            </tr>
+            <tr>
+              <td>Firebase Crashlytics</td>
+              <td>✅ Remote reporting</td>
+              <td>❌ Local logging only</td>
+            </tr>
+            <tr>
+              <td>Google Services</td>
+              <td>✅ Included</td>
+              <td>❌ Excluded</td>
+            </tr>
+            <tr>
+              <td>Error Reporting</td>
+              <td>Cloud-based</td>
+              <td>Local only</td>
+            </tr>
+            <tr>
+              <td>Distribution</td>
+              <td>Play Store, App Store</td>
+              <td>F-Droid, GitHub</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section>
+      <h2>Building FOSS Variants</h2>
+      
+      <div class="card">
+        <h3>Quick Build (Using Scripts)</h3>
+        <p>We provide convenience scripts for building FOSS variants:</p>
+        <pre><code># Debug build
+./bin/build-foss.sh
+
+# Release build (for distribution)
+./bin/build-foss-release.sh</code></pre>
+      </div>
+
+      <div class="card">
+        <h3>Manual Build Commands</h3>
+        
+        <h4>Debug Build</h4>
+        <pre><code>flutter clean
+flutter pub get
+flutter pub run build_runner build --delete-conflicting-outputs
+flutter build apk --flavor foss --dart-define=FOSS_BUILD=true --debug</code></pre>
+
+        <h4>Release Build</h4>
+        <pre><code>flutter clean
+flutter pub get
+flutter pub run build_runner build --delete-conflicting-outputs
+flutter build apk --flavor foss --dart-define=FOSS_BUILD=true --release</code></pre>
+      </div>
+
+      <div class="card">
+        <h3>Output Location</h3>
+        <p>Built APKs are located in:</p>
+        <pre><code>build/app/outputs/flutter-apk/
+├── app-foss-debug.apk     # Debug build
+└── app-foss-release.apk   # Release build</code></pre>
+      </div>
+    </section>
+
+    <section>
+      <h2>Technical Implementation</h2>
+      
+      <div class="card">
+        <h3>Android Configuration</h3>
+        <p>The Android build system uses product flavors to manage the different variants in <code>android/app/build.gradle.kts</code>:</p>
+        <pre><code>flavorDimensions += "distribution"
+
+productFlavors {
+    create("standard") {
+        dimension = "distribution"
+        // Includes Firebase
+    }
+    
+    create("foss") {
+        dimension = "distribution"
+        // Excludes Firebase
+    }
+}</code></pre>
+
+        <p>Firebase plugins are conditionally applied only when <code>google-services.json</code> exists in the standard flavor directory.</p>
+
+        <h4>Flavor-Specific Directories</h4>
+        <ul>
+          <li><code>android/app/src/standard/google-services.json</code> - Real Firebase configuration for standard builds</li>
+          <li><code>android/app/src/foss/google-services.json</code> - Dummy Firebase configuration for FOSS builds</li>
+        </ul>
+
+        <p>
+          The FOSS build includes a dummy <code>google-services.json</code> file to satisfy the Google Services Gradle plugin, 
+          but since Firebase is never initialized in the Dart code (thanks to <code>FlavorConfig.isFirebaseEnabled</code>), 
+          these dummy values are never used at runtime.
+        </p>
+      </div>
+
+      <div class="card">
+        <h3>Dart/Flutter Configuration</h3>
+        <p>The flavor is detected at compile time using Dart's <code>const</code> evaluation in <code>lib/config/flavor.dart</code>:</p>
+        <pre><code>class FlavorConfig {
+  static const bool isFossBuild = 
+    bool.fromEnvironment('FOSS_BUILD', defaultValue: false);
+  
+  static bool get isFirebaseEnabled => !isFossBuild;
+}</code></pre>
+
+        <p>This allows the Dart code to conditionally:</p>
+        <ul>
+          <li>Skip Firebase initialization</li>
+          <li>Disable crash reporting</li>
+          <li>Hide Firebase-related UI elements (debug screens)</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h3>Conditional Code Execution</h3>
+        <p>Firebase initialization is skipped in FOSS builds:</p>
+        <pre><code>Future&lt;void&gt; initializeFirebase() async {
+  if (!FlavorConfig.isFirebaseEnabled) {
+    log.d('[Firebase] FOSS build detected - skipping initialization');
+    return;
+  }
+  // Standard Firebase initialization continues...
+}</code></pre>
+      </div>
+    </section>
+
+    <section>
+      <h2>Testing FOSS Builds</h2>
+      <div class="card">
+        <ol>
+          <li><strong>Build the FOSS variant</strong> using one of the methods above</li>
+          <li><strong>Install on a device:</strong>
+            <pre><code>adb install build/app/outputs/flutter-apk/app-foss-release.apk</code></pre>
+          </li>
+          <li><strong>Verify Firebase is disabled:</strong>
+            <ul>
+              <li>Check app logs for "FOSS build detected" messages</li>
+              <li>Verify no Firebase services are initialized</li>
+              <li>Check that Crashlytics section is hidden in Debug screen</li>
+            </ul>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <section>
+      <h2>F-Droid Considerations</h2>
+      <div class="card">
+        <p>For F-Droid submission:</p>
+        <ol>
+          <li>Use the FOSS flavor exclusively</li>
+          <li>Ensure all proprietary code is excluded</li>
+          <li>Review <code>pubspec.yaml</code> to ensure no non-free dependencies remain</li>
+          <li>Build reproducibly by using consistent Flutter SDK versions</li>
+          <li>Sign with F-Droid's keys (F-Droid handles this)</li>
+        </ol>
+
+        <h3>Metadata for F-Droid</h3>
+        <p>When submitting to F-Droid, specify the build commands in the metadata:</p>
+        <pre><code>Builds:
+  - versionName: '1.0.6'
+    versionCode: 1
+    gradle:
+      - foss
+    prebuild: flutter pub get
+    build: |
+      flutter build apk --flavor foss --dart-define=FOSS_BUILD=true --release</code></pre>
+      </div>
+    </section>
+
+    <section>
+      <h2>Verifying FOSS Compliance</h2>
+      <div class="card">
+        <h3>1. Check the APK contents</h3>
+        <pre><code>unzip -l build/app/outputs/flutter-apk/app-foss-release.apk | grep -i firebase</code></pre>
+        <p>Should return no Firebase-related files.</p>
+
+        <h3>2. Run static analysis</h3>
+        <pre><code>flutter analyze</code></pre>
+
+        <h3>3. Check for proprietary dependencies</h3>
+        <p>Review <code>pubspec.lock</code> and ensure Firebase dependencies aren't pulled in.</p>
+      </div>
+    </section>
+
+    <section>
+      <h2>Maintaining FOSS Compatibility</h2>
+      <div class="card">
+        <p>When adding new features:</p>
+        <ul class="feature-list">
+          <li>Check for proprietary dependencies - Avoid adding new closed-source libraries</li>
+          <li>Use flavor checks - Wrap any platform-specific code with <code>FlavorConfig.isFirebaseEnabled</code></li>
+          <li>Test both flavors - Always build and test both standard and FOSS variants</li>
+          <li>Document changes - Update this file when adding flavor-specific behavior</li>
+        </ul>
+      </div>
+    </section>
+
+    <section>
+      <h2>Troubleshooting</h2>
+      
+      <div class="card">
+        <h3>"FirebaseCrashlytics not found" Error</h3>
+        <p>This usually happens if you forget to add <code>--dart-define=FOSS_BUILD=true</code>. Make sure to include it:</p>
+        <pre><code>flutter build apk --flavor foss --dart-define=FOSS_BUILD=true</code></pre>
+      </div>
+
+      <div class="card">
+        <h3>Firebase Still Initializing in FOSS Build</h3>
+        <p>Check that:</p>
+        <ol>
+          <li>The <code>--dart-define=FOSS_BUILD=true</code> flag was passed</li>
+          <li><code>FlavorConfig.isFirebaseEnabled</code> returns <code>false</code></li>
+          <li>Firebase initialization code checks the flavor before running</li>
+        </ol>
+      </div>
+
+      <div class="card">
+        <h3>Build Fails with Gradle Errors</h3>
+        <p>The Firebase plugins are conditionally applied. If you see Gradle errors:</p>
+        <ol>
+          <li>Try <code>flutter clean</code></li>
+          <li>Delete <code>android/.gradle</code> and <code>android/app/build</code> directories</li>
+          <li>Rebuild with the full command</li>
+        </ol>
+      </div>
+    </section>
+
+    <section>
+      <h2>Additional Resources</h2>
+      <div class="card">
+        <ul>
+          <li><a href="https://f-droid.org/en/docs/Inclusion_Policy/" target="_blank" rel="noopener">F-Droid Inclusion Policy</a></li>
+          <li><a href="https://flutter.dev/docs/deployment/flavors" target="_blank" rel="noopener">Flutter Flavors Documentation</a></li>
+          <li><a href="https://developer.android.com/studio/build/build-variants" target="_blank" rel="noopener">Android Product Flavors</a></li>
+        </ul>
+      </div>
+    </section>
+
+    <section>
+      <h2>Support</h2>
+      <div class="card">
+        <p>
+          For issues specific to FOSS builds, please open an issue on the 
+          <a href="https://github.com/wesleybliss/cnvrt/issues" target="_blank" rel="noopener">project's issue tracker</a> 
+          with the <code>foss</code> label.
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>
+        © 2024 CNVRT Project · 
+        <a href="https://github.com/wesleybliss/cnvrt" target="_blank" rel="noopener">GitHub Repository</a> · 
+        Available in Standard and FOSS variants
+      </p>
+    </div>
+  </footer>
+</body>
+</html>

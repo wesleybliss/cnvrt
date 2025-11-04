@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Technical architecture, code style guidelines, and project structure for CNVRT">
+  <meta name="keywords" content="flutter architecture, clean architecture, riverpod, drift, code style, project structure">
+  <meta name="author" content="Wesley Bliss">
+  <meta name="robots" content="index,follow">
+  
+  <!-- Open Graph -->
+  <meta property="og:title" content="Architecture - CNVRT">
+  <meta property="og:description" content="Technical architecture, code style guidelines, and project structure for CNVRT">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://wesleybliss.github.io/cnvrt/architecture.html">
+  <meta property="og:image" content="https://wesleybliss.github.io/cnvrt/assets/icon.png">
+  
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Architecture - CNVRT">
+  <meta name="twitter:description" content="Technical architecture, code style guidelines, and project structure for CNVRT">
+  <meta name="twitter:image" content="https://wesleybliss.github.io/cnvrt/assets/icon.png">
+  
+  <meta name="theme-color" content="#4ea1ff">
+  <link rel="icon" type="image/png" href="assets/icon.png">
+  <link rel="stylesheet" href="styles.css">
+  <title>Architecture - CNVRT</title>
+</head>
+<body>
+  <header class="site-header">
+    <nav class="container nav">
+      <div class="brand">
+        <img src="assets/icon.png" alt="CNVRT Logo" class="logo">
+        <span>CNVRT</span>
+      </div>
+      <div class="spacer"></div>
+      <a href="index.html">Home</a>
+      <a href="architecture.html" class="active">Architecture</a>
+      <a href="contributing.html">Contributing</a>
+      <a href="foss-builds.html">FOSS Builds</a>
+      <a href="https://github.com/wesleybliss/cnvrt" target="_blank" rel="noopener">GitHub</a>
+    </nav>
+  </header>
+
+  <main class="container">
+    <h1>Architecture</h1>
+    <p>CNVRT follows clean architecture principles with clear separation of concerns across three main layers.</p>
+
+    <section>
+      <h2>Layered Architecture</h2>
+      <div class="card">
+        <pre><code>┌─────────────────────────────────────────────┐
+│              UI Layer                       │
+│  (Screens, Widgets, Theme)                  │
+└──────────────┬──────────────────────────────┘
+               │
+               ▼
+┌─────────────────────────────────────────────┐
+│         State Management                    │
+│  (Riverpod Providers & Notifiers)           │
+└──────────────┬──────────────────────────────┘
+               │
+               ▼
+┌─────────────────────────────────────────────┐
+│          Domain Layer                       │
+│  (Business Logic, Models, Constants)        │
+└──────────────┬──────────────────────────────┘
+               │
+               ▼
+┌─────────────────────────────────────────────┐
+│           IO Layer                          │
+│  (Settings, Repositories, Data Sources)     │
+└──────────────┬──────────────────────────────┘
+               │
+               ▼
+┌─────────────────────────────────────────────┐
+│      Data Sources                           │
+│  (Dio HTTP Client, Drift Database)          │
+└─────────────────────────────────────────────┘</code></pre>
+      </div>
+    </section>
+
+    <section>
+      <h2>Layer Responsibilities</h2>
+      
+      <div class="card">
+        <h3>UI Layer (<code>lib/ui/</code>)</h3>
+        <ul>
+          <li>Screens and widgets organized by feature</li>
+          <li>Consumes Riverpod providers for reactive updates</li>
+          <li>Theme configuration and styling</li>
+          <li>User interaction handling</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h3>State Management (<code>lib/domain/di/providers/</code>)</h3>
+        <ul>
+          <li>Riverpod providers with annotation-based code generation</li>
+          <li>State notifiers for complex state logic</li>
+          <li>Selector providers for derived state</li>
+          <li>Feature-based organization (currencies, settings, units)</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h3>Domain Layer (<code>lib/domain/</code>)</h3>
+        <ul>
+          <li>Business models and entities</li>
+          <li>Application constants and configuration</li>
+          <li>Extension methods and utilities</li>
+          <li>Feature interfaces</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h3>IO Layer (<code>lib/io/</code>, <code>lib/db/</code>)</h3>
+        <ul>
+          <li>Repository pattern implementation</li>
+          <li>Settings persistence via SharedPreferences</li>
+          <li>Database tables and queries via Drift</li>
+          <li>API client configuration</li>
+        </ul>
+      </div>
+    </section>
+
+    <section>
+      <h2>Project Structure</h2>
+      <div class="card">
+        <pre><code>cnvrt/
+├── lib/
+│   ├── domain/              # Business logic and models
+│   │   ├── constants/       # App-wide constants
+│   │   ├── di/              # Dependency injection and providers
+│   │   │   └── providers/   # Riverpod providers by feature
+│   │   ├── extensions/      # Dart extension methods
+│   │   ├── io/              # Interface definitions
+│   │   └── models/          # Data models and entities
+│   ├── io/                  # Data persistence layer
+│   │   └── settings.dart    # Settings implementation
+│   ├── db/                  # Database (Drift)
+│   │   ├── repos/           # Repository implementations
+│   │   ├── tables/          # Drift table definitions
+│   │   └── database.dart    # Database configuration
+│   ├── ui/                  # User interface
+│   │   ├── screens/         # Feature screens
+│   │   │   ├── home/        # Home screen
+│   │   │   ├── currencies/  # Currency management
+│   │   │   ├── units/       # Unit conversion
+│   │   │   ├── settings/    # App settings
+│   │   │   ├── debug/       # Debug screens
+│   │   │   └── error/       # Error handling
+│   │   └── widgets/         # Reusable UI components
+│   ├── l10n/                # Localization
+│   ├── utils/               # Utility functions
+│   ├── config/              # App configuration
+│   ├── theme.dart           # Theme definitions
+│   └── main.dart            # Application entry point
+├── test/                    # Unit and widget tests
+└── pubspec.yaml             # Dependencies</code></pre>
+      </div>
+    </section>
+
+    <section>
+      <h2>Code Style Guidelines</h2>
+      
+      <div class="card">
+        <h3>Naming Conventions</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Type</th>
+              <th>Convention</th>
+              <th>Example</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Classes & Widgets</td>
+              <td>PascalCase</td>
+              <td><code>CurrencyConverter</code></td>
+            </tr>
+            <tr>
+              <td>Variables & Functions</td>
+              <td>camelCase</td>
+              <td><code>fetchExchangeRates()</code></td>
+            </tr>
+            <tr>
+              <td>Files</td>
+              <td>snake_case</td>
+              <td><code>currency_converter.dart</code></td>
+            </tr>
+            <tr>
+              <td>Interfaces</td>
+              <td>Prefix with 'I'</td>
+              <td><code>ISettings</code></td>
+            </tr>
+            <tr>
+              <td>Constants</td>
+              <td>lowerCamelCase</td>
+              <td><code>defaultRefreshInterval</code></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="card">
+        <h3>Code Organization</h3>
+        <ul>
+          <li><strong>Imports:</strong> Grouped by functionality; package imports first, then project imports</li>
+          <li><strong>Widgets:</strong> Use composition over inheritance with small, focused components</li>
+          <li><strong>Error Handling:</strong> Dedicated error screens/widgets for specific scenarios</li>
+          <li><strong>Types:</strong> Use strong typing with required parameters where appropriate</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h3>Linting</h3>
+        <p>The project enforces code quality through <code>analysis_options.yaml</code>:</p>
+        <ul>
+          <li><strong>flutter_lints:</strong> Official Flutter lint rules</li>
+          <li><strong>riverpod_lint:</strong> Riverpod-specific lint rules</li>
+          <li><strong>custom_lint:</strong> Custom lint rule framework</li>
+        </ul>
+        <p>Run linting with: <code>flutter analyze</code></p>
+      </div>
+    </section>
+
+    <section>
+      <h2>Development Commands</h2>
+      <div class="card">
+        <table>
+          <thead>
+            <tr>
+              <th>Command</th>
+              <th>Purpose</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>flutter clean && flutter pub get</code></td>
+              <td>Reset dependencies</td>
+            </tr>
+            <tr>
+              <td><code>flutter pub run build_runner build</code></td>
+              <td>Generate code (Riverpod, Drift)</td>
+            </tr>
+            <tr>
+              <td><code>flutter analyze</code></td>
+              <td>Run static analysis</td>
+            </tr>
+            <tr>
+              <td><code>flutter test</code></td>
+              <td>Run all tests</td>
+            </tr>
+            <tr>
+              <td><code>flutter test test/widget_test.dart</code></td>
+              <td>Run single test file</td>
+            </tr>
+            <tr>
+              <td><code>flutter build apk --release</code></td>
+              <td>Build release APK</td>
+            </tr>
+            <tr>
+              <td><code>./bin/install-wireless.sh</code></td>
+              <td>Build and install to wireless device</td>
+            </tr>
+            <tr>
+              <td><code>adb reverse tcp:3001 tcp:3001</code></td>
+              <td>Bridge ADB ports for API server</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section>
+      <h2>Build Variants</h2>
+      <div class="card">
+        <p>CNVRT supports two build flavors:</p>
+        
+        <h3>Standard Build</h3>
+        <ul>
+          <li>Includes Firebase Crashlytics for error reporting</li>
+          <li>Suitable for Google Play Store and Apple App Store</li>
+          <li>Build command: <code>flutter build apk --flavor standard --release</code></li>
+        </ul>
+
+        <h3>FOSS Build</h3>
+        <ul>
+          <li>Excludes all proprietary libraries (Firebase, Google Services)</li>
+          <li>Fully FOSS-compliant for F-Droid distribution</li>
+          <li>No telemetry or remote crash reporting</li>
+          <li>Build command: <code>flutter build apk --flavor foss --dart-define=FOSS_BUILD=true --release</code></li>
+        </ul>
+
+        <p>See the <a href="foss-builds.html">FOSS Builds documentation</a> for more details.</p>
+      </div>
+    </section>
+
+    <section>
+      <h2>Localization</h2>
+      <div class="card">
+        <p>The app supports <strong>5 languages</strong>:</p>
+        <ul class="feature-list">
+          <li>🇬🇧 English (en)</li>
+          <li>🇪🇸 Spanish (es)</li>
+          <li>🇮🇹 Italian (it)</li>
+          <li>🇰🇷 Korean (ko)</li>
+          <li>🇨🇳 Chinese (zh)</li>
+        </ul>
+
+        <h3>Adding Translations</h3>
+        <ol>
+          <li>Edit or create ARB files in <code>lib/l10n/</code> (e.g., <code>app_en.arb</code>, <code>app_es.arb</code>)</li>
+          <li>Regenerate localization code: <code>./bin/generate-i10n.sh</code> or <code>flutter gen-l10n</code></li>
+          <li>Test translations by changing device language or using the in-app selector</li>
+        </ol>
+      </div>
+    </section>
+
+    <section>
+      <h2>Data Flow</h2>
+      <div class="card">
+        <ol>
+          <li><strong>UI triggers an action</strong> (e.g., fetch currencies button pressed)</li>
+          <li><strong>Provider notifier executes business logic</strong> (validates, prepares request)</li>
+          <li><strong>Repository fetches data</strong> from remote API or local database</li>
+          <li><strong>Data flows back through providers</strong> to update application state</li>
+          <li><strong>UI rebuilds reactively</strong> with new state via Riverpod watchers</li>
+        </ol>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>
+        © 2024 CNVRT Project · 
+        <a href="https://github.com/wesleybliss/cnvrt" target="_blank" rel="noopener">GitHub Repository</a> · 
+        Available in Standard and FOSS variants
+      </p>
+    </div>
+  </footer>
+</body>
+</html>
