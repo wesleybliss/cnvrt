@@ -22,7 +22,7 @@ A fast, privacy-friendly converter for currencies and common units with full off
 
 ## About
 
-cnvrt is a Flutter-based conversion application designed for speed, privacy, and offline resilience. It provides real-time currency exchange rates with local caching for offline use, along with common unit conversions. The app follows clean architecture principles with a domain/io/ui separation pattern and uses Riverpod for state management.
+cnvrt is a Flutter-based conversion application designed for speed, privacy, and offline resilience. It provides near real-time currency exchange rates with local caching for offline use, along with common unit conversions. The app follows clean architecture principles with a domain/io/ui separation pattern and uses Riverpod for state management.
 
 Key highlights:
 - 🌍 **Multi-currency support** with real-time exchange rates
