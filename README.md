@@ -536,6 +536,15 @@ Contributions are welcome! Please follow these guidelines:
 
 ---
 
-**License**: To be determined - please consult the maintainers
+## License
+
+CNVRT is licensed under **Apache 2.0 with Commons Clause**.
+
+This means:
+- ✅ You can use, modify, and distribute the source code
+- ✅ You can create derivative works
+- ❌ You cannot sell the software or services whose value derives substantially from it
+
+See the [LICENSE](LICENSE) file for full details.
 
 **Questions or Issues?** Open an issue on [GitHub](https://github.com/wesleybliss/cnvrt/issues)
