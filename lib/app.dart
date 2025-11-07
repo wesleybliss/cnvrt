@@ -44,6 +44,7 @@ class SimpleCurrencyApp extends ConsumerWidget {
 
   Widget buildApp(BuildContext context, ThemeMode themeMode, String languageCode) {
     return MaterialApp(
+      debugShowCheckedModeBanner: true,
       title: Constants.strings.appName,
       theme: ThemeData(
         useMaterial3: true,
