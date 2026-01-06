@@ -93,13 +93,18 @@ class CurrenciesNotifier extends StateNotifier<CurrenciesState> {
       log.d("fetchCurrencies: upserting ${data.length} currencies");
 
       // Update currencies without destroying locally saved data, like selected state
-      final savedCurrencies = await currenciesRepo.upsertManyCompanions(data);
+      await currenciesRepo.upsertManyCompanions(data);
+
+      // Update last updated timestamp
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString(Constants.keys.settings.lastUpdated, DateTime.now().toIso8601String());
+
+      // Refresh from DB to ensure correct order
+      await readCurrencies(showLoading: false);
 
       // Success: clear any error states
       state = state.copyWith(
-        loading: false,
         isFetching: false,
-        currencies: savedCurrencies,
         hasNetworkError: false,
         clearError: true,
       );
@@ -152,7 +157,7 @@ class CurrenciesNotifier extends StateNotifier<CurrenciesState> {
     if (disableCache) {
       log.d('Currency caching is disabled - forcing fresh fetch');
       await fetchCurrencies();
-      prefs.setString(keys.lastUpdated, DateTime.now().toIso8601String());
+      // prefs.setString(keys.lastUpdated, DateTime.now().toIso8601String()); // Handled in fetchCurrencies
       return;
     }
     
@@ -168,7 +173,7 @@ class CurrenciesNotifier extends StateNotifier<CurrenciesState> {
       log.d('Initializing currencies. Either no currencies saved, or more than 6 hours since last update');
       await fetchCurrencies();
 
-      prefs.setString(keys.lastUpdated, DateTime.now().toIso8601String());
+      // prefs.setString(keys.lastUpdated, DateTime.now().toIso8601String()); // Handled in fetchCurrencies
     }
   }
 }
