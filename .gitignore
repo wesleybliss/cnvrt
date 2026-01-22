@@ -36,7 +36,7 @@ migrate_working_dir/
 # Firebase
 /android/app/src/standard/google-services.json
 # /android/app/src/foss/google-services.json # File kept for FOSS variant, since it's just a stub
-/lib/firebase_options.dart
+# /lib/firebase_options.dart
 
 # Symbolication related
 app.*.symbols
