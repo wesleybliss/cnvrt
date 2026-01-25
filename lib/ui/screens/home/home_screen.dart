@@ -4,6 +4,7 @@ import 'package:cnvrt/domain/di/providers/currencies/currencies_provider.dart';
 import 'package:cnvrt/ui/screens/home/home_error.dart';
 import 'package:cnvrt/ui/screens/home/home_loading.dart';
 import 'package:cnvrt/ui/screens/home/home_ready.dart';
+import 'package:cnvrt/ui/widgets/currency_inputs_list/currency_inputs_list_vm.dart';
 import 'package:cnvrt/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -126,6 +127,33 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(currenciesProvider);
+
+    // Listen for the state to become ready to trigger autofocus.
+    // This handles the transition from loading screens to the input list.
+    ref.listen(currenciesProvider, (previous, next) {
+      final hadData = previous?.currencies.isNotEmpty ?? false;
+      final hasData = next.currencies.isNotEmpty;
+      final wasLoading = previous?.loading ?? true;
+      final isNowReady = !next.loading;
+
+      // Trigger focus if we just got data or just finished a loading state
+      if (hasData && (!hadData || (wasLoading && isNowReady))) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (mounted) {
+            final focusedSymbol = ref.read(focusedCurrencyInputSymbolProvider);
+            final vm = ref.read(currencyInputsListViewModelProvider.notifier);
+            
+            if (focusedSymbol != null) {
+              // Re-focus the last focused input after data update
+              vm.requestFocus(focusedSymbol);
+            } else {
+              // Default to focusing the first one if nothing was focused
+              vm.requestFocusOnFirst();
+            }
+          }
+        });
+      }
+    });
 
     final child = state.loading
         ? state.currencies.isNotEmpty

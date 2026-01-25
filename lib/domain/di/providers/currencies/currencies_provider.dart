@@ -175,6 +175,15 @@ class CurrenciesNotifier extends StateNotifier<CurrenciesState> {
 
       // prefs.setString(keys.lastUpdated, DateTime.now().toIso8601String()); // Handled in fetchCurrencies
     }
+    
+    /*Future.delayed(const Duration(seconds: 2), () async {
+      log.d('********************************************************************');
+      log.d('********************************************************************');
+      log.d('DEBUG: force fetching currencies');
+      log.d('********************************************************************');
+      log.d('********************************************************************');
+      await fetchCurrencies();
+    });*/
   }
 }
 
