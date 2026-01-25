@@ -5,7 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 List<String> items = ['foo', 'bar', 'biz'];
 
-List<Pair<String, Color>> buildColorsList(context) => [
+List<Pair<String, Color>> buildColorsList(BuildContext context) => [
   Pair("secondary", Theme.of(context).colorScheme.secondary),
   Pair("primary", Theme.of(context).colorScheme.primary),
   Pair("onPrimary", Theme.of(context).colorScheme.onPrimary),
