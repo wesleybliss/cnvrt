@@ -4,15 +4,28 @@ import 'package:cnvrt/domain/di/providers/currencies/currency_values_provider.da
 import 'package:cnvrt/domain/di/providers/currencies/sorted_currencies_provider.dart';
 import 'package:cnvrt/utils/currency_locales.dart';
 import 'package:cnvrt/utils/logger.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
+@immutable
 class CurrencyInputsListViewModelState {
   final Map<String, TextEditingController> controllers;
   final Map<String, FocusNode> focusNodes;
 
-  CurrencyInputsListViewModelState({required this.controllers, required this.focusNodes});
+  const CurrencyInputsListViewModelState({required this.controllers, required this.focusNodes});
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is CurrencyInputsListViewModelState &&
+          runtimeType == other.runtimeType &&
+          mapEquals(controllers, other.controllers) &&
+          mapEquals(focusNodes, other.focusNodes);
+
+  @override
+  int get hashCode => controllers.hashCode ^ focusNodes.hashCode;
 }
 
 final currencyInputsListViewModelProvider =
@@ -79,11 +92,9 @@ class CurrencyInputsListViewModel extends Notifier<CurrencyInputsListViewModelSt
       }
     }
 
-    log.d('build() state with: ${_controllers.keys.join(", ")}');
-
     return CurrencyInputsListViewModelState(
-      controllers: Map.unmodifiable(_controllers),
-      focusNodes: Map.unmodifiable(_focusNodes),
+      controllers: Map.from(_controllers),
+      focusNodes: Map.from(_focusNodes),
     );
   }
 
@@ -102,7 +113,7 @@ class CurrencyInputsListViewModel extends Notifier<CurrencyInputsListViewModelSt
       log.d('Requesting focus on $symbol');
       // Use a slight delay to ensure the widget tree is fully built
       Future.delayed(const Duration(milliseconds: 100), () {
-        if (focusNode.canRequestFocus) {
+        if (focusNode.canRequestFocus && !focusNode.hasFocus) {
           focusNode.requestFocus();
         }
       });
@@ -129,8 +140,6 @@ class CurrencyInputsListViewModel extends Notifier<CurrencyInputsListViewModelSt
     String? focusedCurrencyInputSymbol,
     bool allowDecimalInput,
   ) {
-    log.d('updateControllers\n${currencyValues.entries.toString()}');
-
     for (var entry in currencyValues.entries) {
       final symbol = entry.key;
       // Use the double value for formatting
@@ -143,13 +152,10 @@ class CurrencyInputsListViewModel extends Notifier<CurrencyInputsListViewModelSt
         final controller = state.controllers[symbol]!;
         final valueAsString = value;
 
-        log.d('updateControllers $symbol => ${controller.text} -> $valueAsString');
         // Update controller only if the value has changed
         if (controller.text != valueAsString) {
           controller.text = valueAsString;
         }
-      } else {
-        log.e('Currency not found: $symbol in ${state.controllers.keys}');
       }
     }
   }
@@ -171,7 +177,6 @@ class CurrencyInputsListViewModel extends Notifier<CurrencyInputsListViewModelSt
       return;
     }
     final numericText = text.replaceAll(RegExp(r'[^0-9.]'), '');
-    log.d('SET VALUE $symbol $text ($numericText)');
     ref.read(currencyValuesProvider.notifier).setValue(symbol, numericText);
   }
 
