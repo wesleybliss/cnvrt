@@ -14,7 +14,10 @@ class CurrencyInputsListViewModelState {
   final Map<String, TextEditingController> controllers;
   final Map<String, FocusNode> focusNodes;
 
-  const CurrencyInputsListViewModelState({required this.controllers, required this.focusNodes});
+  const CurrencyInputsListViewModelState({
+    required this.controllers,
+    required this.focusNodes,
+  });
 
   @override
   bool operator ==(Object other) =>
@@ -29,23 +32,28 @@ class CurrencyInputsListViewModelState {
 }
 
 final currencyInputsListViewModelProvider =
-    NotifierProvider<CurrencyInputsListViewModel, CurrencyInputsListViewModelState>(() {
+    NotifierProvider<
+      CurrencyInputsListViewModel,
+      CurrencyInputsListViewModelState
+    >(() {
       return CurrencyInputsListViewModel();
     });
 
-class CurrencyInputsListViewModel extends Notifier<CurrencyInputsListViewModelState> {
+class CurrencyInputsListViewModel
+    extends Notifier<CurrencyInputsListViewModelState> {
   final log = Logger('CurrencyInputsListViewModel');
 
   // Cache controllers and focus nodes to prevent focus loss during rebuilds
   final Map<String, TextEditingController> _controllers = {};
   final Map<String, FocusNode> _focusNodes = {};
   bool _onDisposeRegistered = false;
+  bool _isProgrammaticFocus = false;
 
   @override
   CurrencyInputsListViewModelState build() {
     // Watch sortedCurrenciesProvider so this rebuilds when currencies change
     final sortedCurrencies = ref.watch(sortedCurrenciesProvider);
-    
+
     // Register cleanup once
     if (!_onDisposeRegistered) {
       _onDisposeRegistered = true;
@@ -65,7 +73,9 @@ class CurrencyInputsListViewModel extends Notifier<CurrencyInputsListViewModelSt
     final currentSymbols = sortedCurrencies.map((e) => e.symbol).toSet();
 
     // 1. Dispose and remove controllers/nodes for currencies no longer present
-    final symbolsToRemove = _controllers.keys.where((s) => !currentSymbols.contains(s)).toList();
+    final symbolsToRemove = _controllers.keys
+        .where((s) => !currentSymbols.contains(s))
+        .toList();
     for (final symbol in symbolsToRemove) {
       log.d('Disposing controller and focusNode for $symbol');
       _controllers[symbol]?.dispose();
@@ -114,7 +124,12 @@ class CurrencyInputsListViewModel extends Notifier<CurrencyInputsListViewModelSt
       // Use a slight delay to ensure the widget tree is fully built
       Future.delayed(const Duration(milliseconds: 100), () {
         if (focusNode.canRequestFocus && !focusNode.hasFocus) {
+          _isProgrammaticFocus = true;
           focusNode.requestFocus();
+          // Reset the flag after a short delay to allow for normal focus handling
+          Future.delayed(const Duration(milliseconds: 50), () {
+            _isProgrammaticFocus = false;
+          });
         }
       });
     }
@@ -131,7 +146,10 @@ class CurrencyInputsListViewModel extends Notifier<CurrencyInputsListViewModelSt
     final focusedSymbol = ref.read(focusedCurrencyInputSymbolProvider);
     if (focusedSymbol == symbol) return;
 
-    clearAllInputs();
+    // Only clear all inputs if this is not a programmatic focus change
+    if (!_isProgrammaticFocus) {
+      clearAllInputs();
+    }
     ref.read(focusedCurrencyInputSymbolProvider.notifier).setSymbol(symbol);
   }
 
@@ -143,7 +161,11 @@ class CurrencyInputsListViewModel extends Notifier<CurrencyInputsListViewModelSt
     for (var entry in currencyValues.entries) {
       final symbol = entry.key;
       // Use the double value for formatting
-      final value = _formatCurrencyWithSettings(symbol, entry.value, allowDecimalInput);
+      final value = _formatCurrencyWithSettings(
+        symbol,
+        entry.value,
+        allowDecimalInput,
+      );
 
       // Don't update the input field they've typed in
       if (focusedCurrencyInputSymbol == symbol) continue;
@@ -160,11 +182,17 @@ class CurrencyInputsListViewModel extends Notifier<CurrencyInputsListViewModelSt
     }
   }
 
-  String _formatCurrencyWithSettings(String symbol, double value, bool allowDecimalInput) {
+  String _formatCurrencyWithSettings(
+    String symbol,
+    double value,
+    bool allowDecimalInput,
+  ) {
     final formatter = NumberFormat.currency(
       locale: currencyLocales[symbol] ?? 'en_US',
       symbol: '',
-      decimalDigits: allowDecimalInput ? 2 : 0, // Set to 0 for whole numbers, 2 for decimals
+      decimalDigits: allowDecimalInput
+          ? 2
+          : 0, // Set to 0 for whole numbers, 2 for decimals
     );
 
     // Use the actual double value for formatting
