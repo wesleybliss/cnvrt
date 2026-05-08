@@ -3,6 +3,7 @@ import 'package:cnvrt/config/routing/routes.dart';
 import 'package:cnvrt/domain/di/providers/currencies/currencies_provider.dart';
 import 'package:cnvrt/domain/di/providers/settings/settings_provider.dart';
 import 'package:cnvrt/l10n/app_localizations.dart';
+import 'package:cnvrt/ui/screens/home/widgets/debug_force_refresh_button.dart';
 import 'package:cnvrt/ui/widgets/currency_inputs_list/currency_inputs_list.dart';
 import 'package:cnvrt/ui/widgets/currency_inputs_list/currency_inputs_list_vm.dart';
 import 'package:cnvrt/utils/logger.dart';
@@ -11,6 +12,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'widgets/current_exchange_rates_info.dart';
+
+final debugShowForceRefresh = false;
 
 class HomeReady extends ConsumerStatefulWidget {
   const HomeReady({super.key});
@@ -98,6 +101,12 @@ class _HomeReadyState extends ConsumerState<HomeReady> {
               ),
             ),
             // const NumericKeyboardGrid(),
+
+            // Debug
+            if (debugShowForceRefresh) ...[
+              SizedBox(height: 20.0),
+              DebugForceRefreshButton(),
+            ],
           ],
         );
       },
