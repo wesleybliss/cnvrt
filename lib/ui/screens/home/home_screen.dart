@@ -162,11 +162,22 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       },
       child: LayoutBuilder(
         builder: (context, constraints) {
+          // Good for most tablets, to constrain max width
+          const double maxContentWidth = 800;
+
+          double contentWidth = constraints.maxWidth;
+
+          if (contentWidth > maxContentWidth) {
+            contentWidth = maxContentWidth;
+          }
+          
           return SingleChildScrollView(
             physics: const AlwaysScrollableScrollPhysics(),
-            child: ConstrainedBox(
-              constraints: BoxConstraints(minHeight: constraints.maxHeight),
-              child: child,
+            child: Center(
+              child: ConstrainedBox(
+                constraints: BoxConstraints(minHeight: constraints.maxHeight, maxWidth: contentWidth),
+                child: child,
+              ),
             ),
           );
         },
