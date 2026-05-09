@@ -51,10 +51,6 @@ class CurrencyInputsListViewModel
 
   @override
   CurrencyInputsListViewModelState build() {
-    // Watch sortedCurrenciesProvider so this rebuilds when currencies change
-    final sortedCurrencies = ref.watch(sortedCurrenciesProvider);
-
-    // Register cleanup once
     if (!_onDisposeRegistered) {
       _onDisposeRegistered = true;
       ref.onDispose(() {
@@ -68,11 +64,34 @@ class CurrencyInputsListViewModel
         _controllers.clear();
         _focusNodes.clear();
       });
+
+      // Sync controllers reactively without triggering build() re-runs.
+      // Using ref.listen (not ref.watch) keeps build() as a one-shot init,
+      // so ref.onDispose above only fires at true provider disposal —
+      // not on every currency refresh.
+      ref.listen<List<Currency>>(sortedCurrenciesProvider, (_, currencies) {
+        if (_syncControllers(currencies)) {
+          state = CurrencyInputsListViewModelState(
+            controllers: Map.from(_controllers),
+            focusNodes: Map.from(_focusNodes),
+          );
+        }
+      });
     }
 
-    final currentSymbols = sortedCurrencies.map((e) => e.symbol).toSet();
+    _syncControllers(ref.read(sortedCurrenciesProvider));
 
-    // 1. Dispose and remove controllers/nodes for currencies no longer present
+    return CurrencyInputsListViewModelState(
+      controllers: Map.from(_controllers),
+      focusNodes: Map.from(_focusNodes),
+    );
+  }
+
+  // Returns true if controllers were added or removed.
+  bool _syncControllers(List<Currency> currencies) {
+    final currentSymbols = currencies.map((e) => e.symbol).toSet();
+    bool changed = false;
+
     final symbolsToRemove = _controllers.keys
         .where((s) => !currentSymbols.contains(s))
         .toList();
@@ -82,30 +101,26 @@ class CurrencyInputsListViewModel
       _focusNodes[symbol]?.dispose();
       _controllers.remove(symbol);
       _focusNodes.remove(symbol);
+      changed = true;
     }
 
-    // 2. Create or reuse controllers/nodes for current currencies
-    for (var currency in sortedCurrencies) {
+    for (var currency in currencies) {
       final symbol = currency.symbol;
       if (!_controllers.containsKey(symbol)) {
         log.d('Creating new controller and focusNode for $symbol');
         _controllers[symbol] = TextEditingController();
         final focusNode = FocusNode();
         _focusNodes[symbol] = focusNode;
-
-        // Listen to focus changes and update the provider
         focusNode.addListener(() {
           if (focusNode.hasFocus) {
             onFocusChanged(symbol);
           }
         });
+        changed = true;
       }
     }
 
-    return CurrencyInputsListViewModelState(
-      controllers: Map.from(_controllers),
-      focusNodes: Map.from(_focusNodes),
-    );
+    return changed;
   }
 
   /// Request focus on the first currency input
