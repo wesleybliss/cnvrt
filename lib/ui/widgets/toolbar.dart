@@ -25,26 +25,25 @@ class Toolbar extends ConsumerWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final List<Widget> actions =
-        !showActions
-            ? []
-            : [
-              IconButton(
-                icon: const Icon(Icons.favorite), // Heart icon for favorites
-                tooltip: AppLocalizations.of(context)!.favorites,
-                onPressed: () {
-                  Application.router.navigateTo(context, Routes.currencies);
-                },
-              ),
-              const ToolbarThemeToggle(),
-              IconButton(
-                icon: const Icon(Icons.settings), // Settings icon
-                tooltip: AppLocalizations.of(context)!.settings,
-                onPressed: () {
-                  Application.router.navigateTo(context, Routes.settings);
-                },
-              ),
-            ];
+    final List<Widget> actions = !showActions
+        ? []
+        : [
+            IconButton(
+              icon: const Icon(Icons.favorite), // Heart icon for favorites
+              tooltip: AppLocalizations.of(context)!.favorites,
+              onPressed: () {
+                Application.router.navigateTo(context, Routes.currencies);
+              },
+            ),
+            const ToolbarThemeToggle(),
+            IconButton(
+              icon: const Icon(Icons.settings), // Settings icon
+              tooltip: AppLocalizations.of(context)!.settings,
+              onPressed: () {
+                Application.router.navigateTo(context, Routes.settings);
+              },
+            ),
+          ];
 
     return AppBar(
       title: Text(

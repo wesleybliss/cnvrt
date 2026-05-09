@@ -92,5 +92,4 @@ class DefaultFirebaseOptions {
     storageBucket: 'cnvrt-dc3f2.firebasestorage.app',
     measurementId: 'G-SBQRL8HYL0',
   );
-
 }

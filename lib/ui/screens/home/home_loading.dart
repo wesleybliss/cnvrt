@@ -19,7 +19,9 @@ class HomeLoading extends ConsumerWidget {
           if (isFetching)
             Text(
               AppLocalizations.of(context)!.fetchingCurrencies,
-              style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withAlpha(70)),
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.onSurface.withAlpha(70),
+              ),
             ),
         ],
       ),

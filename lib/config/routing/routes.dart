@@ -21,15 +21,20 @@ class Routes {
   static const String currencies = '/currencies';
   static const String units = '/units';
 
-  static Function defineDefault(FluroRouter router) => (
-    String routePath,
-    Handler handler, [
-    TransitionType transitionType = defaultTransition,
-  ]) {
-    log.i('Define route: $routePath');
+  static Function defineDefault(FluroRouter router) =>
+      (
+        String routePath,
+        Handler handler, [
+        TransitionType transitionType = defaultTransition,
+      ]) {
+        log.i('Define route: $routePath');
 
-    router.define(routePath, handler: handler, transitionType: transitionType);
-  };
+        router.define(
+          routePath,
+          handler: handler,
+          transitionType: transitionType,
+        );
+      };
 
   static void configureRoutes(FluroRouter router) {
     Function define = defineDefault(router);

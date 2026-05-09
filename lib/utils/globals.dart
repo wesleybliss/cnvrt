@@ -11,4 +11,3 @@ void globalSnackBar(String message) {
     log.e('failed to show snackbar; navigatorKey was null');
   }*/
 }
-

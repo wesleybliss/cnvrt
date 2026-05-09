@@ -86,14 +86,24 @@ class Logger {
     }
   }
 
-  void _print(LogLevel severity, dynamic message, [Object? error, StackTrace? stackTrace]) {
+  void _print(
+    LogLevel severity,
+    dynamic message, [
+    Object? error,
+    StackTrace? stackTrace,
+  ]) {
     if (kDebugMode) {
       final useLevel = level ?? globalLevel;
       // print('---- debug ---- severity: ${severity.index}, level = ${useLevel.index}');
       if (severity.index >= useLevel.index) {
         final name = _createName(severity);
-        final prefixText = prefix?.isNotEmpty == true ? '[$prefix]' : globalPrefix.isNotEmpty ? '[$globalPrefix]' : '';
-        final messageWithTag = '$prefixText [$tag] ${_stringifyMessage(message)}';
+        final prefixText = prefix?.isNotEmpty == true
+            ? '[$prefix]'
+            : globalPrefix.isNotEmpty
+            ? '[$globalPrefix]'
+            : '';
+        final messageWithTag =
+            '$prefixText [$tag] ${_stringifyMessage(message)}';
 
         if (usePrint == true || globalUsePrint) {
           print('[$name] $messageWithTag');

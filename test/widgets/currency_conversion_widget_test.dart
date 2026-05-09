@@ -18,10 +18,11 @@ void main() {
     setUp(() {
       // Reset DI before each test
       SpotTestHelper.resetDI();
-      
+
       // Setup test settings with decimal input disabled
       testSettings = Settings(
-        roundingDecimals: 3, // Use 3 decimals to see the actual conversion (0.001 USD)
+        roundingDecimals:
+            3, // Use 3 decimals to see the actual conversion (0.001 USD)
         accountForInflation: false,
         theme: "system",
         language: "en",
@@ -36,7 +37,7 @@ void main() {
         allowDecimalInput: false, // Decimal input disabled
         developerModeActive: false,
       );
-      
+
       Spot.registerSingle<ISettings, Settings>((get) => testSettings);
     });
 
@@ -44,7 +45,9 @@ void main() {
       SpotTestHelper.resetDI();
     });
 
-    testWidgets('Entering 5 in COP field converts to approximately 0.001 USD', (WidgetTester tester) async {
+    testWidgets('Entering 5 in COP field converts to approximately 0.001 USD', (
+      WidgetTester tester,
+    ) async {
       // Setup mock currencies
       final currencies = [
         const Currency(
@@ -76,7 +79,9 @@ void main() {
         ProviderScope(
           overrides: [
             // Override the settings provider with our test settings
-            settingsNotifierProvider.overrideWith(() => TestSettingsNotifier(testSettings)),
+            settingsNotifierProvider.overrideWith(
+              () => TestSettingsNotifier(testSettings),
+            ),
           ],
           child: MaterialApp(
             home: Scaffold(
@@ -91,13 +96,20 @@ void main() {
                     onTextChanged: (symbol, text) {
                       // Simulate the conversion logic
                       if (text.isNotEmpty) {
-                        final numericText = text.replaceAll(RegExp(r'[^0-9.]'), '');
+                        final numericText = text.replaceAll(
+                          RegExp(r'[^0-9.]'),
+                          '',
+                        );
                         final inputValue = double.tryParse(numericText) ?? 0.0;
-                        
+
                         // Convert COP to USD
                         final valueInUSD = inputValue / copPerUsd;
-                        final roundedValue = double.parse(valueInUSD.toStringAsFixed(testSettings.roundingDecimals));
-                        
+                        final roundedValue = double.parse(
+                          valueInUSD.toStringAsFixed(
+                            testSettings.roundingDecimals,
+                          ),
+                        );
+
                         // Update USD controller
                         usdController.text = roundedValue.toString();
                       } else {
@@ -117,13 +129,20 @@ void main() {
                     onTextChanged: (symbol, text) {
                       // Simulate the conversion logic
                       if (text.isNotEmpty) {
-                        final numericText = text.replaceAll(RegExp(r'[^0-9.]'), '');
+                        final numericText = text.replaceAll(
+                          RegExp(r'[^0-9.]'),
+                          '',
+                        );
                         final inputValue = double.tryParse(numericText) ?? 0.0;
-                        
+
                         // Convert USD to COP
                         final valueInCOP = inputValue * copPerUsd;
-                        final roundedValue = double.parse(valueInCOP.toStringAsFixed(testSettings.roundingDecimals));
-                        
+                        final roundedValue = double.parse(
+                          valueInCOP.toStringAsFixed(
+                            testSettings.roundingDecimals,
+                          ),
+                        );
+
                         // Update COP controller
                         copController.text = roundedValue.toString();
                       } else {
@@ -163,14 +182,18 @@ void main() {
       // 5 COP / 4115.61 = 0.001215... USD
       // With 3 decimal places rounding: 0.001 USD
       final expectedUsdValue = 5.0 / copPerUsd;
-      final expectedRoundedUsd = double.parse(expectedUsdValue.toStringAsFixed(3));
-      
+      final expectedRoundedUsd = double.parse(
+        expectedUsdValue.toStringAsFixed(3),
+      );
+
       // Verify the USD controller has been updated with the converted value
       expect(usdController.text, equals(expectedRoundedUsd.toString()));
       expect(expectedRoundedUsd, closeTo(0.001, 0.0001));
     });
 
-    testWidgets('Entering 5 in COP with 2 decimal rounding shows 0.0 USD', (WidgetTester tester) async {
+    testWidgets('Entering 5 in COP with 2 decimal rounding shows 0.0 USD', (
+      WidgetTester tester,
+    ) async {
       // Reset settings with only 2 decimal places
       testSettings = Settings(
         roundingDecimals: 2, // Standard 2 decimals
@@ -188,7 +211,7 @@ void main() {
         allowDecimalInput: false,
         developerModeActive: false,
       );
-      
+
       Spot.registerSingle<ISettings, Settings>((get) => testSettings);
 
       final currencies = [
@@ -218,7 +241,9 @@ void main() {
       await tester.pumpWidget(
         ProviderScope(
           overrides: [
-            settingsNotifierProvider.overrideWith(() => TestSettingsNotifier(testSettings)),
+            settingsNotifierProvider.overrideWith(
+              () => TestSettingsNotifier(testSettings),
+            ),
           ],
           child: MaterialApp(
             home: Scaffold(
@@ -231,10 +256,17 @@ void main() {
                     focusNode: copFocusNode,
                     onTextChanged: (symbol, text) {
                       if (text.isNotEmpty) {
-                        final numericText = text.replaceAll(RegExp(r'[^0-9.]'), '');
+                        final numericText = text.replaceAll(
+                          RegExp(r'[^0-9.]'),
+                          '',
+                        );
                         final inputValue = double.tryParse(numericText) ?? 0.0;
                         final valueInUSD = inputValue / copPerUsd;
-                        final roundedValue = double.parse(valueInUSD.toStringAsFixed(testSettings.roundingDecimals));
+                        final roundedValue = double.parse(
+                          valueInUSD.toStringAsFixed(
+                            testSettings.roundingDecimals,
+                          ),
+                        );
                         usdController.text = roundedValue.toString();
                       } else {
                         usdController.text = '';
@@ -274,13 +306,17 @@ void main() {
 
       // With 2 decimal places: 0.001215 rounds to 0.00
       final expectedUsdValue = 5.0 / copPerUsd;
-      final expectedRoundedUsd = double.parse(expectedUsdValue.toStringAsFixed(2));
-      
+      final expectedRoundedUsd = double.parse(
+        expectedUsdValue.toStringAsFixed(2),
+      );
+
       expect(usdController.text, equals(expectedRoundedUsd.toString()));
       expect(expectedRoundedUsd, equals(0.0));
     });
 
-    testWidgets('Entering 5000 in COP converts to approximately 1.215 USD', (WidgetTester tester) async {
+    testWidgets('Entering 5000 in COP converts to approximately 1.215 USD', (
+      WidgetTester tester,
+    ) async {
       // Use 3 decimal places to see the value
       testSettings = Settings(
         roundingDecimals: 3,
@@ -298,7 +334,7 @@ void main() {
         allowDecimalInput: false,
         developerModeActive: false,
       );
-      
+
       Spot.registerSingle<ISettings, Settings>((get) => testSettings);
 
       final currencies = [
@@ -328,7 +364,9 @@ void main() {
       await tester.pumpWidget(
         ProviderScope(
           overrides: [
-            settingsNotifierProvider.overrideWith(() => TestSettingsNotifier(testSettings)),
+            settingsNotifierProvider.overrideWith(
+              () => TestSettingsNotifier(testSettings),
+            ),
           ],
           child: MaterialApp(
             home: Scaffold(
@@ -341,10 +379,17 @@ void main() {
                     focusNode: copFocusNode,
                     onTextChanged: (symbol, text) {
                       if (text.isNotEmpty) {
-                        final numericText = text.replaceAll(RegExp(r'[^0-9.]'), '');
+                        final numericText = text.replaceAll(
+                          RegExp(r'[^0-9.]'),
+                          '',
+                        );
                         final inputValue = double.tryParse(numericText) ?? 0.0;
                         final valueInUSD = inputValue / copPerUsd;
-                        final roundedValue = double.parse(valueInUSD.toStringAsFixed(testSettings.roundingDecimals));
+                        final roundedValue = double.parse(
+                          valueInUSD.toStringAsFixed(
+                            testSettings.roundingDecimals,
+                          ),
+                        );
                         usdController.text = roundedValue.toString();
                       } else {
                         usdController.text = '';
@@ -386,8 +431,10 @@ void main() {
       // 5000 COP / 4115.61 = 1.2149... USD
       // With 3 decimal places rounding: 1.215 USD
       final expectedUsdValue = 5000.0 / copPerUsd;
-      final expectedRoundedUsd = double.parse(expectedUsdValue.toStringAsFixed(3));
-      
+      final expectedRoundedUsd = double.parse(
+        expectedUsdValue.toStringAsFixed(3),
+      );
+
       expect(usdController.text, equals(expectedRoundedUsd.toString()));
       expect(expectedRoundedUsd, closeTo(1.215, 0.001));
     });

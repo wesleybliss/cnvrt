@@ -1,6 +1,7 @@
 import 'package:cnvrt/l10n/app_localizations.dart';
 import 'package:cnvrt/ui/screens/units/numeric_units_row.dart';
-import 'package:cnvrt/utils/unit_conversion_utils.dart' as unit_conversion_utils;
+import 'package:cnvrt/utils/unit_conversion_utils.dart'
+    as unit_conversion_utils;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -60,7 +61,17 @@ class UnitsScreen extends ConsumerWidget {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        ListView(shrinkWrap: true, children: [temperatureRow, distanceRow, speedRow, weightRow, areaRow, volumeRow]),
+        ListView(
+          shrinkWrap: true,
+          children: [
+            temperatureRow,
+            distanceRow,
+            speedRow,
+            weightRow,
+            areaRow,
+            volumeRow,
+          ],
+        ),
       ],
     );
   }

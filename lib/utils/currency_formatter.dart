@@ -6,7 +6,11 @@ class CurrencyFormatter extends TextInputFormatter {
   final int decimalDigits;
   final bool allowDecimals;
 
-  CurrencyFormatter({required this.currencySymbol, this.decimalDigits = 2, this.allowDecimals = true});
+  CurrencyFormatter({
+    required this.currencySymbol,
+    this.decimalDigits = 2,
+    this.allowDecimals = true,
+  });
 
   @override
   TextEditingValue formatEditUpdate(
@@ -20,14 +24,14 @@ class CurrencyFormatter extends TextInputFormatter {
     // Remove all non-digit characters (but keep decimal point if decimals are allowed)
     String newText;
     double value;
-    
+
     if (allowDecimals) {
       // When decimals are allowed, keep the decimal point
       newText = newValue.text.replaceAll(RegExp(r'[^0-9.]'), '');
       if (newText.isEmpty) {
         return newValue;
       }
-      
+
       // Parse as decimal number directly
       value = double.tryParse(newText) ?? 0.0;
     } else {
@@ -36,7 +40,7 @@ class CurrencyFormatter extends TextInputFormatter {
       if (newText.isEmpty) {
         return newValue;
       }
-      
+
       // Treat input as whole units
       value = double.parse(newText);
     }

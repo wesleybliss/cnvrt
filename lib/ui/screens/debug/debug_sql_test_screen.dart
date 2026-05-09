@@ -20,7 +20,10 @@ class _DebugSqlTestScreenState extends ConsumerState<DebugSqlTestScreen> {
 
   Future<void> readDatabase() async {
     final List<db.Currency> res = await currenciesRepo.findAll();
-    final List<String> data = res.fold([], (acc, it) => acc..add("${it.symbol}: ${it.selected ? "selected" : "ok"}"));
+    final List<String> data = res.fold(
+      [],
+      (acc, it) => acc..add("${it.symbol}: ${it.selected ? "selected" : "ok"}"),
+    );
     controller.text = data.join("\n");
   }
 
@@ -36,14 +39,16 @@ class _DebugSqlTestScreenState extends ConsumerState<DebugSqlTestScreen> {
   }
 
   Future<void> updateDatabase() async {
-    final currency =
-        await (currenciesRepo.db.select(currenciesRepo.db.currencies)
-          ..where((t) => t.symbol.equals("USD"))).getSingleOrNull();
+    final currency = await (currenciesRepo.db.select(
+      currenciesRepo.db.currencies,
+    )..where((t) => t.symbol.equals("USD"))).getSingleOrNull();
     if (currency != null) {
       // await currenciesRepo.update(db.CurrenciesCompanion(selected: drift.Value(!currency.selected)));
       await (currenciesRepo.db.update(
         currenciesRepo.db.currencies,
-      )..where((t) => t.symbol.equals("USD"))).write(db.CurrenciesCompanion(selected: drift.Value(!currency.selected)));
+      )..where((t) => t.symbol.equals("USD"))).write(
+        db.CurrenciesCompanion(selected: drift.Value(!currency.selected)),
+      );
     } else {
       log.w("Currency not found");
     }
@@ -65,11 +70,29 @@ class _DebugSqlTestScreenState extends ConsumerState<DebugSqlTestScreen> {
       child: Center(
         child: Column(
           children: [
-            ElevatedButton(onPressed: readDatabase, child: const Text("Read database")),
-            ElevatedButton(onPressed: writeDatabase, child: const Text("Write database")),
-            ElevatedButton(onPressed: updateDatabase, child: const Text("Update database")),
-            ElevatedButton(onPressed: clearDatabase, child: const Text("Clear database")),
-            Expanded(child: TextField(controller: controller, readOnly: true, maxLines: 10)),
+            ElevatedButton(
+              onPressed: readDatabase,
+              child: const Text("Read database"),
+            ),
+            ElevatedButton(
+              onPressed: writeDatabase,
+              child: const Text("Write database"),
+            ),
+            ElevatedButton(
+              onPressed: updateDatabase,
+              child: const Text("Update database"),
+            ),
+            ElevatedButton(
+              onPressed: clearDatabase,
+              child: const Text("Clear database"),
+            ),
+            Expanded(
+              child: TextField(
+                controller: controller,
+                readOnly: true,
+                maxLines: 10,
+              ),
+            ),
           ],
         ),
       ),

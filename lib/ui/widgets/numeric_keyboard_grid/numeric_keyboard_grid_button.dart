@@ -5,7 +5,12 @@ class NumericKeyboardGridButton extends StatelessWidget {
   final VoidCallback onPressed;
   final VoidCallback? onLongPress;
 
-  const NumericKeyboardGridButton({super.key, required this.label, required this.onPressed, this.onLongPress});
+  const NumericKeyboardGridButton({
+    super.key,
+    required this.label,
+    required this.onPressed,
+    this.onLongPress,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -17,14 +22,13 @@ class NumericKeyboardGridButton extends StatelessWidget {
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.all(Radius.circular(0)),
         ),
-        backgroundColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.2),
+        backgroundColor: Theme.of(
+          context,
+        ).colorScheme.primary.withValues(alpha: 0.2),
       ),
       onPressed: onPressed,
       onLongPress: onLongPress,
-      child: Text(
-        label,
-        style: const TextStyle(fontSize: 18),
-      ),
+      child: Text(label, style: const TextStyle(fontSize: 18)),
     );
   }
 }

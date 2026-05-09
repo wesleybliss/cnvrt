@@ -80,18 +80,23 @@ class Settings implements ISettings {
     theme: theme ?? this.theme,
     language: language ?? this.language,
     lastUpdated: lastUpdated ?? this.lastUpdated,
-    updateFrequencyInHours: updateFrequencyInHours ?? this.updateFrequencyInHours,
+    updateFrequencyInHours:
+        updateFrequencyInHours ?? this.updateFrequencyInHours,
     roundingDecimals: roundingDecimals ?? this.roundingDecimals,
     useLargeInputs: useLargeInputs ?? this.useLargeInputs,
-    showDragReorderHandles: showDragReorderHandles ?? this.showDragReorderHandles,
-    showCopyToClipboardButtons: showCopyToClipboardButtons ?? this.showCopyToClipboardButtons,
-    showFullCurrencyNameLabel: showFullCurrencyNameLabel ?? this.showFullCurrencyNameLabel,
+    showDragReorderHandles:
+        showDragReorderHandles ?? this.showDragReorderHandles,
+    showCopyToClipboardButtons:
+        showCopyToClipboardButtons ?? this.showCopyToClipboardButtons,
+    showFullCurrencyNameLabel:
+        showFullCurrencyNameLabel ?? this.showFullCurrencyNameLabel,
     inputsPosition: inputsPosition ?? this.inputsPosition,
     showCurrencyRate: showCurrencyRate ?? this.showCurrencyRate,
     accountForInflation: accountForInflation ?? this.accountForInflation,
     showCountryFlags: showCountryFlags ?? this.showCountryFlags,
     allowDecimalInput: allowDecimalInput ?? this.allowDecimalInput,
-    disableCurrencyCaching: disableCurrencyCaching ?? this.disableCurrencyCaching,
+    disableCurrencyCaching:
+        disableCurrencyCaching ?? this.disableCurrencyCaching,
 
     developerModeActive: developerModeActive ?? this.developerModeActive,
   );
@@ -103,20 +108,24 @@ class Settings implements ISettings {
     return Settings(
       theme: prefs.getString(keys.theme) ?? "system",
       language: prefs.getString(keys.language) ?? "system",
-      lastUpdated:
-          prefs.getString(keys.lastUpdated) != null ? DateTime.parse(prefs.getString(keys.lastUpdated)!) : null,
+      lastUpdated: prefs.getString(keys.lastUpdated) != null
+          ? DateTime.parse(prefs.getString(keys.lastUpdated)!)
+          : null,
       updateFrequencyInHours: prefs.getInt(keys.updateFrequencyInHours) ?? 12,
       roundingDecimals: prefs.getInt(keys.roundingDecimals) ?? 4,
       useLargeInputs: prefs.getInt(keys.useLargeInputs) == 1,
       showDragReorderHandles: prefs.getInt(keys.showDragReorderHandles) == 1,
-      showCopyToClipboardButtons: prefs.getInt(keys.showCopyToClipboardButtons) == 1,
-      showFullCurrencyNameLabel: prefs.getInt(keys.showFullCurrencyNameLabel) == 1,
+      showCopyToClipboardButtons:
+          prefs.getInt(keys.showCopyToClipboardButtons) == 1,
+      showFullCurrencyNameLabel:
+          prefs.getInt(keys.showFullCurrencyNameLabel) == 1,
       inputsPosition: prefs.getString(keys.inputsPosition) ?? "center",
       showCurrencyRate: prefs.getString(keys.showCurrencyRate) ?? "selected",
       accountForInflation: prefs.getBool(keys.accountForInflation) ?? true,
       showCountryFlags: prefs.getBool(keys.showCountryFlags) ?? true,
       allowDecimalInput: prefs.getBool(keys.allowDecimalInput) ?? false,
-      disableCurrencyCaching: prefs.getBool(keys.disableCurrencyCaching) ?? false,
+      disableCurrencyCaching:
+          prefs.getBool(keys.disableCurrencyCaching) ?? false,
 
       developerModeActive: prefs.getBool(keys.developerModeActive) ?? false,
     );
@@ -137,9 +146,18 @@ class Settings implements ISettings {
     await prefs.setInt(keys.updateFrequencyInHours, updateFrequencyInHours);
     await prefs.setInt(keys.roundingDecimals, roundingDecimals);
     await prefs.setInt(keys.useLargeInputs, useLargeInputs ? 1 : 0);
-    await prefs.setInt(keys.showDragReorderHandles, showDragReorderHandles ? 1 : 0);
-    await prefs.setInt(keys.showCopyToClipboardButtons, showCopyToClipboardButtons ? 1 : 0);
-    await prefs.setInt(keys.showFullCurrencyNameLabel, showFullCurrencyNameLabel ? 1 : 0);
+    await prefs.setInt(
+      keys.showDragReorderHandles,
+      showDragReorderHandles ? 1 : 0,
+    );
+    await prefs.setInt(
+      keys.showCopyToClipboardButtons,
+      showCopyToClipboardButtons ? 1 : 0,
+    );
+    await prefs.setInt(
+      keys.showFullCurrencyNameLabel,
+      showFullCurrencyNameLabel ? 1 : 0,
+    );
     await prefs.setString(keys.inputsPosition, inputsPosition);
     await prefs.setString(keys.showCurrencyRate, showCurrencyRate);
     await prefs.setBool(keys.accountForInflation, accountForInflation);

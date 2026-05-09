@@ -17,7 +17,10 @@ class NoInternetError extends StatelessWidget {
           child: SvgPicture.asset(
             'assets/images/no-wifi-2-svgrepo-com.svg',
             fit: BoxFit.contain,
-            colorFilter: ColorFilter.mode(Theme.of(context).colorScheme.secondary, BlendMode.srcIn),
+            colorFilter: ColorFilter.mode(
+              Theme.of(context).colorScheme.secondary,
+              BlendMode.srcIn,
+            ),
             semanticsLabel: AppLocalizations.of(context)!.noInternetMessage,
           ),
         ),

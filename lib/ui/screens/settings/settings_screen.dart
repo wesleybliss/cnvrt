@@ -30,7 +30,9 @@ class SettingsScreen extends ConsumerStatefulWidget {
 
 class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   String appVersion = '0.0.0';
-  final Map<String, TextEditingController> controllers = {"roundingDecimalsController": TextEditingController()};
+  final Map<String, TextEditingController> controllers = {
+    "roundingDecimalsController": TextEditingController(),
+  };
 
   @override
   void initState() {
@@ -58,42 +60,56 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     final settingsAsyncValue = ref.watch(settingsNotifierProvider);
 
     Widget renderBody(Settings settings) {
-      final debugWidget =
-          settings.developerModeActive
-              ? IconButton(
-                icon: const Icon(Icons.bug_report),
-                tooltip: 'Debug',
-                onPressed: () {
-                  Application.router.navigateTo(context, Routes.debug);
-                },
-              )
-              : TapCounter(
-                label: appVersion,
-                onTapCountReached: () async {
-                  // Wait 3 seconds
-                  await Future.delayed(const Duration(seconds: 3), () {
-                    ref.read(settingsNotifierProvider.notifier).setDeveloperModeActive(true);
-                  });
-                },
-              );
+      final debugWidget = settings.developerModeActive
+          ? IconButton(
+              icon: const Icon(Icons.bug_report),
+              tooltip: 'Debug',
+              onPressed: () {
+                Application.router.navigateTo(context, Routes.debug);
+              },
+            )
+          : TapCounter(
+              label: appVersion,
+              onTapCountReached: () async {
+                // Wait 3 seconds
+                await Future.delayed(const Duration(seconds: 3), () {
+                  ref
+                      .read(settingsNotifierProvider.notifier)
+                      .setDeveloperModeActive(true);
+                });
+              },
+            );
 
       return SingleChildScrollView(
         child: Column(
           children: [
             ThemeDropdown(value: settings.theme),
             LanguageDropdown(value: settings.language),
-            RoundDecimalsToInput(controller: controllers["roundingDecimalsController"]),
-            UpdateFrequencyInHoursDropdown(value: settings.updateFrequencyInHours),
+            RoundDecimalsToInput(
+              controller: controllers["roundingDecimalsController"],
+            ),
+            UpdateFrequencyInHoursDropdown(
+              value: settings.updateFrequencyInHours,
+            ),
             UseLargeInputsSwitch(value: settings.useLargeInputs),
-            ShowDragReorderHandlesSwitch(value: settings.showDragReorderHandles),
-            ShowCopyToClipboardButtonsSwitch(value: settings.showCopyToClipboardButtons),
-            ShowFullCurrencyNameLabelSwitch(value: settings.showFullCurrencyNameLabel),
+            ShowDragReorderHandlesSwitch(
+              value: settings.showDragReorderHandles,
+            ),
+            ShowCopyToClipboardButtonsSwitch(
+              value: settings.showCopyToClipboardButtons,
+            ),
+            ShowFullCurrencyNameLabelSwitch(
+              value: settings.showFullCurrencyNameLabel,
+            ),
             InputsPositionDropdown(value: settings.inputsPosition),
             ShowCurrencyRateDropdown(value: settings.showCurrencyRate),
             AccountForInflationSwitch(value: settings.accountForInflation),
             ShowCountryFlagsSwitch(value: settings.showCountryFlags),
             AllowDecimalInputSwitch(value: settings.allowDecimalInput),
-            Padding(padding: EdgeInsets.symmetric(vertical: 16), child: debugWidget),
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: 16),
+              child: debugWidget,
+            ),
           ],
         ),
       );
@@ -101,10 +117,13 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
 
     return settingsAsyncValue.when(
       loading: () => const CircularProgressIndicator(),
-      error: (error, stackTrace) => Text('${AppLocalizations.of(context)!.error}: $error'),
+      error: (error, stackTrace) =>
+          Text('${AppLocalizations.of(context)!.error}: $error'),
       data: (settings) {
         // Set initial values
-        controllers["roundingDecimalsController"]?.text = settings.roundingDecimals.toString();
+        controllers["roundingDecimalsController"]?.text = settings
+            .roundingDecimals
+            .toString();
 
         return renderBody(settings);
       },

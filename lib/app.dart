@@ -14,7 +14,7 @@ const overrideLocale = true;
 
 class SimpleCurrencyApp extends ConsumerWidget {
   static bool _errorWidgetBuilderSet = false;
-  
+
   SimpleCurrencyApp({super.key}) {
     if (Application.isInitialized) return;
 
@@ -27,22 +27,23 @@ class SimpleCurrencyApp extends ConsumerWidget {
     // We detect test environment by checking the binding type string
     final bindingType = WidgetsBinding.instance.runtimeType.toString();
     final isTestEnvironment = bindingType.contains('Test');
-    
+
     if (!_errorWidgetBuilderSet && !isTestEnvironment) {
       _errorWidgetBuilderSet = true;
       ErrorWidget.builder = (FlutterErrorDetails details) {
         final exception = details.exception is Exception
             ? details.exception as Exception
             : Exception(details.exception.toString());
-        return ErrorScreen(
-          error: exception,
-          stackTrace: details.stack,
-        );
+        return ErrorScreen(error: exception, stackTrace: details.stack);
       };
     }
   }
 
-  Widget buildApp(BuildContext context, ThemeMode themeMode, String languageCode) {
+  Widget buildApp(
+    BuildContext context,
+    ThemeMode themeMode,
+    String languageCode,
+  ) {
     return MaterialApp(
       debugShowCheckedModeBanner: true,
       title: Constants.strings.appName,
@@ -77,22 +78,25 @@ class SimpleCurrencyApp extends ConsumerWidget {
     }
 
     if (themeAsyncValue is AsyncError) {
-      return Text('${AppLocalizations.of(context)!.error}: ${themeAsyncValue.error}');
+      return Text(
+        '${AppLocalizations.of(context)!.error}: ${themeAsyncValue.error}',
+      );
     }
 
     if (settingsAsyncValue is AsyncError) {
-      return Text('${AppLocalizations.of(context)!.error}: ${settingsAsyncValue.error}');
+      return Text(
+        '${AppLocalizations.of(context)!.error}: ${settingsAsyncValue.error}',
+      );
     }
 
     final theme = themeAsyncValue.value!;
     final settings = settingsAsyncValue.value!;
 
-    final themeMode =
-        theme == "system"
-            ? ThemeMode.system
-            : theme == "dark"
-            ? ThemeMode.dark
-            : ThemeMode.light;
+    final themeMode = theme == "system"
+        ? ThemeMode.system
+        : theme == "dark"
+        ? ThemeMode.dark
+        : ThemeMode.light;
 
     return buildApp(context, themeMode, settings.language);
   }

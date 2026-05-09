@@ -1,4 +1,3 @@
-
 /*String formatCurrency(String currencyCode, int amount) {
   final locale = currencyLocales[currencyCode] ?? 'en_US';
   return NumberFormat.currency(locale: locale, decimalDigits: 0).format(amount);

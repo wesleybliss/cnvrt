@@ -2,13 +2,30 @@ import 'package:cnvrt/db/database.dart';
 import 'package:cnvrt/io/settings.dart';
 import 'package:cnvrt/utils/logger.dart';
 
-List<String> inflatedCurrencies = ["COP", "IDR", "VND", "KRW", "IRR", "PYG", "CLP", "LAK", "LBP", "TRY"];
+List<String> inflatedCurrencies = [
+  "COP",
+  "IDR",
+  "VND",
+  "KRW",
+  "IRR",
+  "PYG",
+  "CLP",
+  "LAK",
+  "LBP",
+  "TRY",
+];
 
-double getInflatedCurrencyValue(String symbol, double value, {bool accountForInflation = true}) {
+double getInflatedCurrencyValue(
+  String symbol,
+  double value, {
+  bool accountForInflation = true,
+}) {
   final log = Logger('getInflatedCurrencyValue');
-  
-  log.d('getInflatedCurrencyValue: symbol=$symbol, value=$value, isInflated=${inflatedCurrencies.contains(symbol)}, accountForInflation=$accountForInflation');
-  
+
+  log.d(
+    'getInflatedCurrencyValue: symbol=$symbol, value=$value, isInflated=${inflatedCurrencies.contains(symbol)}, accountForInflation=$accountForInflation',
+  );
+
   // For inflated currencies, multiply by 1000 if the value is a whole number
   // This allows users to type "4" and get "4000" for better UX
   // If they want precise decimal entry, they can type "4.0" or "4.5" which won't be multiplied
@@ -26,11 +43,18 @@ double getInflatedCurrencyValue(String symbol, double value, {bool accountForInf
 
 /// Converts the input value to the currency of the symbol, using USD as the base.
 /// Returns a map of symbol to converted value.
-Map<String, double> convertCurrencies(String symbol, double inputValue, List<Currency> currencies, Settings settings) {
+Map<String, double> convertCurrencies(
+  String symbol,
+  double inputValue,
+  List<Currency> currencies,
+  Settings settings,
+) {
   final log = Logger('convertCurrencies');
 
   // Find the currency that was changed
-  final Currency changedCurrency = currencies.firstWhere((it) => it.symbol == symbol);
+  final Currency changedCurrency = currencies.firstWhere(
+    (it) => it.symbol == symbol,
+  );
 
   // If the currency is very inflated, automatically adjust for easier UX
   final sourceValue = getInflatedCurrencyValue(
@@ -39,10 +63,14 @@ Map<String, double> convertCurrencies(String symbol, double inputValue, List<Cur
     accountForInflation: settings.accountForInflation,
   );
 
-  log.d('convertCurrencies: accountForInflation=${settings.accountForInflation}, inputValue=$inputValue, sourceValue=$sourceValue');
-  
+  log.d(
+    'convertCurrencies: accountForInflation=${settings.accountForInflation}, inputValue=$inputValue, sourceValue=$sourceValue',
+  );
+
   // Convert the input value to USD
-  final double valueInUSD = symbol == 'USD' ? sourceValue : sourceValue / changedCurrency.rate;
+  final double valueInUSD = symbol == 'USD'
+      ? sourceValue
+      : sourceValue / changedCurrency.rate;
 
   // Create a map of symbol to converted value
   final Map<String, double> updatedValues = {};
@@ -50,7 +78,9 @@ Map<String, double> convertCurrencies(String symbol, double inputValue, List<Cur
   for (var currency in currencies) {
     final int decimals = settings.roundingDecimals;
     final double convertedValue = valueInUSD * currency.rate;
-    final double roundedValue = double.parse(convertedValue.toStringAsFixed(decimals));
+    final double roundedValue = double.parse(
+      convertedValue.toStringAsFixed(decimals),
+    );
 
     updatedValues[currency.symbol] = roundedValue;
   }

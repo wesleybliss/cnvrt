@@ -12,10 +12,14 @@ class ShowCopyToClipboardButtonsSwitch extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return SwitchListTile(
       title: Text(AppLocalizations.of(context)!.showCopyToClipboardButtons),
-      subtitle: Text(AppLocalizations.of(context)!.showCopyToClipboardButtonsDescription),
+      subtitle: Text(
+        AppLocalizations.of(context)!.showCopyToClipboardButtonsDescription,
+      ),
       value: value,
       onChanged: (bool value) {
-        ref.read(settingsNotifierProvider.notifier).setShowCopyToClipboardButtons(value);
+        ref
+            .read(settingsNotifierProvider.notifier)
+            .setShowCopyToClipboardButtons(value);
       },
       secondary: const Icon(Icons.copy),
     );

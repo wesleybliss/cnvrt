@@ -6,7 +6,13 @@ class TapCounter extends StatefulWidget {
   final VoidCallback onTapCountReached;
   final Widget? child;
 
-  const TapCounter({super.key, this.label, this.targetCount = 10, required this.onTapCountReached, this.child});
+  const TapCounter({
+    super.key,
+    this.label,
+    this.targetCount = 10,
+    required this.onTapCountReached,
+    this.child,
+  });
 
   @override
   TapCounterState createState() => TapCounterState();
@@ -20,7 +26,8 @@ class TapCounterState extends State<TapCounter> {
     if (tapCount > 10) return;
 
     final now = DateTime.now();
-    if (lastTapTime == null || now.difference(lastTapTime!) > Duration(seconds: 1)) {
+    if (lastTapTime == null ||
+        now.difference(lastTapTime!) > Duration(seconds: 1)) {
       tapCount = 0;
     }
     lastTapTime = now;
@@ -32,6 +39,9 @@ class TapCounterState extends State<TapCounter> {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(onTap: handleTap, child: Center(child: widget.child ?? Text(widget.label ?? 'Tap me')));
+    return GestureDetector(
+      onTap: handleTap,
+      child: Center(child: widget.child ?? Text(widget.label ?? 'Tap me')),
+    );
   }
 }

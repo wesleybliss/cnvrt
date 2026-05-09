@@ -25,7 +25,9 @@ class RoundDecimalsToInput extends ConsumerWidget {
           keyboardType: TextInputType.number,
           inputFormatters: [FilteringTextInputFormatter.digitsOnly],
           onChanged: (text) {
-            ref.read(settingsNotifierProvider.notifier).setRoundingDecimals(int.parse(text, radix: 10));
+            ref
+                .read(settingsNotifierProvider.notifier)
+                .setRoundingDecimals(int.parse(text, radix: 10));
           },
         ),
       ),

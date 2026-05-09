@@ -33,7 +33,8 @@ class NumericUnitsState extends _$NumericUnitsState {
     int target = -1,
     required int Function(int value) convertNormalFn,
     required int Function(int value) convertReversedFn,
-    NumericUnitsConversionDirection direction = NumericUnitsConversionDirection.normal,
+    NumericUnitsConversionDirection direction =
+        NumericUnitsConversionDirection.normal,
   }) => NumericUnitsStateModel(
     source,
     target,
@@ -48,7 +49,10 @@ class NumericUnitsState extends _$NumericUnitsState {
 
   void setSource(int value) {
     log.d("update: source: $value");
-    state = state.copyWith(source: value, target: state.convertReversedFn(value));
+    state = state.copyWith(
+      source: value,
+      target: state.convertReversedFn(value),
+    );
   }
 
   void setTarget(int value) {

@@ -8,7 +8,7 @@ import 'package:dio/dio.dart';
 bool isConnectivityError(Object? error) {
   if (error is DioException) {
     final type = error.type;
-    
+
     // Connection-level failures
     if (type == DioExceptionType.connectionError ||
         type == DioExceptionType.connectionTimeout ||
@@ -17,18 +17,18 @@ bool isConnectivityError(Object? error) {
         type == DioExceptionType.badCertificate) {
       return true;
     }
-    
+
     // Check underlying error type
     final innerError = error.error;
     if (innerError is SocketException || innerError is HandshakeException) {
       return true;
     }
-    
+
     // Scan error message for common connectivity patterns
     final message = error.message?.toLowerCase() ?? '';
     final errorString = error.error?.toString().toLowerCase() ?? '';
     final combinedText = '$message $errorString';
-    
+
     const patterns = [
       'socketexception',
       'failed host lookup',
@@ -41,10 +41,10 @@ bool isConnectivityError(Object? error) {
       'timed out',
       'connection error',
     ];
-    
+
     return patterns.any((pattern) => combinedText.contains(pattern));
   }
-  
+
   return false;
 }
 
@@ -58,9 +58,9 @@ bool isHttpApiError(Object? error) {
 /// Truncates very long messages to prevent log spam.
 String toStringSafe(Object? error, {int maxLength = 500}) {
   if (error == null) return 'null';
-  
+
   final str = error.toString();
   if (str.length <= maxLength) return str;
-  
+
   return '${str.substring(0, maxLength)}... (truncated)';
 }

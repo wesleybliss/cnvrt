@@ -21,13 +21,12 @@ Widget _render(
   String title, {
   bool allowBackNavigation = true,
   bool withScaffold = true,
-}) =>
-    withScaffold
-        ? Scaffold(
-          appBar: Toolbar(title: title, allowBackNavigation: allowBackNavigation),
-          body: child,
-        )
-        : child;
+}) => withScaffold
+    ? Scaffold(
+        appBar: Toolbar(title: title, allowBackNavigation: allowBackNavigation),
+        body: child,
+      )
+    : child;
 
 Handler handlerFor(
   Widget child,
@@ -41,12 +40,21 @@ Handler handlerFor(
         throw Exception("Context is required for localization.");
       }
       final title = titleBuilder(context);
-      return _render(child, title, withScaffold: withScaffold, allowBackNavigation: allowBackNavigation);
+      return _render(
+        child,
+        title,
+        withScaffold: withScaffold,
+        allowBackNavigation: allowBackNavigation,
+      );
     },
   );
 }
 
-Handler paramsHandlerFor(ParamsHandler childFn, String Function(BuildContext) titleBuilder, {withScaffold = true}) {
+Handler paramsHandlerFor(
+  ParamsHandler childFn,
+  String Function(BuildContext) titleBuilder, {
+  withScaffold = true,
+}) {
   return Handler(
     handlerFunc: (BuildContext? context, Map<String, dynamic> params) {
       if (context == null) {
@@ -64,27 +72,35 @@ final errorHandler = Handler(
     if (context == null) {
       throw Exception("Context is required for localization.");
     }
-    
+
     // Extract error message from URL params (comes as List<String> from Fluro)
     final messageParam = params['message'];
-    final message = messageParam is List ? messageParam.first : messageParam?.toString();
-    
+    final message = messageParam is List
+        ? messageParam.first
+        : messageParam?.toString();
+
     // Create exception from message if provided
     final errorArg = message != null ? Exception(message) : null;
     final title = Constants.strings.appName;
-    
-    return _render(
-      ErrorScreen(error: errorArg, stackTrace: null),
-      title,
-    );
+
+    return _render(ErrorScreen(error: errorArg, stackTrace: null), title);
   },
 );
 //final splashHandler = handlerFor(SplashScreen(), RouteWrapper.none);
 
 final debugHandler = handlerFor(const DebugScreen(), (context) => "Debug");
-final debugThemeHandler = handlerFor(const DebugThemeScreen(), (context) => "Debug Theme");
-final debugConvertHandler = handlerFor(const DebugConvertScreen(), (context) => "Debug Convert");
-final debugSqlTestHandler = handlerFor(const DebugSqlTestScreen(), (context) => "Debug Sql Test");
+final debugThemeHandler = handlerFor(
+  const DebugThemeScreen(),
+  (context) => "Debug Theme",
+);
+final debugConvertHandler = handlerFor(
+  const DebugConvertScreen(),
+  (context) => "Debug Convert",
+);
+final debugSqlTestHandler = handlerFor(
+  const DebugSqlTestScreen(),
+  (context) => "Debug Sql Test",
+);
 
 final homeHandler = Handler(
   handlerFunc: (context, params) {
@@ -95,9 +111,19 @@ final homeHandler = Handler(
     return const HomeScreen();
   },
 );
-final settingsHandler = handlerFor(const SettingsScreen(), (context) => AppLocalizations.of(context)!.settings);
-final inflationHelpHandler = handlerFor(const InflationHelpScreen(), (context) => AppLocalizations.of(context)!.inflationHelpTitle);
-final currenciesHandler = handlerFor(const CurrenciesScreen(), (context) => AppLocalizations.of(context)!.currencies, allowBackNavigation: false);
+final settingsHandler = handlerFor(
+  const SettingsScreen(),
+  (context) => AppLocalizations.of(context)!.settings,
+);
+final inflationHelpHandler = handlerFor(
+  const InflationHelpScreen(),
+  (context) => AppLocalizations.of(context)!.inflationHelpTitle,
+);
+final currenciesHandler = handlerFor(
+  const CurrenciesScreen(),
+  (context) => AppLocalizations.of(context)!.currencies,
+  allowBackNavigation: false,
+);
 // No Scaffold wrapper for units - MainScreen provides the shared AppBar
 final unitsHandler = Handler(
   handlerFunc: (context, params) {

@@ -72,17 +72,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           duration: const Duration(days: 365), // Effectively indefinite
           content: Row(
             children: [
-              Expanded(
-                child: Text(l10n.unableToRefreshCurrencies),
-              ),
-              TextButton(
-                onPressed: _onManualRetry,
-                child: Text(l10n.retry),
-              ),
-              TextButton(
-                onPressed: _onDismiss,
-                child: Text(l10n.dismiss),
-              ),
+              Expanded(child: Text(l10n.unableToRefreshCurrencies)),
+              TextButton(onPressed: _onManualRetry, child: Text(l10n.retry)),
+              TextButton(onPressed: _onDismiss, child: Text(l10n.dismiss)),
             ],
           ),
         ),
@@ -142,7 +134,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           if (mounted) {
             final focusedSymbol = ref.read(focusedCurrencyInputSymbolProvider);
             final vm = ref.read(currencyInputsListViewModelProvider.notifier);
-            
+
             if (focusedSymbol != null) {
               // Re-focus the last focused input after data update
               vm.requestFocus(focusedSymbol);
@@ -157,8 +149,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
     final child = state.loading
         ? state.currencies.isNotEmpty
-            ? const HomeReady()
-            : HomeLoading(isFetching: state.isFetching)
+              ? const HomeReady()
+              : HomeLoading(isFetching: state.isFetching)
         : state.error != null
         ? const HomeError()
         : const HomeReady();
@@ -173,9 +165,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           return SingleChildScrollView(
             physics: const AlwaysScrollableScrollPhysics(),
             child: ConstrainedBox(
-              constraints: BoxConstraints(
-                minHeight: constraints.maxHeight,
-              ),
+              constraints: BoxConstraints(minHeight: constraints.maxHeight),
               child: child,
             ),
           );

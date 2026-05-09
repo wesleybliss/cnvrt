@@ -66,8 +66,8 @@ class _HomeReadyState extends ConsumerState<HomeReady> {
           ),
           const SizedBox(height: 24.0),
           TextButton(
-            onPressed:
-                () => Application.router.navigateTo(context, Routes.currencies),
+            onPressed: () =>
+                Application.router.navigateTo(context, Routes.currencies),
             child: Text(AppLocalizations.of(context)!.manageCurrencies),
           ),
         ],
@@ -76,15 +76,15 @@ class _HomeReadyState extends ConsumerState<HomeReady> {
 
     return settingsAsyncValue.when(
       loading: () => const CircularProgressIndicator(),
-      error: (error, stackTrace) => Text('${AppLocalizations.of(context)!.error}: $error'),
+      error: (error, stackTrace) =>
+          Text('${AppLocalizations.of(context)!.error}: $error'),
       data: (settings) {
         return Column(
-          mainAxisAlignment:
-              settings.inputsPosition == "top"
-                  ? MainAxisAlignment.start
-                  : settings.inputsPosition == "bottom"
-                  ? MainAxisAlignment.end
-                  : MainAxisAlignment.center,
+          mainAxisAlignment: settings.inputsPosition == "top"
+              ? MainAxisAlignment.start
+              : settings.inputsPosition == "bottom"
+              ? MainAxisAlignment.end
+              : MainAxisAlignment.center,
           children: [
             CurrenciesInputsList(/*currencies: selectedCurrencies*/),
 

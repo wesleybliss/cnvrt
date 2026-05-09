@@ -13,12 +13,23 @@ class ShowCurrencyRateDropdown extends ConsumerWidget {
     final dropdown = DropdownButton(
       value: value,
       items: [
-        DropdownMenuItem(value: "all", child: Text(AppLocalizations.of(context)!.all)),
-        DropdownMenuItem(value: "selected", child: Text(AppLocalizations.of(context)!.selected)),
-        DropdownMenuItem(value: "none", child: Text(AppLocalizations.of(context)!.none)),
+        DropdownMenuItem(
+          value: "all",
+          child: Text(AppLocalizations.of(context)!.all),
+        ),
+        DropdownMenuItem(
+          value: "selected",
+          child: Text(AppLocalizations.of(context)!.selected),
+        ),
+        DropdownMenuItem(
+          value: "none",
+          child: Text(AppLocalizations.of(context)!.none),
+        ),
       ],
       onChanged: (String? value) {
-        ref.read(settingsNotifierProvider.notifier).setShowCurrencyRate(value ?? "selected");
+        ref
+            .read(settingsNotifierProvider.notifier)
+            .setShowCurrencyRate(value ?? "selected");
       },
       hint: Text(AppLocalizations.of(context)!.selectAnOption),
     );

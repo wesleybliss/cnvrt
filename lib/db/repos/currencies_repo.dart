@@ -8,7 +8,9 @@ class CurrenciesRepo extends ICurrenciesRepo {
 
   @override
   Future<Currency> create(Currency currency) async {
-    return await db.into(db.currencies).insertReturning(currency.toCompanion(false));
+    return await db
+        .into(db.currencies)
+        .insertReturning(currency.toCompanion(false));
   }
 
   @override
@@ -21,7 +23,9 @@ class CurrenciesRepo extends ICurrenciesRepo {
     final List<Currency> createdRows = [];
 
     for (final it in currencies) {
-      final insertedRow = await db.into(db.currencies).insertReturning(it.toCompanion(false));
+      final insertedRow = await db
+          .into(db.currencies)
+          .insertReturning(it.toCompanion(false));
       createdRows.add(insertedRow);
     }
 
@@ -35,13 +39,17 @@ class CurrenciesRepo extends ICurrenciesRepo {
 
   @override
   Future<List<Currency>> findAllOrderedByOrder() async {
-    return await (db.select(db.currencies)
-      ..orderBy([(tbl) => OrderingTerm(expression: tbl.order, mode: OrderingMode.asc)])).get();
+    return await (db.select(db.currencies)..orderBy([
+          (tbl) => OrderingTerm(expression: tbl.order, mode: OrderingMode.asc),
+        ]))
+        .get();
   }
 
   @override
   Future<Currency?> findOneById(int id) async {
-    return await (db.select(db.currencies)..where((t) => t.id.equals(id))).getSingleOrNull();
+    return await (db.select(
+      db.currencies,
+    )..where((t) => t.id.equals(id))).getSingleOrNull();
   }
 
   @override
@@ -61,10 +69,14 @@ class CurrenciesRepo extends ICurrenciesRepo {
 
   @override
   Future<Currency?> update(Currency currency) async {
-    final success = await db.update(db.currencies).replace(currency.toCompanion(false));
+    final success = await db
+        .update(db.currencies)
+        .replace(currency.toCompanion(false));
 
     if (success) {
-      return await (db.select(db.currencies)..where((tbl) => tbl.id.equals(currency.id))).getSingleOrNull();
+      return await (db.select(
+        db.currencies,
+      )..where((tbl) => tbl.id.equals(currency.id))).getSingleOrNull();
     }
 
     return null;
@@ -76,10 +88,13 @@ class CurrenciesRepo extends ICurrenciesRepo {
       final List<Currency> updatedRows = [];
 
       for (final currency in currencies) {
-        final success = await db.update(db.currencies).replace(currency.toCompanion(false));
+        final success = await db
+            .update(db.currencies)
+            .replace(currency.toCompanion(false));
         if (success) {
-          final updatedRow =
-              await (db.select(db.currencies)..where((tbl) => tbl.id.equals(currency.id))).getSingleOrNull();
+          final updatedRow = await (db.select(
+            db.currencies,
+          )..where((tbl) => tbl.id.equals(currency.id))).getSingleOrNull();
           if (updatedRow != null) {
             updatedRows.add(updatedRow);
           }
@@ -97,16 +112,22 @@ class CurrenciesRepo extends ICurrenciesRepo {
         .insert(currency.toCompanion(false), mode: InsertMode.insertOrReplace);
 
     // Fetch the row (whether it was inserted or replaced)
-    return await (db.select(db.currencies)..where((tbl) => tbl.id.equals(insertedId))).getSingle();
+    return await (db.select(
+      db.currencies,
+    )..where((tbl) => tbl.id.equals(insertedId))).getSingle();
   }
 
   @override
   Future<List<Currency>> upsertMany(List<Currency> currencies) async {
-    return await upsertManyCompanions(currencies.map((e) => e.toCompanion(false)).toList());
+    return await upsertManyCompanions(
+      currencies.map((e) => e.toCompanion(false)).toList(),
+    );
   }
 
   @override
-  Future<List<Currency>> upsertManyCompanions(List<CurrenciesCompanion> companions) async {
+  Future<List<Currency>> upsertManyCompanions(
+    List<CurrenciesCompanion> companions,
+  ) async {
     return await db.transaction(() async {
       final List<Currency> upsertedRows = [];
 
@@ -116,7 +137,8 @@ class CurrenciesRepo extends ICurrenciesRepo {
         // Fetch the existing currency if it exists
         final existingCurrency =
             await (db.select(db.currencies)
-              ..where((tbl) => tbl.symbol.equals(companion.symbol.value))).getSingleOrNull();
+                  ..where((tbl) => tbl.symbol.equals(companion.symbol.value)))
+                .getSingleOrNull();
 
         /*log.d(
           "upsertManyCompanions: existingCurrency: ${existingCurrency?.symbol}: ${existingCurrency?.id} (selected: ${existingCurrency?.selected})",
@@ -125,21 +147,26 @@ class CurrenciesRepo extends ICurrenciesRepo {
         // If the currency exists, retain its selected property
         // Use Value.absent() for id to let SQLite match on the UNIQUE symbol constraint
         if (existingCurrency != null) {
-          companion = companion.copyWith(id: const Value.absent(), selected: Value(existingCurrency.selected));
+          companion = companion.copyWith(
+            id: const Value.absent(),
+            selected: Value(existingCurrency.selected),
+          );
         } else {
           // For new currencies, also use Value.absent() to let autoIncrement work
           companion = companion.copyWith(id: const Value.absent());
         }
 
         // Use InsertMode.insertOrReplace for upsert behavior
-        final insertedId = await db.into(db.currencies).insert(companion, mode: InsertMode.insertOrReplace);
+        final insertedId = await db
+            .into(db.currencies)
+            .insert(companion, mode: InsertMode.insertOrReplace);
 
         // log.d("upsertManyCompanions: insertedId: $insertedId");
 
         // Fetch the row (whether it was inserted or replaced)
-        final Currency? upsertedRow =
-            await (db.select(db.currencies)
-              ..where((tbl) => tbl.id.equals(insertedId))).getSingleOrNull();
+        final Currency? upsertedRow = await (db.select(
+          db.currencies,
+        )..where((tbl) => tbl.id.equals(insertedId))).getSingleOrNull();
 
         // log.d("upsertManyCompanions: upsertedRow: ${upsertedRow?.symbol}: ${upsertedRow?.id}");
 
@@ -152,7 +179,9 @@ class CurrenciesRepo extends ICurrenciesRepo {
       /*log.d(
         "upsertManyCompanions: all currencies: ${debugAllCurrencies.map((e) => '${e.symbol}: (${e.selected})').join(', ')}",
       );*/
-      log.d("upsertManyCompanions: all currencies (${debugAllCurrencies.length})");
+      log.d(
+        "upsertManyCompanions: all currencies (${debugAllCurrencies.length})",
+      );
 
       return upsertedRows;
     });

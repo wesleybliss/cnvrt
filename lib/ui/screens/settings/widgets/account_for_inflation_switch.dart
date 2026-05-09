@@ -31,11 +31,15 @@ class AccountForInflationSwitch extends ConsumerWidget {
           ),
         ],
       ),
-      subtitle: Text(AppLocalizations.of(context)!.accountForInflationDescription),
+      subtitle: Text(
+        AppLocalizations.of(context)!.accountForInflationDescription,
+      ),
       trailing: Switch(
         value: value,
         onChanged: (bool value) {
-          ref.read(settingsNotifierProvider.notifier).setAccountForInflation(value);
+          ref
+              .read(settingsNotifierProvider.notifier)
+              .setAccountForInflation(value);
         },
       ),
     );

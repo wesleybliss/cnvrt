@@ -23,7 +23,11 @@ class _DebugConvertScreenState extends ConsumerState<DebugConvertScreen> {
       children: [
         Align(
           alignment: Alignment.centerRight,
-          child: Text(text, textAlign: TextAlign.end, style: TextStyle(fontSize: 12, color: Colors.grey)),
+          child: Text(
+            text,
+            textAlign: TextAlign.end,
+            style: TextStyle(fontSize: 12, color: Colors.grey),
+          ),
         ),
       ],
     ),

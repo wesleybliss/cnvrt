@@ -16,8 +16,8 @@ void main() {
       final obj = {
         'user': {
           'name': 'Alice',
-          'details': {'age': 25, 'city': 'NYC'}
-        }
+          'details': {'age': 25, 'city': 'NYC'},
+        },
       };
       final result = jsonPretty(obj);
       expect(result, contains('user'));
@@ -28,7 +28,7 @@ void main() {
 
     test('formats array', () {
       final obj = {
-        'items': [1, 2, 3]
+        'items': [1, 2, 3],
       };
       final result = jsonPretty(obj);
       expect(result, contains('items'));
@@ -103,7 +103,10 @@ void main() {
     });
 
     test('returns default value when function throws', () {
-      final result = Utils.getOrDefault<int>(() => throw Exception('error'), 99);
+      final result = Utils.getOrDefault<int>(
+        () => throw Exception('error'),
+        99,
+      );
       expect(result, equals(99));
     });
 
@@ -119,10 +122,16 @@ void main() {
     });
 
     test('catches and handles any exception type', () {
-      final result1 = Utils.getOrDefault<String>(() => throw ArgumentError('bad'), 'default');
+      final result1 = Utils.getOrDefault<String>(
+        () => throw ArgumentError('bad'),
+        'default',
+      );
       expect(result1, equals('default'));
 
-      final result2 = Utils.getOrDefault<String>(() => throw StateError('bad'), 'fallback');
+      final result2 = Utils.getOrDefault<String>(
+        () => throw StateError('bad'),
+        'fallback',
+      );
       expect(result2, equals('fallback'));
     });
 
@@ -164,7 +173,9 @@ void main() {
     });
 
     test('produces URL-safe encoding', () {
-      final result = Utils.encodeStringToBase64UrlSafeString('test+data/more=stuff');
+      final result = Utils.encodeStringToBase64UrlSafeString(
+        'test+data/more=stuff',
+      );
       // Should use - and _ instead of + and /
       expect(result.contains('+'), isFalse);
       expect(result.contains('/'), isFalse);
@@ -259,10 +270,7 @@ void main() {
 
   group('todo function', () {
     test('throws exception with message', () {
-      expect(
-        () => todo('implement this feature'),
-        throwsA(isA<Exception>()),
-      );
+      expect(() => todo('implement this feature'), throwsA(isA<Exception>()));
     });
 
     test('exception contains todo marker', () {

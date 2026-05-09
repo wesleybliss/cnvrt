@@ -18,5 +18,7 @@ class CurrencyInputModeNotifier extends Notifier<CurrencyInputModes> {
   }
 }
 
-final currencyInputModeProvider = NotifierProvider<CurrencyInputModeNotifier, CurrencyInputModes>(
-    CurrencyInputModeNotifier.new);
+final currencyInputModeProvider =
+    NotifierProvider<CurrencyInputModeNotifier, CurrencyInputModes>(
+      CurrencyInputModeNotifier.new,
+    );

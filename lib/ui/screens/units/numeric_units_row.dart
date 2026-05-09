@@ -41,7 +41,10 @@ class NumericUnitsRowState extends ConsumerState<NumericUnitsRow> {
   Widget build(BuildContext context) {
     // final provider =
     final state = ref.watch(
-      numericUnitsStateProvider(convertNormalFn: widget.convertNormalFn, convertReversedFn: widget.convertReversedFn),
+      numericUnitsStateProvider(
+        convertNormalFn: widget.convertNormalFn,
+        convertReversedFn: widget.convertReversedFn,
+      ),
     );
     final notifier = ref.read(
       numericUnitsStateProvider(
@@ -49,13 +52,17 @@ class NumericUnitsRowState extends ConsumerState<NumericUnitsRow> {
         convertReversedFn: widget.convertReversedFn,
       ).notifier,
     );
-    final isDirectionNormal = state.direction == NumericUnitsConversionDirection.normal;
+    final isDirectionNormal =
+        state.direction == NumericUnitsConversionDirection.normal;
 
     final inputDecoration = defaultInputDecoration.copyWith(
       hintText: "1",
       prefixIcon: Padding(
         padding: const EdgeInsets.only(left: 16.0, right: 8.0, top: 14.0),
-        child: Text(widget.sourceLabel, style: const TextStyle(fontSize: 14, color: Colors.grey)),
+        child: Text(
+          widget.sourceLabel,
+          style: const TextStyle(fontSize: 14, color: Colors.grey),
+        ),
       ),
       labelStyle: TextStyle(fontSize: 12),
     );
@@ -64,14 +71,19 @@ class NumericUnitsRowState extends ConsumerState<NumericUnitsRow> {
       hintText: "1",
       prefixIcon: Padding(
         padding: const EdgeInsets.only(left: 16.0, right: 8.0, top: 14.0),
-        child: Text(widget.targetLabel, style: const TextStyle(fontSize: 14, color: Colors.grey)),
+        child: Text(
+          widget.targetLabel,
+          style: const TextStyle(fontSize: 14, color: Colors.grey),
+        ),
       ),
       labelStyle: TextStyle(fontSize: 12),
     );
 
     void swapInputs() {
       notifier.setDirection(
-        isDirectionNormal ? NumericUnitsConversionDirection.reversed : NumericUnitsConversionDirection.normal,
+        isDirectionNormal
+            ? NumericUnitsConversionDirection.reversed
+            : NumericUnitsConversionDirection.normal,
       );
     }
 
@@ -106,7 +118,10 @@ class NumericUnitsRowState extends ConsumerState<NumericUnitsRow> {
         children: [
           Padding(
             padding: const EdgeInsets.only(left: 8.0, bottom: 8.0),
-            child: Text(widget.title, style: Theme.of(context).textTheme.labelLarge),
+            child: Text(
+              widget.title,
+              style: Theme.of(context).textTheme.labelLarge,
+            ),
           ),
           Row(children: fields),
         ],

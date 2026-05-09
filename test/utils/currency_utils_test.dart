@@ -92,8 +92,19 @@ void main() {
     });
 
     test('does NOT multiply decimal values for any inflated currency', () {
-      final inflatedCodes = ['COP', 'IDR', 'VND', 'KRW', 'IRR', 'PYG', 'CLP', 'LAK', 'LBP', 'TRY'];
-      
+      final inflatedCodes = [
+        'COP',
+        'IDR',
+        'VND',
+        'KRW',
+        'IRR',
+        'PYG',
+        'CLP',
+        'LAK',
+        'LBP',
+        'TRY',
+      ];
+
       for (var code in inflatedCodes) {
         // Decimal values are not multiplied
         expect(getInflatedCurrencyValue(code, 1.5), equals(1.5));
@@ -117,12 +128,12 @@ void main() {
       expect(getInflatedCurrencyValue('COP', 0.0), equals(0.0));
       expect(getInflatedCurrencyValue('USD', 0.0), equals(0.0));
     });
-    
+
     test('edge case: COP to USD with inflation adjustment', () {
-      SpotTestHelper.updateTestDependencies((settings) => settings.copyWith(
-        accountForInflation: true,
-      ));
-      
+      SpotTestHelper.updateTestDependencies(
+        (settings) => settings.copyWith(accountForInflation: true),
+      );
+
       // 4 COP should become 4000 COP, which is roughly 1 USD
       expect(getInflatedCurrencyValue('COP', 4), equals(4000.0));
 
@@ -130,26 +141,63 @@ void main() {
     });
 
     test('edge case: COP to USD without inflation adjustment', () {
-      SpotTestHelper.updateTestDependencies((settings) => settings.copyWith(
-        accountForInflation: false,
-      ));
+      SpotTestHelper.updateTestDependencies(
+        (settings) => settings.copyWith(accountForInflation: false),
+      );
 
       // When accountForInflation is false, getInflatedCurrencyValue should NOT multiply
-      expect(getInflatedCurrencyValue('COP', 4, accountForInflation: false), equals(4.0));
+      expect(
+        getInflatedCurrencyValue('COP', 4, accountForInflation: false),
+        equals(4.0),
+      );
       // But when enabled (default), it should multiply
-      expect(getInflatedCurrencyValue('COP', 4, accountForInflation: true), equals(4000.0));
-      
+      expect(
+        getInflatedCurrencyValue('COP', 4, accountForInflation: true),
+        equals(4000.0),
+      );
+
       const rate = 4115.61;
-      
+
       final convertedValue1 = convertCurrencies('COP', 4, [
-        const Currency(id: 1, symbol: 'COP', name: 'Colombian Peso', rate: rate, selected: true, order: 0),
-        const Currency(id: 2, symbol: 'USD', name: 'US Dollar', rate: 1.0, selected: true, order: 1),
+        const Currency(
+          id: 1,
+          symbol: 'COP',
+          name: 'Colombian Peso',
+          rate: rate,
+          selected: true,
+          order: 0,
+        ),
+        const Currency(
+          id: 2,
+          symbol: 'USD',
+          name: 'US Dollar',
+          rate: 1.0,
+          selected: true,
+          order: 1,
+        ),
       ], Settings(accountForInflation: false));
-      expect(convertedValue1['USD'], equals(0.0)); // 4 COP without inflation is very small in USD
+      expect(
+        convertedValue1['USD'],
+        equals(0.0),
+      ); // 4 COP without inflation is very small in USD
 
       final convertedValue2 = convertCurrencies('COP', rate, [
-        const Currency(id: 1, symbol: 'COP', name: 'Colombian Peso', rate: rate, selected: true, order: 0),
-        const Currency(id: 2, symbol: 'USD', name: 'US Dollar', rate: 1.0, selected: true, order: 1),
+        const Currency(
+          id: 1,
+          symbol: 'COP',
+          name: 'Colombian Peso',
+          rate: rate,
+          selected: true,
+          order: 0,
+        ),
+        const Currency(
+          id: 2,
+          symbol: 'USD',
+          name: 'US Dollar',
+          rate: 1.0,
+          selected: true,
+          order: 1,
+        ),
       ], Settings(accountForInflation: false));
       expect(convertedValue2['USD'], equals(1.0));
 
@@ -168,9 +216,30 @@ void main() {
 
     test('converts from USD to other currencies', () {
       final currencies = [
-        const Currency(id: 1, symbol: 'USD', name: 'US Dollar', rate: 1.0, selected: true, order: 0),
-        const Currency(id: 2, symbol: 'EUR', name: 'Euro', rate: 0.85, selected: true, order: 1),
-        const Currency(id: 3, symbol: 'GBP', name: 'British Pound', rate: 0.73, selected: true, order: 2),
+        const Currency(
+          id: 1,
+          symbol: 'USD',
+          name: 'US Dollar',
+          rate: 1.0,
+          selected: true,
+          order: 0,
+        ),
+        const Currency(
+          id: 2,
+          symbol: 'EUR',
+          name: 'Euro',
+          rate: 0.85,
+          selected: true,
+          order: 1,
+        ),
+        const Currency(
+          id: 3,
+          symbol: 'GBP',
+          name: 'British Pound',
+          rate: 0.73,
+          selected: true,
+          order: 2,
+        ),
       ];
 
       final result = convertCurrencies('USD', 100.0, currencies, Settings());
@@ -182,9 +251,30 @@ void main() {
 
     test('converts from EUR to USD and other currencies', () {
       final currencies = [
-        const Currency(id: 1, symbol: 'USD', name: 'US Dollar', rate: 1.0, selected: true, order: 0),
-        const Currency(id: 2, symbol: 'EUR', name: 'Euro', rate: 0.85, selected: true, order: 1),
-        const Currency(id: 3, symbol: 'GBP', name: 'British Pound', rate: 0.73, selected: true, order: 2),
+        const Currency(
+          id: 1,
+          symbol: 'USD',
+          name: 'US Dollar',
+          rate: 1.0,
+          selected: true,
+          order: 0,
+        ),
+        const Currency(
+          id: 2,
+          symbol: 'EUR',
+          name: 'Euro',
+          rate: 0.85,
+          selected: true,
+          order: 1,
+        ),
+        const Currency(
+          id: 3,
+          symbol: 'GBP',
+          name: 'British Pound',
+          rate: 0.73,
+          selected: true,
+          order: 2,
+        ),
       ];
 
       final result = convertCurrencies('EUR', 85.0, currencies, Settings());
@@ -196,9 +286,30 @@ void main() {
 
     test('converts between non-USD currencies via USD', () {
       final currencies = [
-        const Currency(id: 1, symbol: 'EUR', name: 'Euro', rate: 0.85, selected: true, order: 0),
-        const Currency(id: 2, symbol: 'GBP', name: 'British Pound', rate: 0.73, selected: true, order: 1),
-        const Currency(id: 3, symbol: 'JPY', name: 'Japanese Yen', rate: 110.0, selected: true, order: 2),
+        const Currency(
+          id: 1,
+          symbol: 'EUR',
+          name: 'Euro',
+          rate: 0.85,
+          selected: true,
+          order: 0,
+        ),
+        const Currency(
+          id: 2,
+          symbol: 'GBP',
+          name: 'British Pound',
+          rate: 0.73,
+          selected: true,
+          order: 1,
+        ),
+        const Currency(
+          id: 3,
+          symbol: 'JPY',
+          name: 'Japanese Yen',
+          rate: 110.0,
+          selected: true,
+          order: 2,
+        ),
       ];
 
       final result = convertCurrencies('EUR', 85.0, currencies, Settings());
@@ -207,46 +318,81 @@ void main() {
       expect(result['GBP'], equals(73.0));
       expect(result['JPY'], equals(11000.0));
     });
-    
+
     test('converts between highly inflated currency and USD', () {
       const copPerUsd = 4115.61;
       final currencies = [
-        const Currency(id: 1, symbol: 'COP', name: 'Colombian Peso', rate: copPerUsd, selected: true, order: 0),
-        const Currency(id: 2, symbol: 'USD', name: 'US Dollar', rate: 1.0, selected: true, order: 1),
+        const Currency(
+          id: 1,
+          symbol: 'COP',
+          name: 'Colombian Peso',
+          rate: copPerUsd,
+          selected: true,
+          order: 0,
+        ),
+        const Currency(
+          id: 2,
+          symbol: 'USD',
+          name: 'US Dollar',
+          rate: 1.0,
+          selected: true,
+          order: 1,
+        ),
       ];
-      
-      final result = convertCurrencies('COP', copPerUsd, currencies, Settings());
+
+      final result = convertCurrencies(
+        'COP',
+        copPerUsd,
+        currencies,
+        Settings(),
+      );
       expect(result['COP'], equals(copPerUsd));
       expect(result['USD'], equals(1.0));
     });
-    
-    test('fixes bug: entering low value like 4 in COP shows proper USD value', () {
-      // This is the exact bug scenario: entering "4" in COP should show ~$1 USD
-      // With accountForInflation enabled, 4 COP becomes 4000 COP
-      SpotTestHelper.setupTestDependencies(
-        settings: Settings(
-          roundingDecimals: 2,
-          accountForInflation: true,
-        ),
-      );
-      
-      const copPerUsd = 4115.61;
-      final currencies = [
-        const Currency(id: 1, symbol: 'COP', name: 'Colombian Peso', rate: copPerUsd, selected: true, order: 0),
-        const Currency(id: 2, symbol: 'USD', name: 'US Dollar', rate: 1.0, selected: true, order: 1),
-      ];
-      
-      // User types "4" in COP field
-      final result = convertCurrencies('COP', 4, currencies, Settings(
-        roundingDecimals: 2,
-        accountForInflation: true,
-      ));
-      
-      // 4 gets inflated to 4000 COP
-      // 4000 COP / 4115.61 ≈ 0.97 USD
-      expect(result['COP'], equals(4000.0));
-      expect(result['USD'], equals(0.97)); // Rounded to 2 decimals
-    });
+
+    test(
+      'fixes bug: entering low value like 4 in COP shows proper USD value',
+      () {
+        // This is the exact bug scenario: entering "4" in COP should show ~$1 USD
+        // With accountForInflation enabled, 4 COP becomes 4000 COP
+        SpotTestHelper.setupTestDependencies(
+          settings: Settings(roundingDecimals: 2, accountForInflation: true),
+        );
+
+        const copPerUsd = 4115.61;
+        final currencies = [
+          const Currency(
+            id: 1,
+            symbol: 'COP',
+            name: 'Colombian Peso',
+            rate: copPerUsd,
+            selected: true,
+            order: 0,
+          ),
+          const Currency(
+            id: 2,
+            symbol: 'USD',
+            name: 'US Dollar',
+            rate: 1.0,
+            selected: true,
+            order: 1,
+          ),
+        ];
+
+        // User types "4" in COP field
+        final result = convertCurrencies(
+          'COP',
+          4,
+          currencies,
+          Settings(roundingDecimals: 2, accountForInflation: true),
+        );
+
+        // 4 gets inflated to 4000 COP
+        // 4000 COP / 4115.61 ≈ 0.97 USD
+        expect(result['COP'], equals(4000.0));
+        expect(result['USD'], equals(0.97)); // Rounded to 2 decimals
+      },
+    );
 
     test('respects rounding decimals setting', () {
       SpotTestHelper.setupTestDependencies(
@@ -254,57 +400,105 @@ void main() {
       );
 
       final currencies = [
-        const Currency(id: 1, symbol: 'USD', name: 'US Dollar', rate: 1.0, selected: true, order: 0),
-        const Currency(id: 2, symbol: 'EUR', name: 'Euro', rate: 0.846, selected: true, order: 1),
+        const Currency(
+          id: 1,
+          symbol: 'USD',
+          name: 'US Dollar',
+          rate: 1.0,
+          selected: true,
+          order: 0,
+        ),
+        const Currency(
+          id: 2,
+          symbol: 'EUR',
+          name: 'Euro',
+          rate: 0.846,
+          selected: true,
+          order: 1,
+        ),
       ];
 
-      final result = convertCurrencies('USD', 100.0, currencies, Settings(roundingDecimals: 4));
+      final result = convertCurrencies(
+        'USD',
+        100.0,
+        currencies,
+        Settings(roundingDecimals: 4),
+      );
 
       expect(result['EUR'], equals(84.6));
     });
 
-    test('inflation adjustment enabled but does not trigger with simple decimal', () {
-      SpotTestHelper.setupTestDependencies(
-        settings: Settings(
-          roundingDecimals: 2,
-          accountForInflation: true,
-        ),
-      );
+    test(
+      'inflation adjustment enabled but does not trigger with simple decimal',
+      () {
+        SpotTestHelper.setupTestDependencies(
+          settings: Settings(roundingDecimals: 2, accountForInflation: true),
+        );
 
-      final currencies = [
-        const Currency(id: 1, symbol: 'USD', name: 'US Dollar', rate: 1.0, selected: true, order: 0),
-        const Currency(id: 2, symbol: 'COP', name: 'Colombian Peso', rate: 4000.0, selected: true, order: 1),
-      ];
+        final currencies = [
+          const Currency(
+            id: 1,
+            symbol: 'USD',
+            name: 'US Dollar',
+            rate: 1.0,
+            selected: true,
+            order: 0,
+          ),
+          const Currency(
+            id: 2,
+            symbol: 'COP',
+            name: 'Colombian Peso',
+            rate: 4000.0,
+            selected: true,
+            order: 1,
+          ),
+        ];
 
-      // Input 1.5 COP: "1.5" has commaIndex=-1, decimalIndex=1, sum=0 (NOT > 0), so no inflation multiplier
-      final result = convertCurrencies('COP', 1.5, currencies, Settings(
-        roundingDecimals: 2,
-        accountForInflation: true,
-      ));
+        // Input 1.5 COP: "1.5" has commaIndex=-1, decimalIndex=1, sum=0 (NOT > 0), so no inflation multiplier
+        final result = convertCurrencies(
+          'COP',
+          1.5,
+          currencies,
+          Settings(roundingDecimals: 2, accountForInflation: true),
+        );
 
-      // 1.5 COP / 4000 = 0.000375 USD
-      expect(result['USD'], equals(0.0)); // Rounded to 2 decimals
-      expect(result['COP'], equals(1.5));
-    });
+        // 1.5 COP / 4000 = 0.000375 USD
+        expect(result['USD'], equals(0.0)); // Rounded to 2 decimals
+        expect(result['COP'], equals(1.5));
+      },
+    );
 
     test('does not adjust inflation when disabled', () {
       SpotTestHelper.setupTestDependencies(
-        settings: Settings(
-          roundingDecimals: 2,
-          accountForInflation: false,
-        ),
+        settings: Settings(roundingDecimals: 2, accountForInflation: false),
       );
 
       final currencies = [
-        const Currency(id: 1, symbol: 'USD', name: 'US Dollar', rate: 1.0, selected: true, order: 0),
-        const Currency(id: 2, symbol: 'COP', name: 'Colombian Peso', rate: 4000.0, selected: true, order: 1),
+        const Currency(
+          id: 1,
+          symbol: 'USD',
+          name: 'US Dollar',
+          rate: 1.0,
+          selected: true,
+          order: 0,
+        ),
+        const Currency(
+          id: 2,
+          symbol: 'COP',
+          name: 'Colombian Peso',
+          rate: 4000.0,
+          selected: true,
+          order: 1,
+        ),
       ];
 
       // Input 1.5 COP without inflation should stay as 1.5
-      final result = convertCurrencies('COP', 1.5, currencies, Settings(
-        roundingDecimals: 2,
-        accountForInflation: false,
-      ));
+      final result = convertCurrencies(
+        'COP',
+        1.5,
+        currencies,
+        Settings(roundingDecimals: 2, accountForInflation: false),
+      );
 
       // 1.5 COP / 4000 = 0.000375 USD
       expect(result['USD'], equals(0.0)); // Rounded to 2 decimals
@@ -313,8 +507,22 @@ void main() {
 
     test('handles zero input value', () {
       final currencies = [
-        const Currency(id: 1, symbol: 'USD', name: 'US Dollar', rate: 1.0, selected: true, order: 0),
-        const Currency(id: 2, symbol: 'EUR', name: 'Euro', rate: 0.85, selected: true, order: 1),
+        const Currency(
+          id: 1,
+          symbol: 'USD',
+          name: 'US Dollar',
+          rate: 1.0,
+          selected: true,
+          order: 0,
+        ),
+        const Currency(
+          id: 2,
+          symbol: 'EUR',
+          name: 'Euro',
+          rate: 0.85,
+          selected: true,
+          order: 1,
+        ),
       ];
 
       final result = convertCurrencies('USD', 0.0, currencies, Settings());
@@ -325,11 +533,30 @@ void main() {
 
     test('handles very large values', () {
       final currencies = [
-        const Currency(id: 1, symbol: 'USD', name: 'US Dollar', rate: 1.0, selected: true, order: 0),
-        const Currency(id: 2, symbol: 'EUR', name: 'Euro', rate: 0.85, selected: true, order: 1),
+        const Currency(
+          id: 1,
+          symbol: 'USD',
+          name: 'US Dollar',
+          rate: 1.0,
+          selected: true,
+          order: 0,
+        ),
+        const Currency(
+          id: 2,
+          symbol: 'EUR',
+          name: 'Euro',
+          rate: 0.85,
+          selected: true,
+          order: 1,
+        ),
       ];
 
-      final result = convertCurrencies('USD', 1000000.0, currencies, Settings());
+      final result = convertCurrencies(
+        'USD',
+        1000000.0,
+        currencies,
+        Settings(),
+      );
 
       expect(result['USD'], equals(1000000.0));
       expect(result['EUR'], equals(850000.0));
@@ -337,10 +564,38 @@ void main() {
 
     test('returns map with all currency symbols as keys', () {
       final currencies = [
-        const Currency(id: 1, symbol: 'USD', name: 'US Dollar', rate: 1.0, selected: true, order: 0),
-        const Currency(id: 2, symbol: 'EUR', name: 'Euro', rate: 0.85, selected: true, order: 1),
-        const Currency(id: 3, symbol: 'GBP', name: 'British Pound', rate: 0.73, selected: true, order: 2),
-        const Currency(id: 4, symbol: 'JPY', name: 'Japanese Yen', rate: 110.0, selected: true, order: 3),
+        const Currency(
+          id: 1,
+          symbol: 'USD',
+          name: 'US Dollar',
+          rate: 1.0,
+          selected: true,
+          order: 0,
+        ),
+        const Currency(
+          id: 2,
+          symbol: 'EUR',
+          name: 'Euro',
+          rate: 0.85,
+          selected: true,
+          order: 1,
+        ),
+        const Currency(
+          id: 3,
+          symbol: 'GBP',
+          name: 'British Pound',
+          rate: 0.73,
+          selected: true,
+          order: 2,
+        ),
+        const Currency(
+          id: 4,
+          symbol: 'JPY',
+          name: 'Japanese Yen',
+          rate: 110.0,
+          selected: true,
+          order: 3,
+        ),
       ];
 
       final result = convertCurrencies('USD', 100.0, currencies, Settings());

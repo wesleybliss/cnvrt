@@ -3,7 +3,7 @@ class ConstantsStrings {
   final appName = 'CNVRT';
   final appSlug = 'simple-currency';
   final useLocalApiServer = false;
-  
+
   String get baseUrl {
     const bool isProduction = bool.fromEnvironment('dart.vm.product');
 
