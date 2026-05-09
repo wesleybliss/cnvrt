@@ -9,6 +9,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
+final log = Logger('CurrencyInputsListViewModel');
+
 @immutable
 class CurrencyInputsListViewModelState {
   final Map<String, TextEditingController> controllers;
@@ -41,13 +43,11 @@ final currencyInputsListViewModelProvider =
 
 class CurrencyInputsListViewModel
     extends Notifier<CurrencyInputsListViewModelState> {
-  final log = Logger('CurrencyInputsListViewModel');
 
   // Cache controllers and focus nodes to prevent focus loss during rebuilds
   final Map<String, TextEditingController> _controllers = {};
   final Map<String, FocusNode> _focusNodes = {};
   bool _onDisposeRegistered = false;
-  bool _isProgrammaticFocus = false;
 
   @override
   CurrencyInputsListViewModelState build() {
@@ -118,21 +118,15 @@ class CurrencyInputsListViewModel
   /// Request focus on a specific currency input by its symbol
   void requestFocus(String symbol) {
     final focusNode = _focusNodes[symbol];
-
-    if (focusNode != null) {
-      log.d('Requesting focus on $symbol');
-      // Use a slight delay to ensure the widget tree is fully built
-      Future.delayed(const Duration(milliseconds: 100), () {
-        if (focusNode.canRequestFocus && !focusNode.hasFocus) {
-          _isProgrammaticFocus = true;
-          focusNode.requestFocus();
-          // Reset the flag after a short delay to allow for normal focus handling
-          Future.delayed(const Duration(milliseconds: 50), () {
-            _isProgrammaticFocus = false;
-          });
-        }
-      });
-    }
+    if (focusNode == null) return;
+    log.d('DEBUG requestFocus: symbol=$symbol hasFocus=${focusNode.hasFocus} controllerText=${_controllers[symbol]?.text}');
+    Future.delayed(const Duration(milliseconds: 100), () {
+      log.d('DEBUG requestFocus delayed: symbol=$symbol hasFocus=${focusNode.hasFocus} canRequestFocus=${focusNode.canRequestFocus}');
+      if (focusNode.canRequestFocus && !focusNode.hasFocus) {
+        log.d('DEBUG requestFocus: calling focusNode.requestFocus() for $symbol');
+        focusNode.requestFocus();
+      }
+    });
   }
 
   /// Clear all controllers when the focused input changes
@@ -141,41 +135,42 @@ class CurrencyInputsListViewModel
   }
 
   void onFocusChanged(String symbol) {
-    state.controllers[symbol]?.clear();
-
     final focusedSymbol = ref.read(focusedCurrencyInputSymbolProvider);
-    if (focusedSymbol == symbol) return;
-
-    // Only clear all inputs if this is not a programmatic focus change
-    if (!_isProgrammaticFocus) {
-      clearAllInputs();
+    log.d('DEBUG onFocusChanged: symbol=$symbol focusedSymbol=$focusedSymbol controllerText=${state.controllers[symbol]?.text}');
+    if (focusedSymbol == symbol) {
+      log.d('DEBUG onFocusChanged: same symbol, returning early');
+      return;
     }
+
+    log.d('DEBUG onFocusChanged: clearing controller for $symbol');
+    state.controllers[symbol]?.clear();
+    clearAllInputs();
     ref.read(focusedCurrencyInputSymbolProvider.notifier).setSymbol(symbol);
   }
 
   void updateControllers(
     Map<String, double> currencyValues,
-    String? focusedCurrencyInputSymbol,
     bool allowDecimalInput,
   ) {
+    final focusedSymbol = ref.read(focusedCurrencyInputSymbolProvider);
+    log.d('DEBUG updateControllers: focusedSymbol=$focusedSymbol values=${currencyValues.entries.map((e) => "${e.key}:${e.value}").join(", ")}');
+
     for (var entry in currencyValues.entries) {
       final symbol = entry.key;
-      // Use the double value for formatting
       final value = _formatCurrencyWithSettings(
         symbol,
         entry.value,
         allowDecimalInput,
       );
 
-      // Don't update the input field they've typed in
-      if (focusedCurrencyInputSymbol == symbol) continue;
+      if (focusedSymbol == symbol) continue;
 
       if (state.controllers.containsKey(symbol)) {
         final controller = state.controllers[symbol]!;
         final valueAsString = value;
 
-        // Update controller only if the value has changed
         if (controller.text != valueAsString) {
+          log.d('DEBUG updateControllers: setting $symbol controller to "$valueAsString" (was "${controller.text}")');
           controller.text = valueAsString;
         }
       }

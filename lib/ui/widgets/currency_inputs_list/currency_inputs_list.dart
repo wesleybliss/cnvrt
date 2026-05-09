@@ -26,15 +26,13 @@ class CurrenciesInputsList extends ConsumerWidget {
       focusedCurrencyInputSymbolProvider,
     );
 
-    // Automatically call `updateControllers` when `currencyValuesProvider` changes
+    // Automatically call `updateControllers` when `currencyValuesProvider` changes.
+    // focusedCurrencyInputSymbol is intentionally NOT passed — updateControllers
+    // reads the provider directly to avoid using a stale closure value.
     ref.listen<Map<String, double>>(currencyValuesProvider, (_, next) {
       final allowDecimalInput =
           ref.read(settingsNotifierProvider).value?.allowDecimalInput ?? false;
-      viewModel.updateControllers(
-        next,
-        focusedCurrencyInputSymbol,
-        allowDecimalInput,
-      );
+      viewModel.updateControllers(next, allowDecimalInput);
     });
 
     return settingsAsyncValue.when(
