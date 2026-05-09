@@ -12,7 +12,7 @@ class DebugForceRefreshButton extends ConsumerStatefulWidget {
 
 class _DebugForceRefreshButton extends ConsumerState<DebugForceRefreshButton> {
   void triggerForceRefresh() {
-    //ref.read(currenciesProvider.notifier).fetchCurrencies();
+    ref.read(currenciesProvider.notifier).fetchCurrencies();
   }
 
   @override
