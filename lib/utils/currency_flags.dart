@@ -1,4 +1,3 @@
-
 final Map<String, String> currencyFlags = {
   "COP": "🇨🇴",
   "USD": "🇺🇸",

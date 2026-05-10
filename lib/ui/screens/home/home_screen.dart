@@ -1,6 +1,8 @@
 import 'dart:async';
 
 import 'package:cnvrt/domain/di/providers/currencies/currencies_provider.dart';
+import 'package:cnvrt/domain/di/providers/notifications/notification_provider.dart';
+import 'package:cnvrt/domain/extensions/extensions.dart';
 import 'package:cnvrt/ui/screens/home/home_error.dart';
 import 'package:cnvrt/ui/screens/home/home_loading.dart';
 import 'package:cnvrt/ui/screens/home/home_ready.dart';
@@ -33,6 +35,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     // Listen to network error state changes
     ref.listenManual(currenciesProvider, (previous, next) {
       _handleNetworkErrorStateChange(next);
+    });
+
+    // Listen to currency update notifications
+    ref.listenManual(notificationNotifierProvider, (previous, next) {
+      _handleCurrencyUpdateNotification(next);
     });
   }
 
@@ -72,17 +79,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           duration: const Duration(days: 365), // Effectively indefinite
           content: Row(
             children: [
-              Expanded(
-                child: Text(l10n.unableToRefreshCurrencies),
-              ),
-              TextButton(
-                onPressed: _onManualRetry,
-                child: Text(l10n.retry),
-              ),
-              TextButton(
-                onPressed: _onDismiss,
-                child: Text(l10n.dismiss),
-              ),
+              Expanded(child: Text(l10n.unableToRefreshCurrencies)),
+              TextButton(onPressed: _onManualRetry, child: Text(l10n.retry)),
+              TextButton(onPressed: _onDismiss, child: Text(l10n.dismiss)),
             ],
           ),
         ),
@@ -93,6 +92,25 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   void _hideSnackbar() {
     if (mounted) {
       ScaffoldMessenger.of(context).hideCurrentSnackBar();
+    }
+  }
+
+  void _handleCurrencyUpdateNotification(NotificationState state) {
+    final notification = state.currencyUpdateNotification;
+    if (notification != null && mounted) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+
+        context.snackBar(
+          notification.message,
+          behavior: SnackBarBehavior.floating,
+        );
+
+        // Clear the notification after showing it
+        ref
+            .read(notificationNotifierProvider.notifier)
+            .clearCurrencyUpdateNotification();
+      });
     }
   }
 
@@ -142,7 +160,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           if (mounted) {
             final focusedSymbol = ref.read(focusedCurrencyInputSymbolProvider);
             final vm = ref.read(currencyInputsListViewModelProvider.notifier);
-            
+
             if (focusedSymbol != null) {
               // Re-focus the last focused input after data update
               vm.requestFocus(focusedSymbol);
@@ -157,8 +175,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
     final child = state.loading
         ? state.currencies.isNotEmpty
-            ? const HomeReady()
-            : HomeLoading(isFetching: state.isFetching)
+              ? const HomeReady()
+              : HomeLoading(isFetching: state.isFetching)
         : state.error != null
         ? const HomeError()
         : const HomeReady();
@@ -170,13 +188,22 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       },
       child: LayoutBuilder(
         builder: (context, constraints) {
+          // Good for most tablets, to constrain max width
+          const double maxContentWidth = 800;
+
+          double contentWidth = constraints.maxWidth;
+
+          if (contentWidth > maxContentWidth) {
+            contentWidth = maxContentWidth;
+          }
+          
           return SingleChildScrollView(
             physics: const AlwaysScrollableScrollPhysics(),
-            child: ConstrainedBox(
-              constraints: BoxConstraints(
-                minHeight: constraints.maxHeight,
+            child: Center(
+              child: ConstrainedBox(
+                constraints: BoxConstraints(minHeight: constraints.maxHeight, maxWidth: contentWidth),
+                child: child,
               ),
-              child: child,
             ),
           );
         },

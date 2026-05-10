@@ -13,12 +13,23 @@ class InputsPositionDropdown extends ConsumerWidget {
     final dropdown = DropdownButton(
       value: value,
       items: [
-        DropdownMenuItem(value: "top", child: Text(AppLocalizations.of(context)!.top)),
-        DropdownMenuItem(value: "center", child: Text(AppLocalizations.of(context)!.center)),
-        DropdownMenuItem(value: "bottom", child: Text(AppLocalizations.of(context)!.bottom)),
+        DropdownMenuItem(
+          value: "top",
+          child: Text(AppLocalizations.of(context)!.top),
+        ),
+        DropdownMenuItem(
+          value: "center",
+          child: Text(AppLocalizations.of(context)!.center),
+        ),
+        DropdownMenuItem(
+          value: "bottom",
+          child: Text(AppLocalizations.of(context)!.bottom),
+        ),
       ],
       onChanged: (String? value) {
-        ref.read(settingsNotifierProvider.notifier).setInputsPosition(value ?? "center");
+        ref
+            .read(settingsNotifierProvider.notifier)
+            .setInputsPosition(value ?? "center");
       },
       hint: Text(AppLocalizations.of(context)!.selectAnOption),
     );

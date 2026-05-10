@@ -11,7 +11,8 @@ class NumericKeyboardGrid extends ConsumerStatefulWidget {
   const NumericKeyboardGrid({super.key});
 
   @override
-  ConsumerState<NumericKeyboardGrid> createState() => _NumericKeyboardGridState();
+  ConsumerState<NumericKeyboardGrid> createState() =>
+      _NumericKeyboardGridState();
 }
 
 class _NumericKeyboardGridState extends ConsumerState<NumericKeyboardGrid> {
@@ -20,8 +21,14 @@ class _NumericKeyboardGridState extends ConsumerState<NumericKeyboardGrid> {
   @override
   Widget build(BuildContext context) {
     int buttonLabelIndex = 1;
-    final focusedCurrencyInputSymbol = ref.watch(focusedCurrencyInputSymbolProvider);
-    final allowDecimalInput = ref.watch(settingsNotifierProvider.select((s) => s.value?.allowDecimalInput ?? false));
+    final focusedCurrencyInputSymbol = ref.watch(
+      focusedCurrencyInputSymbolProvider,
+    );
+    final allowDecimalInput = ref.watch(
+      settingsNotifierProvider.select(
+        (s) => s.value?.allowDecimalInput ?? false,
+      ),
+    );
 
     // Get the bottom padding to account for safe area
     final bottomPadding = MediaQuery.of(context).padding.bottom;
@@ -33,7 +40,9 @@ class _NumericKeyboardGridState extends ConsumerState<NumericKeyboardGrid> {
 
     void updateInput(String value) {
       if (focusedCurrencyInputSymbol == null) return;
-      ref.read(currencyValuesProvider.notifier).setValue(focusedCurrencyInputSymbol, value);
+      ref
+          .read(currencyValuesProvider.notifier)
+          .setValue(focusedCurrencyInputSymbol, value);
     }
 
     void setInputMode(CurrencyInputModes mode) {
@@ -42,29 +51,57 @@ class _NumericKeyboardGridState extends ConsumerState<NumericKeyboardGrid> {
 
     void onBackspaceLongPressed() {
       if (focusedCurrencyInputSymbol == null) return;
-      ref.read(currencyValuesProvider.notifier).setValue(focusedCurrencyInputSymbol, '');
+      ref
+          .read(currencyValuesProvider.notifier)
+          .setValue(focusedCurrencyInputSymbol, '');
     }
 
-    Widget numericButtonFor(String label, VoidCallback onPressed, [VoidCallback? onLongPress]) =>
-        NumericKeyboardGridButton(label: label, onPressed: onPressed, onLongPress: onLongPress);
+    Widget numericButtonFor(
+      String label,
+      VoidCallback onPressed, [
+      VoidCallback? onLongPress,
+    ]) => NumericKeyboardGridButton(
+      label: label,
+      onPressed: onPressed,
+      onLongPress: onLongPress,
+    );
 
     final indexToButtonMap = {
       3: numericButtonFor('+', () => setInputMode(CurrencyInputModes.addition)),
-      7: numericButtonFor('-', () => setInputMode(CurrencyInputModes.subtraction)),
-      11: numericButtonFor('*', () => setInputMode(CurrencyInputModes.multiplication)),
+      7: numericButtonFor(
+        '-',
+        () => setInputMode(CurrencyInputModes.subtraction),
+      ),
+      11: numericButtonFor(
+        '*',
+        () => setInputMode(CurrencyInputModes.multiplication),
+      ),
       // Only show decimal button if allowDecimalInput is true, otherwise show empty container
-      12: allowDecimalInput 
-        ? numericButtonFor(',', () => setInputMode(CurrencyInputModes.decimal))
-        : const SizedBox.shrink(),
+      12: allowDecimalInput
+          ? numericButtonFor(
+              ',',
+              () => setInputMode(CurrencyInputModes.decimal),
+            )
+          : const SizedBox.shrink(),
       14: numericButtonFor('/', () => setInputMode(CurrencyInputModes.normal)),
-      15: numericButtonFor('/', () => setInputMode(CurrencyInputModes.division), onBackspaceLongPressed),
+      15: numericButtonFor(
+        '/',
+        () => setInputMode(CurrencyInputModes.division),
+        onBackspaceLongPressed,
+      ),
     };
 
     return Container(
       padding: EdgeInsets.fromLTRB(16, 16, 16, 16 + bottomPadding),
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.surface,
-        boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.1), blurRadius: 8, offset: const Offset(0, -2))],
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.1),
+            blurRadius: 8,
+            offset: const Offset(0, -2),
+          ),
+        ],
       ),
       child: LayoutBuilder(
         builder: (context, constraints) {

@@ -13,7 +13,7 @@ void main() async {
 
   // Initialize Firebase, crash logging, etc.
   await initializeFirebase();
-  
+
   // Initialize the main application & it's dependencies
   await Application.initialize();
 

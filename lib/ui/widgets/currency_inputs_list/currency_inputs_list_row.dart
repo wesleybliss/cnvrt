@@ -46,7 +46,9 @@ class CurrencyInputsListRow extends StatelessWidget {
           IconButton(
             icon: Icon(
               Icons.content_copy,
-              color: Theme.of(context).colorScheme.onSurface.withAlpha(Constants.integers.currencyInputIconsAlpha),
+              color: Theme.of(context).colorScheme.onSurface.withAlpha(
+                Constants.integers.currencyInputIconsAlpha,
+              ),
             ),
             padding: EdgeInsets.zero,
             constraints: const BoxConstraints(),

@@ -14,20 +14,18 @@ class ToolbarThemeToggle extends ConsumerWidget {
       loading: () => const Text(''),
       error: (error, stackTrace) => const Text(''),
       data: (theme) {
-        final themeMode =
-            theme == "system"
-                ? ThemeMode.system
-                : theme == "dark"
-                ? ThemeMode.dark
-                : ThemeMode.light;
+        final themeMode = theme == "system"
+            ? ThemeMode.system
+            : theme == "dark"
+            ? ThemeMode.dark
+            : ThemeMode.light;
 
         return IconButton(
-          icon:
-              themeMode == ThemeMode.system
-                  ? const Icon(Icons.auto_mode)
-                  : themeMode == ThemeMode.light
-                  ? const Icon(Icons.light_mode)
-                  : const Icon(Icons.dark_mode),
+          icon: themeMode == ThemeMode.system
+              ? const Icon(Icons.auto_mode)
+              : themeMode == ThemeMode.light
+              ? const Icon(Icons.light_mode)
+              : const Icon(Icons.dark_mode),
           tooltip: 'Debug',
           onPressed: () {
             ref.read(settingsNotifierProvider.notifier).cycleNextTheme();

@@ -6,17 +6,22 @@ class DebugForceRefreshButton extends ConsumerStatefulWidget {
   const DebugForceRefreshButton({super.key});
 
   @override
-  ConsumerState<DebugForceRefreshButton> createState() => _DebugForceRefreshButton();
+  ConsumerState<DebugForceRefreshButton> createState() =>
+      _DebugForceRefreshButton();
 }
+
 class _DebugForceRefreshButton extends ConsumerState<DebugForceRefreshButton> {
-  void triggerForceRefresh() {
-    //ref.read(currenciesProvider.notifier).fetchCurrencies();
+  void triggerForceRefresh() async {
+    await ref.read(currenciesProvider.notifier).fetchCurrencies();
   }
 
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(currenciesProvider);
-    
-    return ElevatedButton(onPressed: triggerForceRefresh, child: Text("Force Refresh"));
+
+    return ElevatedButton(
+      onPressed: triggerForceRefresh,
+      child: Text("Force Refresh"),
+    );
   }
 }

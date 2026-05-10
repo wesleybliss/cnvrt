@@ -27,14 +27,14 @@ class _CurrenciesReadyState extends ConsumerState<CurrenciesReady> {
     final state = ref.watch(currenciesProvider);
     final searchText = controller.text.toLowerCase();
 
-    final filteredCurrencies =
-        searchText.isEmpty
-            ? state.currencies
-            : state.currencies.where((it) {
-              final currencyName = it.name.toLowerCase();
-              final currencySymbol = it.symbol.toLowerCase();
-              return currencyName.contains(searchText) || currencySymbol.contains(searchText);
-            }).toList();
+    final filteredCurrencies = searchText.isEmpty
+        ? state.currencies
+        : state.currencies.where((it) {
+            final currencyName = it.name.toLowerCase();
+            final currencySymbol = it.symbol.toLowerCase();
+            return currencyName.contains(searchText) ||
+                currencySymbol.contains(searchText);
+          }).toList();
 
     filteredCurrencies.sort((a, b) {
       if (a.selected && !b.selected) {
@@ -42,7 +42,9 @@ class _CurrenciesReadyState extends ConsumerState<CurrenciesReady> {
       } else if (!a.selected && b.selected) {
         return 1; // a is not selected, b is
       } else {
-        return a.symbol.compareTo(b.symbol); // Both are selected or both are not selected
+        return a.symbol.compareTo(
+          b.symbol,
+        ); // Both are selected or both are not selected
       }
     });
 

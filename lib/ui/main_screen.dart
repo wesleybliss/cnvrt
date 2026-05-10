@@ -16,7 +16,10 @@ class MainScreen extends StatefulWidget {
 class MainScreenState extends State<MainScreen> {
   int _selectedIndex = 0;
   late final PageController _pageController;
-  final List<GlobalKey<NavigatorState>> _navigatorKeys = [GlobalKey<NavigatorState>(), GlobalKey<NavigatorState>()];
+  final List<GlobalKey<NavigatorState>> _navigatorKeys = [
+    GlobalKey<NavigatorState>(),
+    GlobalKey<NavigatorState>(),
+  ];
 
   List<String> get _tabRoutes => [Routes.home, Routes.units];
 
@@ -92,7 +95,7 @@ class MainScreenState extends State<MainScreen> {
       },
       child: Scaffold(
         appBar: Toolbar(
-          title: _selectedIndex == 0 
+          title: _selectedIndex == 0
               ? Constants.strings.appName
               : AppLocalizations.of(context)!.units,
           allowBackNavigation: false,
@@ -100,22 +103,25 @@ class MainScreenState extends State<MainScreen> {
         body: PageView(
           controller: _pageController,
           onPageChanged: _onPageChanged,
-          children: [
-            _buildNavigator(0),
-            _buildNavigator(1),
-          ],
+          children: [_buildNavigator(0), _buildNavigator(1)],
         ),
         bottomNavigationBar: NavigationBar(
           labelBehavior: NavigationDestinationLabelBehavior.alwaysHide,
           destinations: [
             NavigationDestination(
               icon: Icon(Icons.attach_money),
-              selectedIcon: Icon(Icons.attach_money, color: Theme.of(context).colorScheme.inversePrimary),
+              selectedIcon: Icon(
+                Icons.attach_money,
+                color: Theme.of(context).colorScheme.inversePrimary,
+              ),
               label: AppLocalizations.of(context)!.currency,
             ),
             NavigationDestination(
               icon: Icon(Icons.straighten),
-              selectedIcon: Icon(Icons.straighten, color: Theme.of(context).colorScheme.inversePrimary),
+              selectedIcon: Icon(
+                Icons.straighten,
+                color: Theme.of(context).colorScheme.inversePrimary,
+              ),
               label: AppLocalizations.of(context)!.units,
             ),
           ],
@@ -144,7 +150,8 @@ class _NavigatorPage extends StatefulWidget {
   State<_NavigatorPage> createState() => _NavigatorPageState();
 }
 
-class _NavigatorPageState extends State<_NavigatorPage> with AutomaticKeepAliveClientMixin {
+class _NavigatorPageState extends State<_NavigatorPage>
+    with AutomaticKeepAliveClientMixin {
   @override
   bool get wantKeepAlive => true;
 
@@ -164,4 +171,3 @@ class _NavigatorPageState extends State<_NavigatorPage> with AutomaticKeepAliveC
     );
   }
 }
-

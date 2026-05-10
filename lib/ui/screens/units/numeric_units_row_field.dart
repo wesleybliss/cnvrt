@@ -6,7 +6,12 @@ class NumericUnitsRowField extends StatelessWidget {
   final InputDecoration decoration;
   final ValueChanged<String> onChanged;
 
-  const NumericUnitsRowField({super.key, required this.controller, required this.decoration, required this.onChanged});
+  const NumericUnitsRowField({
+    super.key,
+    required this.controller,
+    required this.decoration,
+    required this.onChanged,
+  });
 
   @override
   Widget build(BuildContext context) {

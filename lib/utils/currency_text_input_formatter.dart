@@ -7,9 +7,16 @@ class CurrencyTextInputFormatter extends TextInputFormatter {
   final String currencyCode;
   final int decimalRange;
 
-  CurrencyTextInputFormatter({required this.currencyCode, this.decimalRange = 2});
+  CurrencyTextInputFormatter({
+    required this.currencyCode,
+    this.decimalRange = 2,
+  });
 
-  static String formatCurrencyDisplay(String value, String currencyCode, {int decimalRange = 2}) {
+  static String formatCurrencyDisplay(
+    String value,
+    String currencyCode, {
+    int decimalRange = 2,
+  }) {
     if (value.isEmpty) return '';
 
     // Parse the value to double, handling different decimal separators
@@ -28,7 +35,9 @@ class CurrencyTextInputFormatter extends TextInputFormatter {
     if (numericValue == null) return value;
 
     // Round the value to the specified decimal places
-    final double roundedValue = double.parse(numericValue.toStringAsFixed(decimalRange));
+    final double roundedValue = double.parse(
+      numericValue.toStringAsFixed(decimalRange),
+    );
 
     // Use intl package for proper formatting
     final NumberFormat numberFormat;
@@ -37,41 +46,39 @@ class CurrencyTextInputFormatter extends TextInputFormatter {
       case 'USD':
       case 'GBP':
       case 'AUD':
-        numberFormat =
-            NumberFormat.decimalPattern('en_US')
-              ..minimumFractionDigits = decimalRange
-              ..maximumFractionDigits = decimalRange;
+        numberFormat = NumberFormat.decimalPattern('en_US')
+          ..minimumFractionDigits = decimalRange
+          ..maximumFractionDigits = decimalRange;
         break;
       case 'EUR':
-        numberFormat =
-            NumberFormat.decimalPattern('de_DE')
-              ..minimumFractionDigits = decimalRange
-              ..maximumFractionDigits = decimalRange;
+        numberFormat = NumberFormat.decimalPattern('de_DE')
+          ..minimumFractionDigits = decimalRange
+          ..maximumFractionDigits = decimalRange;
         break;
       case 'COP':
-        numberFormat =
-            NumberFormat.decimalPattern('es_CO')
-              ..minimumFractionDigits = decimalRange
-              ..maximumFractionDigits = decimalRange;
+        numberFormat = NumberFormat.decimalPattern('es_CO')
+          ..minimumFractionDigits = decimalRange
+          ..maximumFractionDigits = decimalRange;
         break;
       case 'BRL':
-        numberFormat =
-            NumberFormat.decimalPattern('pt_BR')
-              ..minimumFractionDigits = decimalRange
-              ..maximumFractionDigits = decimalRange;
+        numberFormat = NumberFormat.decimalPattern('pt_BR')
+          ..minimumFractionDigits = decimalRange
+          ..maximumFractionDigits = decimalRange;
         break;
       default:
-        numberFormat =
-            NumberFormat.decimalPattern('en_US')
-              ..minimumFractionDigits = decimalRange
-              ..maximumFractionDigits = decimalRange;
+        numberFormat = NumberFormat.decimalPattern('en_US')
+          ..minimumFractionDigits = decimalRange
+          ..maximumFractionDigits = decimalRange;
     }
 
     return numberFormat.format(roundedValue);
   }
 
   @override
-  TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
+  TextEditingValue formatEditUpdate(
+    TextEditingValue oldValue,
+    TextEditingValue newValue,
+  ) {
     if (newValue.text.isEmpty) {
       return newValue; // Allow empty input
     }
@@ -112,10 +119,15 @@ class CurrencyTextInputFormatter extends TextInputFormatter {
 
       cleanText = _ensureTrailingDecimalPlace(cleanText, decimalSeparator);
 
-      return TextEditingValue(text: cleanText, selection: TextSelection.collapsed(offset: cleanText.length));
+      return TextEditingValue(
+        text: cleanText,
+        selection: TextSelection.collapsed(offset: cleanText.length),
+      );
     }
 
-    return oldValue.copyWith(text: _ensureTrailingDecimalPlace(oldValue.text, decimalSeparator));
+    return oldValue.copyWith(
+      text: _ensureTrailingDecimalPlace(oldValue.text, decimalSeparator),
+    );
   }
 
   String _ensureTrailingDecimalPlace(String value, String decimalSeparator) {

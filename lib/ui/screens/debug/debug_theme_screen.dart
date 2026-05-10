@@ -20,31 +20,58 @@ List<Pair<String, Color>> buildColorsList(BuildContext context) => [
   Pair("primaryFixed", Theme.of(context).colorScheme.primaryFixed),
   Pair("primaryFixedDim", Theme.of(context).colorScheme.primaryFixedDim),
   Pair("onPrimaryFixed", Theme.of(context).colorScheme.onPrimaryFixed),
-  Pair("onPrimaryFixedVariant", Theme.of(context).colorScheme.onPrimaryFixedVariant),
+  Pair(
+    "onPrimaryFixedVariant",
+    Theme.of(context).colorScheme.onPrimaryFixedVariant,
+  ),
   Pair("secondaryContainer", Theme.of(context).colorScheme.secondaryContainer),
-  Pair("onSecondaryContainer", Theme.of(context).colorScheme.onSecondaryContainer),
+  Pair(
+    "onSecondaryContainer",
+    Theme.of(context).colorScheme.onSecondaryContainer,
+  ),
   Pair("secondaryFixed", Theme.of(context).colorScheme.secondaryFixed),
   Pair("secondaryFixedDim", Theme.of(context).colorScheme.secondaryFixedDim),
   Pair("onSecondaryFixed", Theme.of(context).colorScheme.onSecondaryFixed),
-  Pair("onSecondaryFixedVariant", Theme.of(context).colorScheme.onSecondaryFixedVariant),
+  Pair(
+    "onSecondaryFixedVariant",
+    Theme.of(context).colorScheme.onSecondaryFixedVariant,
+  ),
   Pair("tertiary", Theme.of(context).colorScheme.tertiary),
   Pair("onTertiary", Theme.of(context).colorScheme.onTertiary),
   Pair("tertiaryContainer", Theme.of(context).colorScheme.tertiaryContainer),
-  Pair("onTertiaryContainer", Theme.of(context).colorScheme.onTertiaryContainer),
+  Pair(
+    "onTertiaryContainer",
+    Theme.of(context).colorScheme.onTertiaryContainer,
+  ),
   Pair("tertiaryFixed", Theme.of(context).colorScheme.tertiaryFixed),
   Pair("tertiaryFixedDim", Theme.of(context).colorScheme.tertiaryFixedDim),
   Pair("onTertiaryFixed", Theme.of(context).colorScheme.onTertiaryFixed),
-  Pair("onTertiaryFixedVariant", Theme.of(context).colorScheme.onTertiaryFixedVariant),
+  Pair(
+    "onTertiaryFixedVariant",
+    Theme.of(context).colorScheme.onTertiaryFixedVariant,
+  ),
   Pair("errorContainer", Theme.of(context).colorScheme.errorContainer),
   Pair("onErrorContainer", Theme.of(context).colorScheme.onErrorContainer),
   Pair("surfaceVariant", Theme.of(context).colorScheme.surfaceContainerHighest),
   Pair("surfaceDim", Theme.of(context).colorScheme.surfaceDim),
   Pair("surfaceBright", Theme.of(context).colorScheme.surfaceBright),
-  Pair("surfaceContainerLowest", Theme.of(context).colorScheme.surfaceContainerLowest),
-  Pair("surfaceContainerLow", Theme.of(context).colorScheme.surfaceContainerLow),
+  Pair(
+    "surfaceContainerLowest",
+    Theme.of(context).colorScheme.surfaceContainerLowest,
+  ),
+  Pair(
+    "surfaceContainerLow",
+    Theme.of(context).colorScheme.surfaceContainerLow,
+  ),
   Pair("surfaceContainer", Theme.of(context).colorScheme.surfaceContainer),
-  Pair("surfaceContainerHigh", Theme.of(context).colorScheme.surfaceContainerHigh),
-  Pair("surfaceContainerHighest", Theme.of(context).colorScheme.surfaceContainerHighest),
+  Pair(
+    "surfaceContainerHigh",
+    Theme.of(context).colorScheme.surfaceContainerHigh,
+  ),
+  Pair(
+    "surfaceContainerHighest",
+    Theme.of(context).colorScheme.surfaceContainerHighest,
+  ),
   Pair("onSurfaceVariant", Theme.of(context).colorScheme.onSurfaceVariant),
   Pair("outline", Theme.of(context).colorScheme.outline),
   Pair("outlineVariant", Theme.of(context).colorScheme.outlineVariant),
@@ -64,7 +91,9 @@ Widget buildCard(Pair<String, Color> item) => Card(
   child: SizedBox(
     width: double.infinity,
     height: 50,
-    child: Center(child: Text(item.first, style: TextStyle(color: Colors.grey))),
+    child: Center(
+      child: Text(item.first, style: TextStyle(color: Colors.grey)),
+    ),
   ),
 );
 

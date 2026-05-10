@@ -13,9 +13,7 @@ class InflationHelpScreen extends StatelessWidget {
         children: [
           Text(
             AppLocalizations.of(context)!.inflationHelpContent,
-            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-              height: 1.6,
-            ),
+            style: Theme.of(context).textTheme.bodyLarge?.copyWith(height: 1.6),
           ),
         ],
       ),

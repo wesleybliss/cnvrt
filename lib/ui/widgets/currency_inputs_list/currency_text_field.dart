@@ -59,10 +59,9 @@ class CurrencyTextField extends ConsumerWidget {
     final labelFontSize = useLargeInputs ? 16.0 : 12.0;
     final inputFontSize = useLargeInputs ? 20.0 : 12.0;
 
-    final prefixText =
-        showCountryFlags
-            ? "${currencyFlags[item.symbol]}  ${item.symbol}"
-            : item.symbol;
+    final prefixText = showCountryFlags
+        ? "${currencyFlags[item.symbol]}  ${item.symbol}"
+        : item.symbol;
     final prefixIcon = Padding(
       padding: const EdgeInsets.only(left: 12.0, right: 8.0),
       child: Row(
@@ -81,27 +80,26 @@ class CurrencyTextField extends ConsumerWidget {
       ),
     );
 
-    final label =
-        showFullCurrencyNameLabel
-            ? Align(
-              alignment: Alignment.centerRight,
-              child: Column(
-                children: [
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: Text(
-                      item.name,
-                      textAlign: TextAlign.end,
-                      style: TextStyle(
-                        fontSize: labelFontSize,
-                        color: Colors.grey,
-                      ),
+    final label = showFullCurrencyNameLabel
+        ? Align(
+            alignment: Alignment.centerRight,
+            child: Column(
+              children: [
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: Text(
+                    item.name,
+                    textAlign: TextAlign.end,
+                    style: TextStyle(
+                      fontSize: labelFontSize,
+                      color: Colors.grey,
                     ),
                   ),
-                ],
-              ),
-            )
-            : null;
+                ),
+              ],
+            ),
+          )
+        : null;
 
     final decoration = defaultInputDecoration.copyWith(
       hintText: allowDecimalInput ? "0.00" : "0",
@@ -116,10 +114,9 @@ class CurrencyTextField extends ConsumerWidget {
       decoration: decoration,
       textAlign: TextAlign.end,
       style: TextStyle(fontFamily: 'monospace', fontSize: inputFontSize),
-      keyboardType:
-          allowDecimalInput
-              ? const TextInputType.numberWithOptions(decimal: true)
-              : TextInputType.number,
+      keyboardType: allowDecimalInput
+          ? const TextInputType.numberWithOptions(decimal: true)
+          : TextInputType.number,
       inputFormatters: [
         // When decimals are allowed, use DecimalTextInputFormatter to allow decimal point
         // When decimals are not allowed, use digitsOnly to block decimal point

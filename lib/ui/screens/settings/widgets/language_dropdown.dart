@@ -34,15 +34,25 @@ class LanguageDropdown extends ConsumerWidget {
     final items = [DropdownMenuItem(value: "system", child: Text(l10n.system))];
 
     for (var locale in AppLocalizations.supportedLocales) {
-      final localizedName = _getLocalizedLanguageName(context, locale.languageCode);
-      items.add(DropdownMenuItem(value: locale.languageCode, child: Text(localizedName)));
+      final localizedName = _getLocalizedLanguageName(
+        context,
+        locale.languageCode,
+      );
+      items.add(
+        DropdownMenuItem(
+          value: locale.languageCode,
+          child: Text(localizedName),
+        ),
+      );
     }
 
     final dropdown = DropdownButton(
       value: value,
       items: items,
       onChanged: (String? value) {
-        ref.read(settingsNotifierProvider.notifier).setLanguage(value ?? "system");
+        ref
+            .read(settingsNotifierProvider.notifier)
+            .setLanguage(value ?? "system");
       },
       hint: Text(l10n.selectAnOption),
     );

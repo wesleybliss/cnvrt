@@ -132,21 +132,33 @@ void main() {
 
     test('rounds to 2 decimal places by default', () {
       expect(
-        CurrencyTextInputFormatter.formatCurrencyDisplay('100.123456', 'USD', decimalRange: 2),
+        CurrencyTextInputFormatter.formatCurrencyDisplay(
+          '100.123456',
+          'USD',
+          decimalRange: 2,
+        ),
         equals('100.12'),
       );
     });
 
     test('rounds to 3 decimal places when specified', () {
       expect(
-        CurrencyTextInputFormatter.formatCurrencyDisplay('100.123456', 'USD', decimalRange: 3),
+        CurrencyTextInputFormatter.formatCurrencyDisplay(
+          '100.123456',
+          'USD',
+          decimalRange: 3,
+        ),
         equals('100.123'),
       );
     });
 
     test('rounds to 4 decimal places when specified', () {
       expect(
-        CurrencyTextInputFormatter.formatCurrencyDisplay('100.123456', 'USD', decimalRange: 4),
+        CurrencyTextInputFormatter.formatCurrencyDisplay(
+          '100.123456',
+          'USD',
+          decimalRange: 4,
+        ),
         equals('100.1235'),
       );
     });
@@ -167,11 +179,19 @@ void main() {
 
     test('handles very small decimal values', () {
       expect(
-        CurrencyTextInputFormatter.formatCurrencyDisplay('0.01', 'USD', decimalRange: 2),
+        CurrencyTextInputFormatter.formatCurrencyDisplay(
+          '0.01',
+          'USD',
+          decimalRange: 2,
+        ),
         equals('0.01'),
       );
       expect(
-        CurrencyTextInputFormatter.formatCurrencyDisplay('0.001', 'USD', decimalRange: 3),
+        CurrencyTextInputFormatter.formatCurrencyDisplay(
+          '0.001',
+          'USD',
+          decimalRange: 3,
+        ),
         equals('0.001'),
       );
     });
@@ -196,11 +216,19 @@ void main() {
 
     test('adds trailing zeros to match decimal range', () {
       expect(
-        CurrencyTextInputFormatter.formatCurrencyDisplay('100.5', 'USD', decimalRange: 2),
+        CurrencyTextInputFormatter.formatCurrencyDisplay(
+          '100.5',
+          'USD',
+          decimalRange: 2,
+        ),
         equals('100.50'),
       );
       expect(
-        CurrencyTextInputFormatter.formatCurrencyDisplay('100.5', 'EUR', decimalRange: 3),
+        CurrencyTextInputFormatter.formatCurrencyDisplay(
+          '100.5',
+          'EUR',
+          decimalRange: 3,
+        ),
         equals('100,500'),
       );
     });
@@ -213,7 +241,10 @@ void main() {
     });
 
     test('returns original value for invalid numeric input', () {
-      final result = CurrencyTextInputFormatter.formatCurrencyDisplay('abc', 'USD');
+      final result = CurrencyTextInputFormatter.formatCurrencyDisplay(
+        'abc',
+        'USD',
+      );
       // Invalid input should return the original or empty
       expect(result, equals('abc'));
     });
@@ -247,7 +278,11 @@ void main() {
 
     test('handles maximum precision', () {
       expect(
-        CurrencyTextInputFormatter.formatCurrencyDisplay('123.456789', 'USD', decimalRange: 6),
+        CurrencyTextInputFormatter.formatCurrencyDisplay(
+          '123.456789',
+          'USD',
+          decimalRange: 6,
+        ),
         equals('123.456789'),
       );
     });
@@ -256,15 +291,27 @@ void main() {
       // Dart uses "round half away from zero" for toStringAsFixed
       // 100.125 rounds to 100.13 (away from zero)
       expect(
-        CurrencyTextInputFormatter.formatCurrencyDisplay('100.125', 'USD', decimalRange: 2),
+        CurrencyTextInputFormatter.formatCurrencyDisplay(
+          '100.125',
+          'USD',
+          decimalRange: 2,
+        ),
         equals('100.13'),
       );
       expect(
-        CurrencyTextInputFormatter.formatCurrencyDisplay('100.124', 'USD', decimalRange: 2),
+        CurrencyTextInputFormatter.formatCurrencyDisplay(
+          '100.124',
+          'USD',
+          decimalRange: 2,
+        ),
         equals('100.12'),
       );
       expect(
-        CurrencyTextInputFormatter.formatCurrencyDisplay('100.126', 'USD', decimalRange: 2),
+        CurrencyTextInputFormatter.formatCurrencyDisplay(
+          '100.126',
+          'USD',
+          decimalRange: 2,
+        ),
         equals('100.13'),
       );
     });

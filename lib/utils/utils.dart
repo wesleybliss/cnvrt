@@ -25,13 +25,15 @@ abstract class Utils {
   /// This version does not require a context.
   /// For context usage, use Context.isSystemDarkMode()
   static bool get isSystemDarkMode {
-    var brightness = SchedulerBinding.instance.platformDispatcher.platformBrightness;
+    var brightness =
+        SchedulerBinding.instance.platformDispatcher.platformBrightness;
     return brightness == Brightness.dark;
   }
 
   static void noop() {}
 
-  static Future sleep(int seconds) => Future.delayed(Duration(seconds: seconds));
+  static Future sleep(int seconds) =>
+      Future.delayed(Duration(seconds: seconds));
 
   static String? truncate(String? text, [int maxLen = 10]) {
     if (text == null) return text;
@@ -61,7 +63,10 @@ abstract class Utils {
     return Future.delayed(Duration(milliseconds: delayMillis), () => fn);
   }
 
-  static Future<void> waitFor(bool Function() fn, [int delayMillis = 1000]) async {
+  static Future<void> waitFor(
+    bool Function() fn, [
+    int delayMillis = 1000,
+  ]) async {
     while (!fn()) {
       await Future.delayed(Duration(milliseconds: delayMillis));
     }
@@ -84,23 +89,32 @@ abstract class Utils {
     return avatarUrl;
   }
 
-  static String getAvatarUrlOrRandom(int? userId, String? email, {bool asSVG = false}) {
+  static String getAvatarUrlOrRandom(
+    int? userId,
+    String? email, {
+    bool asSVG = false,
+  }) {
     // First check if we have an email, and try to use the Gravatar URL
-    String? avatarUrl = email == null ? null : GravatarSource(email, 300).getAvatarUrl();
+    String? avatarUrl = email == null
+        ? null
+        : GravatarSource(email, 300).getAvatarUrl();
 
     // If email is empty or Gravatar is a 404, try setting a random avatar
     if (avatarUrl == null || avatarUrl.endsWith('404')) {
       // But only if we have an email
       if (email?.isNotEmpty == true) {
-        avatarUrl = Utils.getHashedUserAvatarUrl(email!) + (asSVG ? '' : '.png');
+        avatarUrl =
+            Utils.getHashedUserAvatarUrl(email!) + (asSVG ? '' : '.png');
       } else {
         // Otherwise WTF
         log.w("User doesn't have an email, so we can't set an avatar");
         // @todo something else here?
-        final randomSeed = DateTime
-            .now()
-            .millisecondsSinceEpoch * Random.secure().nextInt(9999);
-        final randomAvatarSeed = (userId?.toString() ?? randomSeed.toString()) + (asSVG ? '' : '.png');
+        final randomSeed =
+            DateTime.now().millisecondsSinceEpoch *
+            Random.secure().nextInt(9999);
+        final randomAvatarSeed =
+            (userId?.toString() ?? randomSeed.toString()) +
+            (asSVG ? '' : '.png');
         avatarUrl = Utils.getHashedUserAvatarUrl(randomAvatarSeed);
       }
     }
@@ -108,7 +122,9 @@ abstract class Utils {
     return avatarUrl;
   }
 
-  static String encodeStringToBase64UrlSafeString(final String url) => _base64SafeEncoder.encode(utf8.encode(url));
+  static String encodeStringToBase64UrlSafeString(final String url) =>
+      _base64SafeEncoder.encode(utf8.encode(url));
 
-  static String decodeFromBase64UrlSafeEncodedString(String str) => utf8.decode(_base64SafeEncoder.decode(str));
+  static String decodeFromBase64UrlSafeEncodedString(String str) =>
+      utf8.decode(_base64SafeEncoder.decode(str));
 }

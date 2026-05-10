@@ -23,7 +23,11 @@ class CurrencyValuesNotifier extends StateNotifier<Map<String, double>> {
   }
 
   // Update the value for a specific currency
-  Map<String, double> setValue(String symbol, String text, {updateSelf = true}) {
+  Map<String, double> setValue(
+    String symbol,
+    String text, {
+    updateSelf = true,
+  }) {
     final raw = removeAllButLastDecimal(text);
     final double value = double.tryParse(raw) ?? 0.0;
     final sortedCurrencies = ref.read(sortedCurrenciesProvider);
@@ -44,10 +48,11 @@ class CurrencyValuesNotifier extends StateNotifier<Map<String, double>> {
   }
 }
 
-final currencyValuesProvider = StateNotifierProvider<CurrencyValuesNotifier, Map<String, double>>((ref) {
-  // Get the list of selected currencies
-  final selectedCurrencies = ref.watch(selectedCurrenciesProvider);
+final currencyValuesProvider =
+    StateNotifierProvider<CurrencyValuesNotifier, Map<String, double>>((ref) {
+      // Get the list of selected currencies
+      final selectedCurrencies = ref.watch(selectedCurrenciesProvider);
 
-  // Create the notifier with the initial values
-  return CurrencyValuesNotifier(selectedCurrencies, ref);
-});
+      // Create the notifier with the initial values
+      return CurrencyValuesNotifier(selectedCurrencies, ref);
+    });

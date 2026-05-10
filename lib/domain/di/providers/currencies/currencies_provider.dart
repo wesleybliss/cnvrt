@@ -1,5 +1,7 @@
 import 'package:cnvrt/db/database.dart';
 import 'package:cnvrt/domain/constants/constants.dart';
+import 'package:cnvrt/domain/di/providers/notifications/notification_provider.dart';
+import 'package:cnvrt/domain/di/providers/settings/settings_provider.dart';
 import 'package:cnvrt/utils/crashlytics_utils.dart';
 import 'package:cnvrt/utils/network_utils.dart';
 import 'package:spot_di/spot_di.dart';
@@ -47,11 +49,14 @@ class CurrenciesNotifier extends StateNotifier<CurrenciesState> {
   final log = Logger('CurrenciesNotifier');
   final currenciesRepo = spot<ICurrenciesRepo>();
   final currenciesService = spot<ICurrenciesService>();
+  final Ref ref;
 
-  CurrenciesNotifier() : super(CurrenciesState());
+  CurrenciesNotifier(this.ref) : super(CurrenciesState());
 
   void setCurrency(Currency currency) {
-    final next = state.currencies.map((e) => e.id == currency.id ? currency : e).toList();
+    final next = state.currencies
+        .map((e) => e.id == currency.id ? currency : e)
+        .toList();
     state = state.copyWith(currencies: next);
     currenciesRepo.create(currency);
   }
@@ -97,7 +102,10 @@ class CurrenciesNotifier extends StateNotifier<CurrenciesState> {
 
       // Update last updated timestamp
       final prefs = await SharedPreferences.getInstance();
-      await prefs.setString(Constants.keys.settings.lastUpdated, DateTime.now().toIso8601String());
+      await prefs.setString(
+        Constants.keys.settings.lastUpdated,
+        DateTime.now().toIso8601String(),
+      );
 
       // Refresh from DB to ensure correct order
       await readCurrencies(showLoading: false);
@@ -108,13 +116,25 @@ class CurrenciesNotifier extends StateNotifier<CurrenciesState> {
         hasNetworkError: false,
         clearError: true,
       );
+
+      // Show notification if enabled
+      final settingsAsyncValue = ref.watch(settingsNotifierProvider);
+      final settings = settingsAsyncValue.value;
+      if (settings?.notifyOnCurrencyUpdate ?? false) {
+        ref
+            .read(notificationNotifierProvider.notifier)
+            .showCurrencyUpdateNotification(
+              success: true,
+              message: 'Currency data updated successfully',
+            );
+      }
     } catch (e, st) {
       final isConnectivity = isConnectivityError(e);
       final hasCache = state.currencies.isNotEmpty;
 
       if (isConnectivity) {
         log.w('Network connectivity issue: ${toStringSafe(e, maxLength: 200)}');
-        
+
         if (hasCache) {
           // User has cached data, just flag the network error
           state = state.copyWith(
@@ -132,26 +152,50 @@ class CurrenciesNotifier extends StateNotifier<CurrenciesState> {
             error: e as Exception,
           );
         }
+
+        // Show notification if enabled
+        final settingsAsyncValue = ref.watch(settingsNotifierProvider);
+        final settings = settingsAsyncValue.value;
+        if (settings?.notifyOnCurrencyUpdate ?? false) {
+          ref
+              .read(notificationNotifierProvider.notifier)
+              .showCurrencyUpdateNotification(
+                success: false,
+                message: 'Failed to update currency data',
+              );
+        }
         return;
       }
 
       // Non-connectivity errors: report to Crashlytics and show error
       log.e('Non-connectivity error fetching currencies', e);
       await recordNonConnectivityError(e, st);
-      
+
       state = state.copyWith(
         loading: false,
         isFetching: false,
         error: e as Exception,
         hasNetworkError: false,
       );
+
+      // Show notification if enabled
+      final settingsAsyncValue = ref.watch(settingsNotifierProvider);
+      final settings = settingsAsyncValue.value;
+      if (settings?.notifyOnCurrencyUpdate ?? false) {
+        ref
+            .read(notificationNotifierProvider.notifier)
+            .showCurrencyUpdateNotification(
+              success: false,
+              message: 'Failed to update currency data',
+            );
+      }
     }
   }
 
   Future<void> initializeCurrencies() async {
     final keys = Constants.keys.settings;
     final prefs = await SharedPreferences.getInstance();
-    
+
     // Check if caching is disabled for debugging
     final disableCache = prefs.getBool(keys.disableCurrencyCaching) ?? false;
     if (disableCache) {
@@ -160,22 +204,29 @@ class CurrenciesNotifier extends StateNotifier<CurrenciesState> {
       // prefs.setString(keys.lastUpdated, DateTime.now().toIso8601String()); // Handled in fetchCurrencies
       return;
     }
-    
+
     final lastUpdatedValue = prefs.getString(keys.lastUpdated);
-    final lastUpdated = lastUpdatedValue != null ? DateTime.parse(lastUpdatedValue) : null;
-    final lastUpdatedDiff = lastUpdated == null ? 0 : DateTime.now().difference(lastUpdated).inHours;
+    final lastUpdated = lastUpdatedValue != null
+        ? DateTime.parse(lastUpdatedValue)
+        : null;
+    final lastUpdatedDiff = lastUpdated == null
+        ? 0
+        : DateTime.now().difference(lastUpdated).inHours;
     final updateFrequencyInHours = prefs.getInt(keys.updateFrequencyInHours);
-    final shouldUpdate = lastUpdated == null || lastUpdatedDiff > (updateFrequencyInHours ?? 12);
+    final shouldUpdate =
+        lastUpdated == null || lastUpdatedDiff > (updateFrequencyInHours ?? 12);
     final savedCurrencies = await readCurrencies();
 
     // If we haven't fetched in more than 6 hours, fetch again
     if (savedCurrencies.isEmpty || shouldUpdate) {
-      log.d('Initializing currencies. Either no currencies saved, or more than 6 hours since last update');
+      log.d(
+        'Initializing currencies. Either no currencies saved, or more than 6 hours since last update',
+      );
       await fetchCurrencies();
 
       // prefs.setString(keys.lastUpdated, DateTime.now().toIso8601String()); // Handled in fetchCurrencies
     }
-    
+
     /*Future.delayed(const Duration(seconds: 2), () async {
       log.d('********************************************************************');
       log.d('********************************************************************');
@@ -187,15 +238,18 @@ class CurrenciesNotifier extends StateNotifier<CurrenciesState> {
   }
 }
 
-final currenciesProvider = StateNotifierProvider<CurrenciesNotifier, CurrenciesState>((ref) {
-  return CurrenciesNotifier();
-});
+final currenciesProvider =
+    StateNotifierProvider<CurrenciesNotifier, CurrenciesState>((ref) {
+      return CurrenciesNotifier(ref);
+    });
 
 final selectedCurrenciesProvider = Provider<List<Currency>>((ref) {
   // Watch the state from the currenciesProvider
   final currenciesState = ref.watch(currenciesProvider);
   // Derive the selected currencies
-  return currenciesState.currencies.where((currency) => currency.selected).toList();
+  return currenciesState.currencies
+      .where((currency) => currency.selected)
+      .toList();
 });
 
 class FocusedCurrencyInputSymbolNotifier extends Notifier<String?> {
@@ -208,6 +262,7 @@ class FocusedCurrencyInputSymbolNotifier extends Notifier<String?> {
 }
 
 // Provider to track the currently selected input's currency symbol
-final focusedCurrencyInputSymbolProvider = NotifierProvider<FocusedCurrencyInputSymbolNotifier, String?>(
-  FocusedCurrencyInputSymbolNotifier.new,
-);
+final focusedCurrencyInputSymbolProvider =
+    NotifierProvider<FocusedCurrencyInputSymbolNotifier, String?>(
+      FocusedCurrencyInputSymbolNotifier.new,
+    );

@@ -4,7 +4,11 @@ class ConditionallyVisible extends StatelessWidget {
   final Widget child;
   final bool isVisible;
 
-  const ConditionallyVisible({super.key, required this.child, required this.isVisible});
+  const ConditionallyVisible({
+    super.key,
+    required this.child,
+    required this.isVisible,
+  });
 
   @override
   Widget build(BuildContext context) {

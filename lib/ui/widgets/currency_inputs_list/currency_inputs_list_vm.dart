@@ -9,6 +9,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
+final log = Logger('CurrencyInputsListViewModel');
+
 @immutable
 class CurrencyInputsListViewModelState {
   final Map<String, TextEditingController> controllers;
@@ -41,20 +43,14 @@ final currencyInputsListViewModelProvider =
 
 class CurrencyInputsListViewModel
     extends Notifier<CurrencyInputsListViewModelState> {
-  final log = Logger('CurrencyInputsListViewModel');
 
   // Cache controllers and focus nodes to prevent focus loss during rebuilds
   final Map<String, TextEditingController> _controllers = {};
   final Map<String, FocusNode> _focusNodes = {};
   bool _onDisposeRegistered = false;
-  bool _isProgrammaticFocus = false;
 
   @override
   CurrencyInputsListViewModelState build() {
-    // Watch sortedCurrenciesProvider so this rebuilds when currencies change
-    final sortedCurrencies = ref.watch(sortedCurrenciesProvider);
-
-    // Register cleanup once
     if (!_onDisposeRegistered) {
       _onDisposeRegistered = true;
       ref.onDispose(() {
@@ -68,11 +64,34 @@ class CurrencyInputsListViewModel
         _controllers.clear();
         _focusNodes.clear();
       });
+
+      // Sync controllers reactively without triggering build() re-runs.
+      // Using ref.listen (not ref.watch) keeps build() as a one-shot init,
+      // so ref.onDispose above only fires at true provider disposal —
+      // not on every currency refresh.
+      ref.listen<List<Currency>>(sortedCurrenciesProvider, (_, currencies) {
+        if (_syncControllers(currencies)) {
+          state = CurrencyInputsListViewModelState(
+            controllers: Map.from(_controllers),
+            focusNodes: Map.from(_focusNodes),
+          );
+        }
+      });
     }
 
-    final currentSymbols = sortedCurrencies.map((e) => e.symbol).toSet();
+    _syncControllers(ref.read(sortedCurrenciesProvider));
 
-    // 1. Dispose and remove controllers/nodes for currencies no longer present
+    return CurrencyInputsListViewModelState(
+      controllers: Map.from(_controllers),
+      focusNodes: Map.from(_focusNodes),
+    );
+  }
+
+  // Returns true if controllers were added or removed.
+  bool _syncControllers(List<Currency> currencies) {
+    final currentSymbols = currencies.map((e) => e.symbol).toSet();
+    bool changed = false;
+
     final symbolsToRemove = _controllers.keys
         .where((s) => !currentSymbols.contains(s))
         .toList();
@@ -82,30 +101,26 @@ class CurrencyInputsListViewModel
       _focusNodes[symbol]?.dispose();
       _controllers.remove(symbol);
       _focusNodes.remove(symbol);
+      changed = true;
     }
 
-    // 2. Create or reuse controllers/nodes for current currencies
-    for (var currency in sortedCurrencies) {
+    for (var currency in currencies) {
       final symbol = currency.symbol;
       if (!_controllers.containsKey(symbol)) {
         log.d('Creating new controller and focusNode for $symbol');
         _controllers[symbol] = TextEditingController();
         final focusNode = FocusNode();
         _focusNodes[symbol] = focusNode;
-
-        // Listen to focus changes and update the provider
         focusNode.addListener(() {
           if (focusNode.hasFocus) {
             onFocusChanged(symbol);
           }
         });
+        changed = true;
       }
     }
 
-    return CurrencyInputsListViewModelState(
-      controllers: Map.from(_controllers),
-      focusNodes: Map.from(_focusNodes),
-    );
+    return changed;
   }
 
   /// Request focus on the first currency input
@@ -118,21 +133,15 @@ class CurrencyInputsListViewModel
   /// Request focus on a specific currency input by its symbol
   void requestFocus(String symbol) {
     final focusNode = _focusNodes[symbol];
-
-    if (focusNode != null) {
-      log.d('Requesting focus on $symbol');
-      // Use a slight delay to ensure the widget tree is fully built
-      Future.delayed(const Duration(milliseconds: 100), () {
-        if (focusNode.canRequestFocus && !focusNode.hasFocus) {
-          _isProgrammaticFocus = true;
-          focusNode.requestFocus();
-          // Reset the flag after a short delay to allow for normal focus handling
-          Future.delayed(const Duration(milliseconds: 50), () {
-            _isProgrammaticFocus = false;
-          });
-        }
-      });
-    }
+    if (focusNode == null) return;
+    log.d('DEBUG requestFocus: symbol=$symbol hasFocus=${focusNode.hasFocus} controllerText=${_controllers[symbol]?.text}');
+    Future.delayed(const Duration(milliseconds: 100), () {
+      log.d('DEBUG requestFocus delayed: symbol=$symbol hasFocus=${focusNode.hasFocus} canRequestFocus=${focusNode.canRequestFocus}');
+      if (focusNode.canRequestFocus && !focusNode.hasFocus) {
+        log.d('DEBUG requestFocus: calling focusNode.requestFocus() for $symbol');
+        focusNode.requestFocus();
+      }
+    });
   }
 
   /// Clear all controllers when the focused input changes
@@ -141,41 +150,42 @@ class CurrencyInputsListViewModel
   }
 
   void onFocusChanged(String symbol) {
-    state.controllers[symbol]?.clear();
-
     final focusedSymbol = ref.read(focusedCurrencyInputSymbolProvider);
-    if (focusedSymbol == symbol) return;
-
-    // Only clear all inputs if this is not a programmatic focus change
-    if (!_isProgrammaticFocus) {
-      clearAllInputs();
+    log.d('DEBUG onFocusChanged: symbol=$symbol focusedSymbol=$focusedSymbol controllerText=${state.controllers[symbol]?.text}');
+    if (focusedSymbol == symbol) {
+      log.d('DEBUG onFocusChanged: same symbol, returning early');
+      return;
     }
+
+    log.d('DEBUG onFocusChanged: clearing controller for $symbol');
+    state.controllers[symbol]?.clear();
+    clearAllInputs();
     ref.read(focusedCurrencyInputSymbolProvider.notifier).setSymbol(symbol);
   }
 
   void updateControllers(
     Map<String, double> currencyValues,
-    String? focusedCurrencyInputSymbol,
     bool allowDecimalInput,
   ) {
+    final focusedSymbol = ref.read(focusedCurrencyInputSymbolProvider);
+    log.d('DEBUG updateControllers: focusedSymbol=$focusedSymbol values=${currencyValues.entries.map((e) => "${e.key}:${e.value}").join(", ")}');
+
     for (var entry in currencyValues.entries) {
       final symbol = entry.key;
-      // Use the double value for formatting
       final value = _formatCurrencyWithSettings(
         symbol,
         entry.value,
         allowDecimalInput,
       );
 
-      // Don't update the input field they've typed in
-      if (focusedCurrencyInputSymbol == symbol) continue;
+      if (focusedSymbol == symbol) continue;
 
       if (state.controllers.containsKey(symbol)) {
         final controller = state.controllers[symbol]!;
         final valueAsString = value;
 
-        // Update controller only if the value has changed
         if (controller.text != valueAsString) {
+          log.d('DEBUG updateControllers: setting $symbol controller to "$valueAsString" (was "${controller.text}")');
           controller.text = valueAsString;
         }
       }

@@ -271,8 +271,14 @@ void main() {
     });
 
     test('roundtrip conversion maintains approximate value', () {
-      expect(squareMetersToSquareFeet(squareFeetToSquareMeters(1000)), closeTo(1000, 50));
-      expect(squareFeetToSquareMeters(squareMetersToSquareFeet(100)), closeTo(100, 5));
+      expect(
+        squareMetersToSquareFeet(squareFeetToSquareMeters(1000)),
+        closeTo(1000, 50),
+      );
+      expect(
+        squareFeetToSquareMeters(squareMetersToSquareFeet(100)),
+        closeTo(100, 5),
+      );
     });
   });
 

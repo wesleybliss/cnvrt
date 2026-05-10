@@ -55,13 +55,17 @@ class SettingsNotifier extends _$SettingsNotifier {
 
   Future<void> setUseLargeInputs(bool value) async {
     final currentSettings = await future;
-    final newSettings = currentSettings.copyWith(useLargeInputs: !currentSettings.useLargeInputs);
+    final newSettings = currentSettings.copyWith(
+      useLargeInputs: !currentSettings.useLargeInputs,
+    );
     await updateSettings(newSettings);
   }
 
   Future<void> setDragReorderHandles(bool value) async {
     final currentSettings = await future;
-    final newSettings = currentSettings.copyWith(showDragReorderHandles: !currentSettings.showDragReorderHandles);
+    final newSettings = currentSettings.copyWith(
+      showDragReorderHandles: !currentSettings.showDragReorderHandles,
+    );
     await updateSettings(newSettings);
   }
 
@@ -75,7 +79,9 @@ class SettingsNotifier extends _$SettingsNotifier {
 
   Future<void> setShowFullCurrencyNameLabel(bool value) async {
     final currentSettings = await future;
-    final newSettings = currentSettings.copyWith(showFullCurrencyNameLabel: !currentSettings.showFullCurrencyNameLabel);
+    final newSettings = currentSettings.copyWith(
+      showFullCurrencyNameLabel: !currentSettings.showFullCurrencyNameLabel,
+    );
     await updateSettings(newSettings);
   }
 
@@ -99,19 +105,33 @@ class SettingsNotifier extends _$SettingsNotifier {
 
   Future<void> setShowCountryFlags(bool value) async {
     final currentSettings = await future;
-    final newSettings = currentSettings.copyWith(showCountryFlags: !currentSettings.showCountryFlags);
+    final newSettings = currentSettings.copyWith(
+      showCountryFlags: !currentSettings.showCountryFlags,
+    );
     await updateSettings(newSettings);
   }
 
   Future<void> setAllowDecimalInput(bool value) async {
     final currentSettings = await future;
-    final newSettings = currentSettings.copyWith(allowDecimalInput: !currentSettings.allowDecimalInput);
+    final newSettings = currentSettings.copyWith(
+      allowDecimalInput: !currentSettings.allowDecimalInput,
+    );
+    await updateSettings(newSettings);
+  }
+
+  Future<void> setNotifyOnCurrencyUpdate(bool value) async {
+    final currentSettings = await future;
+    final newSettings = currentSettings.copyWith(
+      notifyOnCurrencyUpdate: !currentSettings.notifyOnCurrencyUpdate,
+    );
     await updateSettings(newSettings);
   }
 
   Future<void> setDeveloperModeActive(bool value) async {
     final currentSettings = await future;
-    final newSettings = currentSettings.copyWith(developerModeActive: !currentSettings.developerModeActive);
+    final newSettings = currentSettings.copyWith(
+      developerModeActive: !currentSettings.developerModeActive,
+    );
     await updateSettings(newSettings);
   }
 
@@ -129,7 +149,11 @@ class SettingsNotifier extends _$SettingsNotifier {
 
   void cycleNextTheme() {
     if (state.value?.theme == "system") {
-      setThemeMode(getSystemBrightness() == Brightness.light ? ThemeMode.dark : ThemeMode.light);
+      setThemeMode(
+        getSystemBrightness() == Brightness.light
+            ? ThemeMode.dark
+            : ThemeMode.light,
+      );
     } else if (state.value?.theme == "light") {
       setThemeMode(ThemeMode.dark);
     } else {

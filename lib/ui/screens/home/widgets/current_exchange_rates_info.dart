@@ -37,10 +37,9 @@ class CurrentExchangeRatesInfo extends StatelessWidget {
         ),
       );
     } else {
-      final currentExchangeRate =
-          focusedCurrency == null
-              ? ''
-              : '\$1 = ${nf.format(focusedCurrency?.rate)} $focusedCurrencyInputSymbol';
+      final currentExchangeRate = focusedCurrency == null
+          ? ''
+          : '\$1 = ${nf.format(focusedCurrency?.rate)} $focusedCurrencyInputSymbol';
 
       child = Text(
         currentExchangeRate,
@@ -59,7 +58,9 @@ class CurrentExchangeRatesInfo extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
-            focusedCurrency != null ? AppLocalizations.of(context)!.exchangeRate.toUpperCase() : "",
+            focusedCurrency != null
+                ? AppLocalizations.of(context)!.exchangeRate.toUpperCase()
+                : "",
             textAlign: TextAlign.center,
             style: Theme.of(context).textTheme.labelLarge?.copyWith(
               color: Theme.of(context).colorScheme.onSurface.withAlpha(125),

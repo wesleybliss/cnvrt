@@ -7,7 +7,8 @@ import 'package:cnvrt/domain/io/repos/i_currencies_repo.dart';
 import 'package:cnvrt/io/settings.dart';
 import 'package:cnvrt/utils/logger.dart';
 import 'package:collection/collection.dart';
-import 'package:firebase_crashlytics/firebase_crashlytics.dart' if (dart.library.js) '../../../utils/firebase_stub.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart'
+    if (dart.library.js) '../../../utils/firebase_stub.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:spot_di/spot_di.dart';
@@ -55,11 +56,15 @@ class _DebugScreenState extends ConsumerState<DebugScreen> {
     }
 
     void debugReportStatus() async {
-      log.d('Status: ${state.currencies.length} total, ${selectedCurrencies.length} selected');
+      log.d(
+        'Status: ${state.currencies.length} total, ${selectedCurrencies.length} selected',
+      );
     }
 
     void debugDumpAllCurrencies() {
-      log.d('\n${state.currencies.map((it) => '${it.symbol}, ${it.name}').join('\n')}\n');
+      log.d(
+        '\n${state.currencies.map((it) => '${it.symbol}, ${it.name}').join('\n')}\n',
+      );
     }
 
     void onFetchCurrenciesClick() {
@@ -85,31 +90,34 @@ class _DebugScreenState extends ConsumerState<DebugScreen> {
         }
         return;
       }
-      
+
       try {
         throw Exception('Testing');
       } catch (error, stackTrace) {
         log.i('Recording non-fatal test error to Crashlytics: $error');
         log.d('[Crashlytics Test] Sending non-fatal error...');
-        
+
         // Check if Crashlytics is enabled
-        final isEnabled = FirebaseCrashlytics.instance.isCrashlyticsCollectionEnabled;
+        final isEnabled =
+            FirebaseCrashlytics.instance.isCrashlyticsCollectionEnabled;
         log.d('[Crashlytics Test] Crashlytics enabled: $isEnabled');
-        
+
         await FirebaseCrashlytics.instance.recordError(
           error,
           stackTrace,
           fatal: false,
           reason: 'Test non-fatal error from debug screen',
         );
-        
+
         log.d('[Crashlytics Test] Error recorded successfully');
         log.d('[Crashlytics Test] Restart app to upload to Firebase');
-        
+
         if (context.mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('Error logged! Crashlytics ${isEnabled ? "enabled" : "DISABLED"}. Restart app to send.'),
+              content: Text(
+                'Error logged! Crashlytics ${isEnabled ? "enabled" : "DISABLED"}. Restart app to send.',
+              ),
               duration: const Duration(seconds: 4),
             ),
           );
@@ -129,7 +137,7 @@ class _DebugScreenState extends ConsumerState<DebugScreen> {
         }
         return;
       }
-      
+
       log.w('Triggering fatal crash test - app will crash!');
       log.d('[Crashlytics Test] Forcing fatal crash...');
       // This will cause an actual crash
@@ -139,13 +147,17 @@ class _DebugScreenState extends ConsumerState<DebugScreen> {
     Widget buildSectionHeader(BuildContext context, String title) {
       return Text(
         title,
-        style: Theme.of(context).textTheme.titleMedium?.copyWith(
-              fontWeight: FontWeight.bold,
-            ),
+        style: Theme.of(
+          context,
+        ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
       );
     }
 
-    Widget buildNavigationButton(BuildContext context, String label, String route) {
+    Widget buildNavigationButton(
+      BuildContext context,
+      String label,
+      String route,
+    ) {
       return OutlinedButton(
         onPressed: () => Application.router.navigateTo(context, route),
         child: Text(label),
@@ -159,10 +171,7 @@ class _DebugScreenState extends ConsumerState<DebugScreen> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(label),
-            Text(
-              value,
-              style: const TextStyle(fontWeight: FontWeight.w500),
-            ),
+            Text(value, style: const TextStyle(fontWeight: FontWeight.w500)),
           ],
         ),
       );
@@ -186,11 +195,7 @@ class _DebugScreenState extends ConsumerState<DebugScreen> {
               // Debug Screens Section
               buildSectionHeader(context, '🎨 Debug Screens'),
               const SizedBox(height: 8),
-              buildNavigationButton(
-                context,
-                'Theme Debug',
-                Routes.debugTheme,
-              ),
+              buildNavigationButton(context, 'Theme Debug', Routes.debugTheme),
               buildNavigationButton(
                 context,
                 'Convert Debug',
@@ -212,12 +217,30 @@ class _DebugScreenState extends ConsumerState<DebugScreen> {
                   child: Column(
                     children: [
                       buildSettingRow('Theme', settings.theme),
-                      buildSettingRow('Drag Handles', settings.showDragReorderHandles.toString()),
-                      buildSettingRow('Clipboard Buttons', settings.showCopyToClipboardButtons.toString()),
-                      buildSettingRow('Full Currency Names', settings.showFullCurrencyNameLabel.toString()),
-                      buildSettingRow('Inputs Position', settings.inputsPosition.toString()),
-                      buildSettingRow('Show Currency Rate', settings.showCurrencyRate.toString()),
-                      buildSettingRow('Account for Inflation', settings.accountForInflation.toString()),
+                      buildSettingRow(
+                        'Drag Handles',
+                        settings.showDragReorderHandles.toString(),
+                      ),
+                      buildSettingRow(
+                        'Clipboard Buttons',
+                        settings.showCopyToClipboardButtons.toString(),
+                      ),
+                      buildSettingRow(
+                        'Full Currency Names',
+                        settings.showFullCurrencyNameLabel.toString(),
+                      ),
+                      buildSettingRow(
+                        'Inputs Position',
+                        settings.inputsPosition.toString(),
+                      ),
+                      buildSettingRow(
+                        'Show Currency Rate',
+                        settings.showCurrencyRate.toString(),
+                      ),
+                      buildSettingRow(
+                        'Account for Inflation',
+                        settings.accountForInflation.toString(),
+                      ),
                     ],
                   ),
                 ),
@@ -227,24 +250,30 @@ class _DebugScreenState extends ConsumerState<DebugScreen> {
               // Currency Actions Section
               buildSectionHeader(context, '💱 Currency Actions'),
               const SizedBox(height: 8),
-              
+
               // Cache toggle
               Card(
                 child: SwitchListTile(
                   title: const Text('Disable Currency Caching'),
-                  subtitle: const Text('Force fresh API calls every time (for debugging)'),
+                  subtitle: const Text(
+                    'Force fresh API calls every time (for debugging)',
+                  ),
                   value: settings.disableCurrencyCaching,
                   onChanged: (value) async {
-                    final notifier = ref.read(settingsNotifierProvider.notifier);
+                    final notifier = ref.read(
+                      settingsNotifierProvider.notifier,
+                    );
                     await notifier.updateSettings(
                       settings.copyWith(disableCurrencyCaching: value),
                     );
                     if (context.mounted) {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
-                          content: Text(value
-                              ? 'Caching disabled - will fetch fresh data on every launch'
-                              : 'Caching enabled - will use cached data'),
+                          content: Text(
+                            value
+                                ? 'Caching disabled - will fetch fresh data on every launch'
+                                : 'Caching enabled - will use cached data',
+                          ),
                           duration: const Duration(seconds: 2),
                         ),
                       );
@@ -253,9 +282,10 @@ class _DebugScreenState extends ConsumerState<DebugScreen> {
                 ),
               ),
               const SizedBox(height: 8),
-              
+
               ElevatedButton.icon(
-                onPressed: () => Application.router.navigateTo(context, Routes.currencies),
+                onPressed: () =>
+                    Application.router.navigateTo(context, Routes.currencies),
                 icon: const Icon(Icons.manage_search),
                 label: const Text('Manage Currencies'),
               ),
@@ -355,9 +385,8 @@ class _DebugScreenState extends ConsumerState<DebugScreen> {
                       children: [
                         Text(
                           'Testing Instructions:',
-                          style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                                fontWeight: FontWeight.bold,
-                              ),
+                          style: Theme.of(context).textTheme.titleSmall
+                              ?.copyWith(fontWeight: FontWeight.bold),
                         ),
                         const SizedBox(height: 8),
                         Text(
@@ -371,9 +400,8 @@ class _DebugScreenState extends ConsumerState<DebugScreen> {
                         const SizedBox(height: 8),
                         Text(
                           'Check Firebase Console in 5-10 minutes after test.',
-                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                fontStyle: FontStyle.italic,
-                              ),
+                          style: Theme.of(context).textTheme.bodySmall
+                              ?.copyWith(fontStyle: FontStyle.italic),
                         ),
                       ],
                     ),
@@ -389,7 +417,8 @@ class _DebugScreenState extends ConsumerState<DebugScreen> {
 
     return settingsAsyncValue.when(
       loading: () => const CircularProgressIndicator(),
-      error: (error, stackTrace) => Text('${AppLocalizations.of(context)!.error}: $error'),
+      error: (error, stackTrace) =>
+          Text('${AppLocalizations.of(context)!.error}: $error'),
       data: (settings) {
         return renderBody(settings);
       },

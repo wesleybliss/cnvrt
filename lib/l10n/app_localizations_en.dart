@@ -245,4 +245,17 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get languageKorean => 'Korean';
+
+  @override
+  String get notifyOnCurrencyUpdate => 'Notify on currency update';
+
+  @override
+  String get notifyOnCurrencyUpdateDescription =>
+      'Show notification when currency data is updated';
+
+  @override
+  String get currencyUpdateSuccess => 'Currency data updated successfully';
+
+  @override
+  String get currencyUpdateFailed => 'Failed to update currency data';
 }

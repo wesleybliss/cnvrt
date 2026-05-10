@@ -75,5 +75,9 @@
   "languageSpanish": "西班牙语",
   "languageItalian": "意大利语",
   "languageChinese": "中文",
-  "languageKorean": "韩语"
+  "languageKorean": "韩语",
+  "notifyOnCurrencyUpdate": "货币更新时通知",
+  "notifyOnCurrencyUpdateDescription": "货币数据更新时显示通知",
+  "currencyUpdateSuccess": "货币数据更新成功",
+  "currencyUpdateFailed": "更新货币数据失败"
 }

@@ -547,6 +547,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Korean'**
   String get languageKorean;
+
+  /// No description provided for @notifyOnCurrencyUpdate.
+  ///
+  /// In en, this message translates to:
+  /// **'Notify on currency update'**
+  String get notifyOnCurrencyUpdate;
+
+  /// No description provided for @notifyOnCurrencyUpdateDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Show notification when currency data is updated'**
+  String get notifyOnCurrencyUpdateDescription;
+
+  /// No description provided for @currencyUpdateSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Currency data updated successfully'**
+  String get currencyUpdateSuccess;
+
+  /// No description provided for @currencyUpdateFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to update currency data'**
+  String get currencyUpdateFailed;
 }
 
 class _AppLocalizationsDelegate

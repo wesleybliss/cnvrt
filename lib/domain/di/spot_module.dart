@@ -26,7 +26,9 @@ abstract class SpotModule {
       factory<ICurrenciesRepo, CurrenciesRepo>((get) => CurrenciesRepo());
 
       // Services
-      single<ICurrenciesService, CurrenciesService>((get) => CurrenciesService(get<IDioClient>()));
+      single<ICurrenciesService, CurrenciesService>(
+        (get) => CurrenciesService(get<IDioClient>()),
+      );
 
       // Core Services
       // factory<IAuthService, AuthService>((get) => AuthService());
@@ -36,8 +38,6 @@ abstract class SpotModule {
 
 abstract class TestSpotModule extends SpotModule {
   static void registerDependencies() {
-    Spot.init((factory, single) {
-
-    });
+    Spot.init((factory, single) {});
   }
 }

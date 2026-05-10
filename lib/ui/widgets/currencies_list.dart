@@ -9,7 +9,11 @@ class CurrenciesList extends ConsumerWidget {
   final List<Currency> currencies;
   final VoidCallback onFavoriteToggled;
 
-  const CurrenciesList({super.key, required this.currencies, required this.onFavoriteToggled});
+  const CurrenciesList({
+    super.key,
+    required this.currencies,
+    required this.onFavoriteToggled,
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -21,7 +25,9 @@ class CurrenciesList extends ConsumerWidget {
         return ListTile(
           title: Text(item.symbol),
           subtitle: Text(item.name),
-          trailing: Icon(item.selected ? Icons.favorite : Icons.favorite_border_outlined),
+          trailing: Icon(
+            item.selected ? Icons.favorite : Icons.favorite_border_outlined,
+          ),
           onTap: () async {
             final currenciesRepo = spot<ICurrenciesRepo>();
             final next = item.copyWith(selected: !item.selected);
