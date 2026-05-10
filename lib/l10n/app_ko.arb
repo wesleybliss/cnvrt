@@ -75,5 +75,9 @@
   "languageSpanish": "스페인어",
   "languageItalian": "이탈리아어",
   "languageChinese": "중국어",
-  "languageKorean": "한국어"
+  "languageKorean": "한국어",
+  "notifyOnCurrencyUpdate": "통화 업데이트 알림",
+  "notifyOnCurrencyUpdateDescription": "통화 데이터가 업데이트될 때 알림 표시",
+  "currencyUpdateSuccess": "통화 데이터가 성공적으로 업데이트되었습니다",
+  "currencyUpdateFailed": "통화 데이터 업데이트 실패"
 }

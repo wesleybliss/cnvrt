@@ -16,6 +16,7 @@ abstract class ISettings {
   abstract bool accountForInflation;
   abstract bool allowDecimalInput;
   abstract bool disableCurrencyCaching;
+  abstract bool notifyOnCurrencyUpdate;
 
   // If the user has tapped the version number 10 times, we enable developer mode
   abstract bool developerModeActive;
@@ -36,6 +37,7 @@ abstract class ISettings {
     bool? showCountryFlags,
     bool? allowDecimalInput,
     bool? disableCurrencyCaching,
+    bool? notifyOnCurrencyUpdate,
 
     bool? developerModeActive,
   });

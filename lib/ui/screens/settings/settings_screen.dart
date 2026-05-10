@@ -14,6 +14,7 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:cnvrt/l10n/app_localizations.dart';
 
 import 'widgets/inputs_position_dropdown.dart';
+import 'widgets/notify_on_currency_update_switch.dart';
 import 'widgets/round_decimals_to_input.dart';
 import 'widgets/show_copy_to_clipboard_buttons_switch.dart';
 import 'widgets/show_currency_rate_dropdown.dart';
@@ -90,6 +91,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             ),
             UpdateFrequencyInHoursDropdown(
               value: settings.updateFrequencyInHours,
+            ),
+            NotifyOnCurrencyUpdateSwitch(
+              value: settings.notifyOnCurrencyUpdate,
             ),
             UseLargeInputsSwitch(value: settings.useLargeInputs),
             ShowDragReorderHandlesSwitch(

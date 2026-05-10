@@ -230,4 +230,16 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get languageKorean => '韩语';
+
+  @override
+  String get notifyOnCurrencyUpdate => '货币更新时通知';
+
+  @override
+  String get notifyOnCurrencyUpdateDescription => '货币数据更新时显示通知';
+
+  @override
+  String get currencyUpdateSuccess => '货币数据更新成功';
+
+  @override
+  String get currencyUpdateFailed => '更新货币数据失败';
 }

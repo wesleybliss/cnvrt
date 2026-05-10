@@ -1,6 +1,8 @@
 import 'dart:async';
 
 import 'package:cnvrt/domain/di/providers/currencies/currencies_provider.dart';
+import 'package:cnvrt/domain/di/providers/notifications/notification_provider.dart';
+import 'package:cnvrt/domain/extensions/extensions.dart';
 import 'package:cnvrt/ui/screens/home/home_error.dart';
 import 'package:cnvrt/ui/screens/home/home_loading.dart';
 import 'package:cnvrt/ui/screens/home/home_ready.dart';
@@ -33,6 +35,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     // Listen to network error state changes
     ref.listenManual(currenciesProvider, (previous, next) {
       _handleNetworkErrorStateChange(next);
+    });
+
+    // Listen to currency update notifications
+    ref.listenManual(notificationNotifierProvider, (previous, next) {
+      _handleCurrencyUpdateNotification(next);
     });
   }
 
@@ -85,6 +92,25 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   void _hideSnackbar() {
     if (mounted) {
       ScaffoldMessenger.of(context).hideCurrentSnackBar();
+    }
+  }
+
+  void _handleCurrencyUpdateNotification(NotificationState state) {
+    final notification = state.currencyUpdateNotification;
+    if (notification != null && mounted) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+
+        context.snackBar(
+          notification.message,
+          behavior: SnackBarBehavior.floating,
+        );
+
+        // Clear the notification after showing it
+        ref
+            .read(notificationNotifierProvider.notifier)
+            .clearCurrencyUpdateNotification();
+      });
     }
   }
 

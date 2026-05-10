@@ -33,6 +33,8 @@ class Settings implements ISettings {
   bool allowDecimalInput = false;
   @override
   bool disableCurrencyCaching = false;
+  @override
+  bool notifyOnCurrencyUpdate = true;
 
   @override
   bool developerModeActive = false;
@@ -53,6 +55,7 @@ class Settings implements ISettings {
     this.showCountryFlags = true,
     this.allowDecimalInput = false,
     this.disableCurrencyCaching = false,
+    this.notifyOnCurrencyUpdate = true,
 
     this.developerModeActive = false,
   });
@@ -74,6 +77,7 @@ class Settings implements ISettings {
     bool? showCountryFlags,
     bool? allowDecimalInput,
     bool? disableCurrencyCaching,
+    bool? notifyOnCurrencyUpdate,
 
     bool? developerModeActive,
   }) => Settings(
@@ -97,6 +101,8 @@ class Settings implements ISettings {
     allowDecimalInput: allowDecimalInput ?? this.allowDecimalInput,
     disableCurrencyCaching:
         disableCurrencyCaching ?? this.disableCurrencyCaching,
+    notifyOnCurrencyUpdate:
+        notifyOnCurrencyUpdate ?? this.notifyOnCurrencyUpdate,
 
     developerModeActive: developerModeActive ?? this.developerModeActive,
   );
@@ -126,6 +132,8 @@ class Settings implements ISettings {
       allowDecimalInput: prefs.getBool(keys.allowDecimalInput) ?? false,
       disableCurrencyCaching:
           prefs.getBool(keys.disableCurrencyCaching) ?? false,
+      notifyOnCurrencyUpdate:
+          prefs.getBool(keys.notifyOnCurrencyUpdate) ?? true,
 
       developerModeActive: prefs.getBool(keys.developerModeActive) ?? false,
     );
@@ -164,6 +172,7 @@ class Settings implements ISettings {
     await prefs.setBool(keys.showCountryFlags, showCountryFlags);
     await prefs.setBool(keys.allowDecimalInput, allowDecimalInput);
     await prefs.setBool(keys.disableCurrencyCaching, disableCurrencyCaching);
+    await prefs.setBool(keys.notifyOnCurrencyUpdate, notifyOnCurrencyUpdate);
 
     await prefs.setBool(keys.developerModeActive, developerModeActive);
   }

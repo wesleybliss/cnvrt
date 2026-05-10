@@ -119,6 +119,14 @@ class SettingsNotifier extends _$SettingsNotifier {
     await updateSettings(newSettings);
   }
 
+  Future<void> setNotifyOnCurrencyUpdate(bool value) async {
+    final currentSettings = await future;
+    final newSettings = currentSettings.copyWith(
+      notifyOnCurrencyUpdate: !currentSettings.notifyOnCurrencyUpdate,
+    );
+    await updateSettings(newSettings);
+  }
+
   Future<void> setDeveloperModeActive(bool value) async {
     final currentSettings = await future;
     final newSettings = currentSettings.copyWith(

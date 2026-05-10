@@ -75,5 +75,9 @@
   "languageSpanish": "Spagnolo",
   "languageItalian": "Italiano",
   "languageChinese": "Cinese",
-  "languageKorean": "Coreano"
+  "languageKorean": "Coreano",
+  "notifyOnCurrencyUpdate": "Notifica l'aggiornamento della valuta",
+  "notifyOnCurrencyUpdateDescription": "Mostra notifica quando i dati valutari vengono aggiornati",
+  "currencyUpdateSuccess": "Dati valutari aggiornati con successo",
+  "currencyUpdateFailed": "Errore nell'aggiornamento dei dati valutari"
 }

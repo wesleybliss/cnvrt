@@ -18,6 +18,7 @@ class ConstantsKeysSettings {
   final showCountryFlags = "showCountryFlags";
   final allowDecimalInput = "allowDecimalInput";
   final disableCurrencyCaching = "disableCurrencyCaching";
+  final notifyOnCurrencyUpdate = "notifyOnCurrencyUpdate";
 
   final developerModeActive = "developerModeActive";
 }

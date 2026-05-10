@@ -231,4 +231,16 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get languageKorean => '한국어';
+
+  @override
+  String get notifyOnCurrencyUpdate => '통화 업데이트 알림';
+
+  @override
+  String get notifyOnCurrencyUpdateDescription => '통화 데이터가 업데이트될 때 알림 표시';
+
+  @override
+  String get currencyUpdateSuccess => '통화 데이터가 성공적으로 업데이트되었습니다';
+
+  @override
+  String get currencyUpdateFailed => '통화 데이터 업데이트 실패';
 }

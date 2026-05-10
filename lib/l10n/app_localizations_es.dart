@@ -250,4 +250,18 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get languageKorean => 'Coreano';
+
+  @override
+  String get notifyOnCurrencyUpdate => 'Notificar al actualizar monedas';
+
+  @override
+  String get notifyOnCurrencyUpdateDescription =>
+      'Mostrar notificación cuando se actualiza la información de divisas';
+
+  @override
+  String get currencyUpdateSuccess =>
+      'Datos de divisas actualizados exitosamente';
+
+  @override
+  String get currencyUpdateFailed => 'Error al actualizar datos de divisas';
 }

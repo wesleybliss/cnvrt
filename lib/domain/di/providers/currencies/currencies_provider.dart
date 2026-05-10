@@ -1,5 +1,7 @@
 import 'package:cnvrt/db/database.dart';
 import 'package:cnvrt/domain/constants/constants.dart';
+import 'package:cnvrt/domain/di/providers/notifications/notification_provider.dart';
+import 'package:cnvrt/domain/di/providers/settings/settings_provider.dart';
 import 'package:cnvrt/utils/crashlytics_utils.dart';
 import 'package:cnvrt/utils/network_utils.dart';
 import 'package:spot_di/spot_di.dart';
@@ -47,8 +49,9 @@ class CurrenciesNotifier extends StateNotifier<CurrenciesState> {
   final log = Logger('CurrenciesNotifier');
   final currenciesRepo = spot<ICurrenciesRepo>();
   final currenciesService = spot<ICurrenciesService>();
+  final Ref ref;
 
-  CurrenciesNotifier() : super(CurrenciesState());
+  CurrenciesNotifier(this.ref) : super(CurrenciesState());
 
   void setCurrency(Currency currency) {
     final next = state.currencies
@@ -113,6 +116,18 @@ class CurrenciesNotifier extends StateNotifier<CurrenciesState> {
         hasNetworkError: false,
         clearError: true,
       );
+
+      // Show notification if enabled
+      final settingsAsyncValue = ref.watch(settingsNotifierProvider);
+      final settings = settingsAsyncValue.value;
+      if (settings?.notifyOnCurrencyUpdate ?? false) {
+        ref
+            .read(notificationNotifierProvider.notifier)
+            .showCurrencyUpdateNotification(
+              success: true,
+              message: 'Currency data updated successfully',
+            );
+      }
     } catch (e, st) {
       final isConnectivity = isConnectivityError(e);
       final hasCache = state.currencies.isNotEmpty;
@@ -137,6 +152,18 @@ class CurrenciesNotifier extends StateNotifier<CurrenciesState> {
             error: e as Exception,
           );
         }
+
+        // Show notification if enabled
+        final settingsAsyncValue = ref.watch(settingsNotifierProvider);
+        final settings = settingsAsyncValue.value;
+        if (settings?.notifyOnCurrencyUpdate ?? false) {
+          ref
+              .read(notificationNotifierProvider.notifier)
+              .showCurrencyUpdateNotification(
+                success: false,
+                message: 'Failed to update currency data',
+              );
+        }
         return;
       }
 
@@ -150,6 +177,18 @@ class CurrenciesNotifier extends StateNotifier<CurrenciesState> {
         error: e as Exception,
         hasNetworkError: false,
       );
+
+      // Show notification if enabled
+      final settingsAsyncValue = ref.watch(settingsNotifierProvider);
+      final settings = settingsAsyncValue.value;
+      if (settings?.notifyOnCurrencyUpdate ?? false) {
+        ref
+            .read(notificationNotifierProvider.notifier)
+            .showCurrencyUpdateNotification(
+              success: false,
+              message: 'Failed to update currency data',
+            );
+      }
     }
   }
 
@@ -201,7 +240,7 @@ class CurrenciesNotifier extends StateNotifier<CurrenciesState> {
 
 final currenciesProvider =
     StateNotifierProvider<CurrenciesNotifier, CurrenciesState>((ref) {
-      return CurrenciesNotifier();
+      return CurrenciesNotifier(ref);
     });
 
 final selectedCurrenciesProvider = Provider<List<Currency>>((ref) {
