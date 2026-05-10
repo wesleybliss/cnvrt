@@ -196,12 +196,15 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           if (contentWidth > maxContentWidth) {
             contentWidth = maxContentWidth;
           }
-          
+
           return SingleChildScrollView(
             physics: const AlwaysScrollableScrollPhysics(),
             child: Center(
               child: ConstrainedBox(
-                constraints: BoxConstraints(minHeight: constraints.maxHeight, maxWidth: contentWidth),
+                constraints: BoxConstraints(
+                  minHeight: constraints.maxHeight,
+                  maxWidth: contentWidth,
+                ),
                 child: child,
               ),
             ),

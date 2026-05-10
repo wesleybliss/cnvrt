@@ -43,7 +43,6 @@ final currencyInputsListViewModelProvider =
 
 class CurrencyInputsListViewModel
     extends Notifier<CurrencyInputsListViewModelState> {
-
   // Cache controllers and focus nodes to prevent focus loss during rebuilds
   final Map<String, TextEditingController> _controllers = {};
   final Map<String, FocusNode> _focusNodes = {};
@@ -134,11 +133,17 @@ class CurrencyInputsListViewModel
   void requestFocus(String symbol) {
     final focusNode = _focusNodes[symbol];
     if (focusNode == null) return;
-    log.d('DEBUG requestFocus: symbol=$symbol hasFocus=${focusNode.hasFocus} controllerText=${_controllers[symbol]?.text}');
+    log.d(
+      'DEBUG requestFocus: symbol=$symbol hasFocus=${focusNode.hasFocus} controllerText=${_controllers[symbol]?.text}',
+    );
     Future.delayed(const Duration(milliseconds: 100), () {
-      log.d('DEBUG requestFocus delayed: symbol=$symbol hasFocus=${focusNode.hasFocus} canRequestFocus=${focusNode.canRequestFocus}');
+      log.d(
+        'DEBUG requestFocus delayed: symbol=$symbol hasFocus=${focusNode.hasFocus} canRequestFocus=${focusNode.canRequestFocus}',
+      );
       if (focusNode.canRequestFocus && !focusNode.hasFocus) {
-        log.d('DEBUG requestFocus: calling focusNode.requestFocus() for $symbol');
+        log.d(
+          'DEBUG requestFocus: calling focusNode.requestFocus() for $symbol',
+        );
         focusNode.requestFocus();
       }
     });
@@ -151,7 +156,9 @@ class CurrencyInputsListViewModel
 
   void onFocusChanged(String symbol) {
     final focusedSymbol = ref.read(focusedCurrencyInputSymbolProvider);
-    log.d('DEBUG onFocusChanged: symbol=$symbol focusedSymbol=$focusedSymbol controllerText=${state.controllers[symbol]?.text}');
+    log.d(
+      'DEBUG onFocusChanged: symbol=$symbol focusedSymbol=$focusedSymbol controllerText=${state.controllers[symbol]?.text}',
+    );
     if (focusedSymbol == symbol) {
       log.d('DEBUG onFocusChanged: same symbol, returning early');
       return;
@@ -168,7 +175,9 @@ class CurrencyInputsListViewModel
     bool allowDecimalInput,
   ) {
     final focusedSymbol = ref.read(focusedCurrencyInputSymbolProvider);
-    log.d('DEBUG updateControllers: focusedSymbol=$focusedSymbol values=${currencyValues.entries.map((e) => "${e.key}:${e.value}").join(", ")}');
+    log.d(
+      'DEBUG updateControllers: focusedSymbol=$focusedSymbol values=${currencyValues.entries.map((e) => "${e.key}:${e.value}").join(", ")}',
+    );
 
     for (var entry in currencyValues.entries) {
       final symbol = entry.key;
@@ -185,7 +194,9 @@ class CurrencyInputsListViewModel
         final valueAsString = value;
 
         if (controller.text != valueAsString) {
-          log.d('DEBUG updateControllers: setting $symbol controller to "$valueAsString" (was "${controller.text}")');
+          log.d(
+            'DEBUG updateControllers: setting $symbol controller to "$valueAsString" (was "${controller.text}")',
+          );
           controller.text = valueAsString;
         }
       }

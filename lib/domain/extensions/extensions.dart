@@ -6,7 +6,8 @@ const defaultDuration = Duration(seconds: 3);
 
 extension ContextExtensions on BuildContext {
   /// Quick and easy SnackBar shortcut
-  ScaffoldFeatureController<SnackBar, SnackBarClosedReason> snackBar(String text, {
+  ScaffoldFeatureController<SnackBar, SnackBarClosedReason> snackBar(
+    String text, {
     Color? backgroundColor,
     double? elevation,
     EdgeInsetsGeometry? margin,
@@ -36,7 +37,7 @@ extension ContextExtensions on BuildContext {
       ),
     );
   }
-  
+
   void copyToClipboard(String text, {bool showSnackBar = false}) {
     Clipboard.setData(ClipboardData(text: text));
 

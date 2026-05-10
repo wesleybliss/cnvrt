@@ -6,18 +6,13 @@ class CurrencyUpdateNotification {
   final bool success;
   final String message;
 
-  CurrencyUpdateNotification({
-    required this.success,
-    required this.message,
-  });
+  CurrencyUpdateNotification({required this.success, required this.message});
 }
 
 class NotificationState {
   final CurrencyUpdateNotification? currencyUpdateNotification;
 
-  NotificationState({
-    this.currencyUpdateNotification,
-  });
+  NotificationState({this.currencyUpdateNotification});
 
   NotificationState copyWith({
     CurrencyUpdateNotification? currencyUpdateNotification,
