@@ -89,6 +89,9 @@ dependencies:
   # Firebase
   firebase_core: ^4.2.0
   firebase_crashlytics: ^5.0.3
+  
+  # SVG Country Flags (more stable than emojis)
+  country_flags: ^4.1.2
 
 dev_dependencies:
   flutter_test:

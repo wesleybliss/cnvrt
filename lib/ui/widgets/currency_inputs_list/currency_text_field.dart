@@ -1,6 +1,7 @@
 import 'package:cnvrt/db/database.dart';
 import 'package:cnvrt/domain/di/providers/settings/settings_provider.dart';
 import 'package:cnvrt/theme.dart';
+import 'package:cnvrt/ui/widgets/country_flag.dart';
 import 'package:cnvrt/utils/currency_flags.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -58,11 +59,16 @@ class CurrencyTextField extends ConsumerWidget {
 
     final labelFontSize = useLargeInputs ? 16.0 : 12.0;
     final inputFontSize = useLargeInputs ? 20.0 : 12.0;
+    final String? countryCode = currencyToCountry[item.symbol];
 
+    /*final prefixText = showCountryFlags
+        ? "${currencyFlags[item.symbol]}  ${item.symbol}"
+        : item.symbol;*/
     final prefixText = showCountryFlags
         ? "${currencyFlags[item.symbol]}  ${item.symbol}"
         : item.symbol;
-    final prefixIcon = Padding(
+
+    /*final prefixIcon = Padding(
       padding: const EdgeInsets.only(left: 12.0, right: 8.0),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -73,6 +79,31 @@ class CurrencyTextField extends ConsumerWidget {
               color: Theme.of(
                 context,
               ).colorScheme.onSurface.withAlpha(90), // Dimmer text
+              fontSize: labelFontSize,
+            ),
+          ),
+        ],
+      ),
+    );*/
+    final prefixIcon = Padding(
+      padding: const EdgeInsets.only(left: 12.0, right: 8.0),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          if (showCountryFlags && countryCode != null && countryCode.isNotEmpty)
+            buildCurrencyFlag(
+              item.symbol,
+              style: BuildCurrencyFlagStyle.roundedRectangle,
+            ),
+
+          if (showCountryFlags && countryCode != null && countryCode.isNotEmpty)
+            const SizedBox(width: 8),
+
+          Text(
+            item.symbol,
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+              color: Theme.of(context).colorScheme.onSurface.withAlpha(90),
               fontSize: labelFontSize,
             ),
           ),
