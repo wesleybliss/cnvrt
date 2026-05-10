@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class NumericUnitsRow extends ConsumerStatefulWidget {
-  final String title;
+  final String? title;
   final String sourceLabel;
   final String targetLabel;
   final int Function(int value) convertNormalFn;
@@ -14,7 +14,7 @@ class NumericUnitsRow extends ConsumerStatefulWidget {
 
   const NumericUnitsRow({
     super.key,
-    required this.title,
+    this.title,
     required this.sourceLabel,
     required this.targetLabel,
     required this.convertNormalFn,
@@ -116,13 +116,14 @@ class NumericUnitsRowState extends ConsumerState<NumericUnitsRow> {
       title: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Padding(
-            padding: const EdgeInsets.only(left: 8.0, bottom: 8.0),
-            child: Text(
-              widget.title,
-              style: Theme.of(context).textTheme.labelLarge,
+          if (widget.title?.isNotEmpty == true)
+            Padding(
+              padding: const EdgeInsets.only(left: 8.0, bottom: 8.0),
+              child: Text(
+                widget.title!,
+                style: Theme.of(context).textTheme.labelLarge,
+              ),
             ),
-          ),
           Row(children: fields),
         ],
       ),

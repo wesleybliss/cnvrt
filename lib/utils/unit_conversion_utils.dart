@@ -64,6 +64,20 @@ int mphToKph(int mph) {
 
 //endregion Speed
 
+//region Length
+
+int inchesToCm(int inches) {
+  log.d("inchesToCm: $inches");
+  return (inches * 2.54).toInt();
+}
+
+int cmToInches(int cm) {
+  log.d("cmToInches: $cm");
+  return (cm / 2.54).toInt();
+}
+
+//endregion Length
+
 //region Area
 
 int squareMetersToSquareFeet(int sqm) {
@@ -79,6 +93,16 @@ int squareFeetToSquareMeters(int sqft) {
 //endregion Area
 
 //region Weight
+
+int gramsToOunces(int grams) {
+  log.d("gramsToOunces: $grams");
+  return (grams / 28.349523125).toInt(); // more precise value
+}
+
+int ouncesToGrams(int ounces) {
+  log.d("ouncesToGrams: $ounces");
+  return (ounces * 28.349523125).toInt();
+}
 
 int kilogramsToPounds(int kg) {
   log.d("kilogramsToPounds: $kg");
@@ -102,6 +126,16 @@ int gallonsToLiters(int gallons) {
 int litersToGallons(int liters) {
   log.d("litersToGallons: $liters");
   return (liters / 3.78541).toInt();
+}
+
+int flOzToMl(int flOz) {
+  log.d("flOzToMl: $flOz");
+  return (flOz * 29.5735).toInt(); // US fluid ounce
+}
+
+int mlToFlOz(int ml) {
+  log.d("mlToFlOz: $ml");
+  return (ml / 29.5735).toInt();
 }
 
 //endregion Volume
