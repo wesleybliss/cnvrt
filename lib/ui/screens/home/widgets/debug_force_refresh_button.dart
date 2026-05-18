@@ -17,8 +17,6 @@ class _DebugForceRefreshButton extends ConsumerState<DebugForceRefreshButton> {
 
   @override
   Widget build(BuildContext context) {
-    final state = ref.watch(currenciesProvider);
-
     return ElevatedButton(
       onPressed: triggerForceRefresh,
       child: Text("Force Refresh"),

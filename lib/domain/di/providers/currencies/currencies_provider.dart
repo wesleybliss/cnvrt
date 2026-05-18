@@ -87,7 +87,7 @@ class CurrenciesNotifier extends StateNotifier<CurrenciesState> {
     if (state.loading) return;
 
     state = state.copyWith(
-      loading: true,
+      loading: !state.hasData,
       isFetching: true,
       currencies: state.currencies,
     );
