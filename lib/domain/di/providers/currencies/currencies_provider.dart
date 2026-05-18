@@ -43,6 +43,8 @@ class CurrenciesState {
       hasNetworkError: hasNetworkError ?? this.hasNetworkError,
     );
   }
+
+  bool get hasData => currencies.isNotEmpty;
 }
 
 class CurrenciesNotifier extends StateNotifier<CurrenciesState> {

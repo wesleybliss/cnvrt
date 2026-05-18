@@ -50,6 +50,19 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     super.dispose();
   }
 
+  Widget buildHomeView(CurrenciesState state) {
+    if (state.error != null) return HomeError();
+    if (state.loading) return HomeLoading(isFetching: state.isFetching);
+    if (state.currencies.isNotEmpty) return HomeReady();
+
+    // loading == false but no currencies in the DB — can happen transiently
+    // during a rebuild (e.g. theme change) before initializeCurrencies() finishes
+    // reading from SQLite.  Show a loading indicator instead of an empty HomeReady
+    // so the user never sees "You don't have any currencies selected yet."
+    // when their favourites are still on disk.
+    return HomeLoading(isFetching: false);
+  }
+
   void _handleNetworkErrorStateChange(CurrenciesState state) {
     final hasError = state.hasNetworkError;
     final hasCache = state.currencies.isNotEmpty;
@@ -147,7 +160,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     final state = ref.watch(currenciesProvider);
 
     // Listen for the state to become ready to trigger autofocus.
-    // This handles the transition from loading screens to the input list.
+    // Re-registering on every build() is safe: Riverpod saves and replaces
+    // the previous one-shot subscription so there is never a leak.
     ref.listen(currenciesProvider, (previous, next) {
       final hadData = previous?.currencies.isNotEmpty ?? false;
       final hasData = next.currencies.isNotEmpty;
@@ -157,29 +171,22 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       // Trigger focus if we just got data or just finished a loading state
       if (hasData && (!hadData || (wasLoading && isNowReady))) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
-          if (mounted) {
-            final focusedSymbol = ref.read(focusedCurrencyInputSymbolProvider);
-            final vm = ref.read(currencyInputsListViewModelProvider.notifier);
+          if (!mounted) return;
+          final focusedSymbol = ref.read(focusedCurrencyInputSymbolProvider);
+          final vm = ref.read(currencyInputsListViewModelProvider.notifier);
 
-            if (focusedSymbol != null) {
-              // Re-focus the last focused input after data update
-              vm.requestFocus(focusedSymbol);
-            } else {
-              // Default to focusing the first one if nothing was focused
-              vm.requestFocusOnFirst();
-            }
+          if (focusedSymbol != null) {
+            // Re-focus the last focused input after data update
+            vm.requestFocus(focusedSymbol);
+          } else {
+            // Default to focusing the first one if nothing was focused
+            vm.requestFocusOnFirst();
           }
         });
       }
     });
 
-    final child = state.loading
-        ? state.currencies.isNotEmpty
-              ? const HomeReady()
-              : HomeLoading(isFetching: state.isFetching)
-        : state.error != null
-        ? const HomeError()
-        : const HomeReady();
+    final child = buildHomeView(state);
 
     return RefreshIndicator(
       onRefresh: () async {
