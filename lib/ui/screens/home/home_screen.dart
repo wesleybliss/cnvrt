@@ -21,8 +21,10 @@ class HomeScreen extends ConsumerStatefulWidget {
 
 class _HomeScreenState extends ConsumerState<HomeScreen> {
   Timer? _autoRetryTimer;
-  bool _snackbarDismissedManually = false;
-
+  bool _isSnackbarShown = false;
+  int _retryCount = 0;
+  static const int _maxRetryAttempts = 2;
+  
   @override
   void initState() {
     super.initState();
@@ -67,16 +69,22 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     final hasError = state.hasNetworkError;
     final hasCache = state.currencies.isNotEmpty;
 
-    if (hasError && hasCache && !_snackbarDismissedManually) {
-      // Show snackbar and start auto-retry
+    if (hasError && hasCache && !_isSnackbarShown) {
+      // Show snackbar and start auto-retry (first attempt)
       _showNetworkErrorSnackbar();
+      _retryCount = 0;
       _startAutoRetry();
     } else if (!hasError) {
       // Success: hide snackbar and cancel retry
       _cancelAutoRetry();
       _hideSnackbar();
-      _snackbarDismissedManually = false;
+      _isSnackbarShown = false;
+      _retryCount = 0;
     }
+    // Note: if we are already showing the snackbar and we get another error,
+    // we do not show the snackbar again, but we may still want to auto-retry
+    // if we haven't exceeded the max attempts. This is handled in _startAutoRetry
+    // which is called from _onManualRetry and from the timer.
   }
 
   void _showNetworkErrorSnackbar() {
@@ -131,11 +139,18 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     // Cancel any existing timer first
     _cancelAutoRetry();
 
-    _autoRetryTimer = Timer(const Duration(seconds: 3), () {
-      if (mounted && !_snackbarDismissedManually) {
-        ref.read(currenciesProvider.notifier).fetchCurrencies();
-      }
-    });
+    // If we haven't reached the max retry attempts, schedule a retry
+    if (_retryCount < _maxRetryAttempts) {
+      _retryCount++;
+      _autoRetryTimer = Timer(const Duration(seconds: 3), () {
+        if (mounted && !_isSnackbarShown) {
+          // Note: we check _isSnackbarShown because the user might have dismissed
+          // the snackbar while we were waiting for the timer.
+          ref.read(currenciesProvider.notifier).fetchCurrencies();
+        }
+      });
+    }
+    // If we have reached the max attempts, we do nothing (no timer set)
   }
 
   void _cancelAutoRetry() {
@@ -144,13 +159,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   }
 
   void _onManualRetry() {
-    _snackbarDismissedManually = false;
+    _isSnackbarShown = false;
     _cancelAutoRetry();
     ref.read(currenciesProvider.notifier).fetchCurrencies();
   }
 
   void _onDismiss() {
-    _snackbarDismissedManually = true;
+    _isSnackbarShown = false;
     _cancelAutoRetry();
     _hideSnackbar();
   }
@@ -190,7 +205,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
     return RefreshIndicator(
       onRefresh: () async {
-        _snackbarDismissedManually = false;
+        _isSnackbarShown = false;
         ref.read(currenciesProvider.notifier).fetchCurrencies();
       },
       child: LayoutBuilder(
