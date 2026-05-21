@@ -35,10 +35,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     });
 
     // Listen to network error state changes
-    ref.listenManual(currenciesProvider, (previous, next) {
+    /*ref.listenManual(currenciesProvider, (previous, next) {
       _handleNetworkErrorStateChange(next);
-    });
-
+    });*/
+    
     // Listen to currency update notifications
     ref.listenManual(notificationNotifierProvider, (previous, next) {
       _handleCurrencyUpdateNotification(next);

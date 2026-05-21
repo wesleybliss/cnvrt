@@ -42,7 +42,7 @@ class $CurrenciesTable extends Currencies
     false,
     type: DriftSqlType.string,
     requiredDuringInsert: true,
-    $customConstraints: 'UNIQUE',
+    $customConstraints: 'UNIQUE NOT NULL',
   );
   static const VerificationMeta _nameMeta = const VerificationMeta('name');
   @override
