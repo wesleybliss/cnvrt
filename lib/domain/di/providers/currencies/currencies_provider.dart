@@ -120,7 +120,7 @@ class CurrenciesNotifier extends StateNotifier<CurrenciesState> {
       );
 
       // Show notification if enabled
-      final settingsAsyncValue = ref.watch(settingsNotifierProvider);
+      final settingsAsyncValue = ref.read(settingsNotifierProvider);
       final settings = settingsAsyncValue.value;
       if (settings?.notifyOnCurrencyUpdate ?? false) {
         ref
@@ -156,7 +156,7 @@ class CurrenciesNotifier extends StateNotifier<CurrenciesState> {
         }
 
         // Show notification if enabled
-        final settingsAsyncValue = ref.watch(settingsNotifierProvider);
+        final settingsAsyncValue = ref.read(settingsNotifierProvider);
         final settings = settingsAsyncValue.value;
         if (settings?.notifyOnCurrencyUpdate ?? false) {
           ref
@@ -181,7 +181,7 @@ class CurrenciesNotifier extends StateNotifier<CurrenciesState> {
       );
 
       // Show notification if enabled
-      final settingsAsyncValue = ref.watch(settingsNotifierProvider);
+      final settingsAsyncValue = ref.read(settingsNotifierProvider);
       final settings = settingsAsyncValue.value;
       if (settings?.notifyOnCurrencyUpdate ?? false) {
         ref
