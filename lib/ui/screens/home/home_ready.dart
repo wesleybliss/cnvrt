@@ -13,7 +13,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'widgets/current_exchange_rates_info.dart';
 
-final debugShowForceRefresh = true;
+final debugShowForceRefresh = false;
 
 class HomeReady extends ConsumerStatefulWidget {
   const HomeReady({super.key});
