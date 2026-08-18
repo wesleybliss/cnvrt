@@ -50,3 +50,6 @@ app.*.map.json
 /android/app/profile
 /android/app/release
 keystore
+key.properties
+release-key.jks
+settings.local.json

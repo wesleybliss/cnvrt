@@ -13,7 +13,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'widgets/current_exchange_rates_info.dart';
 
-final debugShowForceRefresh = false;
+final debugShowForceRefresh = true;
 
 class HomeReady extends ConsumerStatefulWidget {
   const HomeReady({super.key});
@@ -33,25 +33,17 @@ class _HomeReadyState extends ConsumerState<HomeReady> {
     final selectedCurrencies = ref.watch(selectedCurrenciesProvider);
 
     // @debug
-    final focusedCurrencyInputSymbol = ref.watch(
-      focusedCurrencyInputSymbolProvider,
-    );
-    final focusedCurrency = selectedCurrencies.firstWhereOrNull(
-      (it) => it.symbol == focusedCurrencyInputSymbol,
-    );
+    final focusedCurrencyInputSymbol = ref.watch(focusedCurrencyInputSymbolProvider);
+    final focusedCurrency = selectedCurrencies.firstWhereOrNull((it) => it.symbol == focusedCurrencyInputSymbol);
 
     log.d('HomeReady: ${state.currencies.length} total');
     log.d('HomeReady: ${selectedCurrencies.length} selected');
 
     // Auto-focus the first currency input when the screen loads
-    if (!_hasAutoFocused &&
-        selectedCurrencies.isNotEmpty &&
-        focusedCurrencyInputSymbol == null) {
+    if (!_hasAutoFocused && selectedCurrencies.isNotEmpty && focusedCurrencyInputSymbol == null) {
       _hasAutoFocused = true;
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        ref
-            .read(currencyInputsListViewModelProvider.notifier)
-            .requestFocusOnFirst();
+        ref.read(currencyInputsListViewModelProvider.notifier).requestFocusOnFirst();
       });
     }
 
@@ -61,13 +53,10 @@ class _HomeReadyState extends ConsumerState<HomeReady> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           if (state.error != null) Text(state.error!.toString()),
-          Center(
-            child: Text(AppLocalizations.of(context)!.noSelectedCurrencies),
-          ),
+          Center(child: Text(AppLocalizations.of(context)!.noSelectedCurrencies)),
           const SizedBox(height: 24.0),
           TextButton(
-            onPressed: () =>
-                Application.router.navigateTo(context, Routes.currencies),
+            onPressed: () => Application.router.navigateTo(context, Routes.currencies),
             child: Text(AppLocalizations.of(context)!.manageCurrencies),
           ),
         ],
@@ -76,8 +65,7 @@ class _HomeReadyState extends ConsumerState<HomeReady> {
 
     return settingsAsyncValue.when(
       loading: () => const CircularProgressIndicator(),
-      error: (error, stackTrace) =>
-          Text('${AppLocalizations.of(context)!.error}: $error'),
+      error: (error, stackTrace) => Text('${AppLocalizations.of(context)!.error}: $error'),
       data: (settings) {
         return Column(
           mainAxisAlignment: settings.inputsPosition == "top"
@@ -89,10 +77,7 @@ class _HomeReadyState extends ConsumerState<HomeReady> {
             CurrenciesInputsList(/*currencies: selectedCurrencies*/),
 
             Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 20.0,
-                vertical: 20.0,
-              ),
+              padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
               child: CurrentExchangeRatesInfo(
                 focusedCurrency: focusedCurrency,
                 focusedCurrencyInputSymbol: focusedCurrencyInputSymbol,
@@ -103,10 +88,7 @@ class _HomeReadyState extends ConsumerState<HomeReady> {
             // const NumericKeyboardGrid(),
 
             // Debug
-            if (debugShowForceRefresh) ...[
-              SizedBox(height: 20.0),
-              DebugForceRefreshButton(),
-            ],
+            if (debugShowForceRefresh) ...[SizedBox(height: 20.0), DebugForceRefreshButton()],
           ],
         );
       },
