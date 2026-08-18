@@ -10,11 +10,36 @@ class CurrencyValuesNotifier extends StateNotifier<Map<String, double>> {
   final log = Logger('CurrencyValuesNotifier');
   final Ref ref;
 
-  CurrencyValuesNotifier(List<Currency> initialCurrencies, this.ref)
-    : super(
-        // Initialize with the selected currencies and default values (e.g., 0.0)
-        {for (var currency in initialCurrencies) currency.symbol: 0.0},
-      );
+  CurrencyValuesNotifier(this.ref) : super({}) {
+    // Initialize once with the currently selected currencies, preserving any
+    // values that may already exist. We intentionally do NOT depend on
+    // selectedCurrenciesProvider inside the create function, because that would
+    // recreate this notifier (resetting all values to 0.0) every time the
+    // currencies get refreshed in the background — which is the bug that caused
+    // the non-focused inputs to be cleared on refresh.
+    _syncSelected(ref.read(selectedCurrenciesProvider));
+
+    // Keep the values in sync with selection changes (add/remove), but preserve
+    // existing values so background refreshes never disturb the current UI state.
+    ref.listen<List<Currency>>(selectedCurrenciesProvider, (_, next) {
+      _syncSelected(next);
+    });
+  }
+
+  // Add newly selected currencies and drop deselected ones, preserving any
+  // values that are still present. This keeps conversions intact across refreshes.
+  void _syncSelected(List<Currency> selectedCurrencies) {
+    final newState = Map<String, double>.from(state);
+    final selectedSymbols = selectedCurrencies.map((c) => c.symbol).toSet();
+
+    newState.removeWhere((symbol, _) => !selectedSymbols.contains(symbol));
+
+    for (final currency in selectedCurrencies) {
+      newState.putIfAbsent(currency.symbol, () => 0.0);
+    }
+
+    state = newState;
+  }
 
   void clearValues() {
     for (var currency in state.keys) {
@@ -46,13 +71,35 @@ class CurrencyValuesNotifier extends StateNotifier<Map<String, double>> {
 
     return state;
   }
+
+  // Recompute all conversions using the current focused input's value and the
+  // latest rates. Called after a background currency refresh so the displayed
+  // converted values stay accurate without disturbing the user's current input.
+  void recomputeWithLatestRates() {
+    final sortedCurrencies = ref.read(sortedCurrenciesProvider);
+    final settings = ref.read(settingsNotifierProvider).value;
+    if (settings == null || sortedCurrencies.isEmpty) return;
+
+    final focusedSymbol = ref.read(focusedCurrencyInputSymbolProvider);
+    if (focusedSymbol == null) return;
+
+    // Use the last computed value for the focused symbol as the source amount.
+    final sourceValue = state[focusedSymbol] ?? 0.0;
+    if (sourceValue == 0.0) return;
+
+    state = convertCurrencies(
+      focusedSymbol,
+      sourceValue,
+      sortedCurrencies,
+      settings,
+    );
+  }
 }
 
 final currencyValuesProvider =
     StateNotifierProvider<CurrencyValuesNotifier, Map<String, double>>((ref) {
-      // Get the list of selected currencies
-      final selectedCurrencies = ref.watch(selectedCurrenciesProvider);
-
-      // Create the notifier with the initial values
-      return CurrencyValuesNotifier(selectedCurrencies, ref);
+      // Create the notifier. It reads the selected currencies itself (inside
+      // build) so it is NOT recreated when the currencies list refreshes in
+      // the background — only when the provider is truly disposed.
+      return CurrencyValuesNotifier(ref);
     });
