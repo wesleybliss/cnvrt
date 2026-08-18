@@ -1,16 +1,17 @@
 import 'package:cnvrt/db/database.dart';
 import 'package:cnvrt/domain/constants/constants.dart';
+import 'package:cnvrt/domain/di/providers/currencies/currency_values_provider.dart';
 import 'package:cnvrt/domain/di/providers/notifications/notification_provider.dart';
 import 'package:cnvrt/domain/di/providers/settings/settings_provider.dart';
-import 'package:cnvrt/utils/crashlytics_utils.dart';
-import 'package:cnvrt/utils/network_utils.dart';
-import 'package:spot_di/spot_di.dart';
 import 'package:cnvrt/domain/io/repos/i_currencies_repo.dart';
 import 'package:cnvrt/domain/io/services/i_currencies_service.dart';
 import 'package:cnvrt/domain/models/currency_response.dart';
+import 'package:cnvrt/utils/crashlytics_utils.dart';
 import 'package:cnvrt/utils/logger.dart';
+import 'package:cnvrt/utils/network_utils.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:spot_di/spot_di.dart';
 
 class CurrenciesState {
   final List<Currency> currencies;
@@ -56,9 +57,7 @@ class CurrenciesNotifier extends StateNotifier<CurrenciesState> {
   CurrenciesNotifier(this.ref) : super(CurrenciesState());
 
   void setCurrency(Currency currency) {
-    final next = state.currencies
-        .map((e) => e.id == currency.id ? currency : e)
-        .toList();
+    final next = state.currencies.map((e) => e.id == currency.id ? currency : e).toList();
     state = state.copyWith(currencies: next);
     currenciesRepo.create(currency);
   }
@@ -86,11 +85,7 @@ class CurrenciesNotifier extends StateNotifier<CurrenciesState> {
   Future<void> fetchCurrencies() async {
     if (state.loading) return;
 
-    state = state.copyWith(
-      loading: !state.hasData,
-      isFetching: true,
-      currencies: state.currencies,
-    );
+    state = state.copyWith(loading: !state.hasData, isFetching: true, currencies: state.currencies);
 
     try {
       final CurrencyResponse? res = await currenciesService.fetchCurrencies();
@@ -104,20 +99,17 @@ class CurrenciesNotifier extends StateNotifier<CurrenciesState> {
 
       // Update last updated timestamp
       final prefs = await SharedPreferences.getInstance();
-      await prefs.setString(
-        Constants.keys.settings.lastUpdated,
-        DateTime.now().toIso8601String(),
-      );
+      await prefs.setString(Constants.keys.settings.lastUpdated, DateTime.now().toIso8601String());
 
       // Refresh from DB to ensure correct order
       await readCurrencies(showLoading: false);
 
       // Success: clear any error states
-      state = state.copyWith(
-        isFetching: false,
-        hasNetworkError: false,
-        clearError: true,
-      );
+      state = state.copyWith(isFetching: false, hasNetworkError: false, clearError: true);
+
+      // Recompute the displayed conversions with the latest rates so the
+      // non-focused inputs update transparently without clearing the UI state.
+      ref.read(currencyValuesProvider.notifier).recomputeWithLatestRates();
 
       // Show notification if enabled
       final settingsAsyncValue = ref.read(settingsNotifierProvider);
@@ -125,10 +117,7 @@ class CurrenciesNotifier extends StateNotifier<CurrenciesState> {
       if (settings?.notifyOnCurrencyUpdate ?? false) {
         ref
             .read(notificationNotifierProvider.notifier)
-            .showCurrencyUpdateNotification(
-              success: true,
-              message: 'Currency data updated successfully',
-            );
+            .showCurrencyUpdateNotification(success: true, message: 'Currency data updated successfully');
       }
     } catch (e, st) {
       final isConnectivity = isConnectivityError(e);
@@ -139,20 +128,10 @@ class CurrenciesNotifier extends StateNotifier<CurrenciesState> {
 
         if (hasCache) {
           // User has cached data, just flag the network error
-          state = state.copyWith(
-            loading: false,
-            isFetching: false,
-            hasNetworkError: true,
-            clearError: true,
-          );
+          state = state.copyWith(loading: false, isFetching: false, hasNetworkError: true, clearError: true);
         } else {
           // No cached data, set error for full-screen error display
-          state = state.copyWith(
-            loading: false,
-            isFetching: false,
-            hasNetworkError: true,
-            error: e as Exception,
-          );
+          state = state.copyWith(loading: false, isFetching: false, hasNetworkError: true, error: e as Exception);
         }
 
         // Show notification if enabled
@@ -161,10 +140,7 @@ class CurrenciesNotifier extends StateNotifier<CurrenciesState> {
         if (settings?.notifyOnCurrencyUpdate ?? false) {
           ref
               .read(notificationNotifierProvider.notifier)
-              .showCurrencyUpdateNotification(
-                success: false,
-                message: 'Failed to update currency data',
-              );
+              .showCurrencyUpdateNotification(success: false, message: 'Failed to update currency data');
         }
         return;
       }
@@ -173,12 +149,7 @@ class CurrenciesNotifier extends StateNotifier<CurrenciesState> {
       log.e('Non-connectivity error fetching currencies', e);
       await recordNonConnectivityError(e, st);
 
-      state = state.copyWith(
-        loading: false,
-        isFetching: false,
-        error: e as Exception,
-        hasNetworkError: false,
-      );
+      state = state.copyWith(loading: false, isFetching: false, error: e as Exception, hasNetworkError: false);
 
       // Show notification if enabled
       final settingsAsyncValue = ref.read(settingsNotifierProvider);
@@ -186,10 +157,7 @@ class CurrenciesNotifier extends StateNotifier<CurrenciesState> {
       if (settings?.notifyOnCurrencyUpdate ?? false) {
         ref
             .read(notificationNotifierProvider.notifier)
-            .showCurrencyUpdateNotification(
-              success: false,
-              message: 'Failed to update currency data',
-            );
+            .showCurrencyUpdateNotification(success: false, message: 'Failed to update currency data');
       }
     }
   }
@@ -208,22 +176,15 @@ class CurrenciesNotifier extends StateNotifier<CurrenciesState> {
     }
 
     final lastUpdatedValue = prefs.getString(keys.lastUpdated);
-    final lastUpdated = lastUpdatedValue != null
-        ? DateTime.parse(lastUpdatedValue)
-        : null;
-    final lastUpdatedDiff = lastUpdated == null
-        ? 0
-        : DateTime.now().difference(lastUpdated).inHours;
+    final lastUpdated = lastUpdatedValue != null ? DateTime.parse(lastUpdatedValue) : null;
+    final lastUpdatedDiff = lastUpdated == null ? 0 : DateTime.now().difference(lastUpdated).inHours;
     final updateFrequencyInHours = prefs.getInt(keys.updateFrequencyInHours);
-    final shouldUpdate =
-        lastUpdated == null || lastUpdatedDiff > (updateFrequencyInHours ?? 12);
+    final shouldUpdate = lastUpdated == null || lastUpdatedDiff > (updateFrequencyInHours ?? 12);
     final savedCurrencies = await readCurrencies();
 
     // If we haven't fetched in more than 6 hours, fetch again
     if (savedCurrencies.isEmpty || shouldUpdate) {
-      log.d(
-        'Initializing currencies. Either no currencies saved, or more than 6 hours since last update',
-      );
+      log.d('Initializing currencies. Either no currencies saved, or more than 6 hours since last update');
       await fetchCurrencies();
 
       // prefs.setString(keys.lastUpdated, DateTime.now().toIso8601String()); // Handled in fetchCurrencies
@@ -240,18 +201,15 @@ class CurrenciesNotifier extends StateNotifier<CurrenciesState> {
   }
 }
 
-final currenciesProvider =
-    StateNotifierProvider<CurrenciesNotifier, CurrenciesState>((ref) {
-      return CurrenciesNotifier(ref);
-    });
+final currenciesProvider = StateNotifierProvider<CurrenciesNotifier, CurrenciesState>((ref) {
+  return CurrenciesNotifier(ref);
+});
 
 final selectedCurrenciesProvider = Provider<List<Currency>>((ref) {
   // Watch the state from the currenciesProvider
   final currenciesState = ref.watch(currenciesProvider);
   // Derive the selected currencies
-  return currenciesState.currencies
-      .where((currency) => currency.selected)
-      .toList();
+  return currenciesState.currencies.where((currency) => currency.selected).toList();
 });
 
 class FocusedCurrencyInputSymbolNotifier extends Notifier<String?> {
@@ -264,7 +222,6 @@ class FocusedCurrencyInputSymbolNotifier extends Notifier<String?> {
 }
 
 // Provider to track the currently selected input's currency symbol
-final focusedCurrencyInputSymbolProvider =
-    NotifierProvider<FocusedCurrencyInputSymbolNotifier, String?>(
-      FocusedCurrencyInputSymbolNotifier.new,
-    );
+final focusedCurrencyInputSymbolProvider = NotifierProvider<FocusedCurrencyInputSymbolNotifier, String?>(
+  FocusedCurrencyInputSymbolNotifier.new,
+);
