@@ -13,8 +13,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'widgets/current_exchange_rates_info.dart';
 
-final debugShowForceRefresh = true;
-
 class HomeReady extends ConsumerStatefulWidget {
   const HomeReady({super.key});
 
@@ -88,7 +86,7 @@ class _HomeReadyState extends ConsumerState<HomeReady> {
             // const NumericKeyboardGrid(),
 
             // Debug
-            if (debugShowForceRefresh) ...[SizedBox(height: 20.0), DebugForceRefreshButton()],
+            if (settings.showForceRefreshButton) ...[SizedBox(height: 20.0), const DebugForceRefreshButton()],
           ],
         );
       },

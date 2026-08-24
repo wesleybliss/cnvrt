@@ -17,6 +17,7 @@ abstract class ISettings {
   abstract bool allowDecimalInput;
   abstract bool disableCurrencyCaching;
   abstract bool notifyOnCurrencyUpdate;
+  abstract bool showForceRefreshButton;
 
   // If the user has tapped the version number 10 times, we enable developer mode
   abstract bool developerModeActive;
@@ -38,6 +39,7 @@ abstract class ISettings {
     bool? allowDecimalInput,
     bool? disableCurrencyCaching,
     bool? notifyOnCurrencyUpdate,
+    bool? showForceRefreshButton,
 
     bool? developerModeActive,
   });

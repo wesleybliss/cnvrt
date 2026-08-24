@@ -19,6 +19,7 @@ class ConstantsKeysSettings {
   final allowDecimalInput = "allowDecimalInput";
   final disableCurrencyCaching = "disableCurrencyCaching";
   final notifyOnCurrencyUpdate = "notifyOnCurrencyUpdate";
+  final showForceRefreshButton = "showForceRefreshButton";
 
   final developerModeActive = "developerModeActive";
 }

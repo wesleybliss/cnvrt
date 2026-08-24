@@ -283,6 +283,25 @@ class _DebugScreenState extends ConsumerState<DebugScreen> {
               ),
               const SizedBox(height: 8),
 
+              Card(
+                child: SwitchListTile(
+                  title: const Text('Show Force Refresh Button'),
+                  subtitle: const Text(
+                    'Display a Force Refresh button on the home screen',
+                  ),
+                  value: settings.showForceRefreshButton,
+                  onChanged: (value) async {
+                    final notifier = ref.read(
+                      settingsNotifierProvider.notifier,
+                    );
+                    await notifier.updateSettings(
+                      settings.copyWith(showForceRefreshButton: value),
+                    );
+                  },
+                ),
+              ),
+              const SizedBox(height: 8),
+
               ElevatedButton.icon(
                 onPressed: () =>
                     Application.router.navigateTo(context, Routes.currencies),
