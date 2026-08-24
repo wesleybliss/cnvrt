@@ -84,6 +84,9 @@ class CurrencyValuesNotifier extends StateNotifier<Map<String, double>> {
     if (focusedSymbol == null) return;
 
     // Use the last computed value for the focused symbol as the source amount.
+    // The stored value already reflects any inflation adjustment (e.g. COP
+    // "1234" is stored as 1,234,000), so we must NOT apply inflation again —
+    // otherwise it would be multiplied by 1000 a second time after a refresh.
     final sourceValue = state[focusedSymbol] ?? 0.0;
     if (sourceValue == 0.0) return;
 
@@ -92,6 +95,7 @@ class CurrencyValuesNotifier extends StateNotifier<Map<String, double>> {
       sourceValue,
       sortedCurrencies,
       settings,
+      accountForInflation: false,
     );
   }
 }

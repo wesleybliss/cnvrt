@@ -47,9 +47,17 @@ Map<String, double> convertCurrencies(
   String symbol,
   double inputValue,
   List<Currency> currencies,
-  Settings settings,
-) {
+  Settings settings, {
+  bool? accountForInflation,
+}) {
   final log = Logger('convertCurrencies');
+
+  // Allow callers to override the inflation behavior. This is used when
+  // recomputing with the latest rates: the stored focused value has already
+  // had the inflation multiplier applied, so feeding it back through the
+  // default inflation logic would multiply it a second time.
+  final effectiveAccountForInflation =
+      accountForInflation ?? settings.accountForInflation;
 
   // Find the currency that was changed
   final Currency changedCurrency = currencies.firstWhere(
@@ -60,7 +68,7 @@ Map<String, double> convertCurrencies(
   final sourceValue = getInflatedCurrencyValue(
     changedCurrency.symbol,
     inputValue,
-    accountForInflation: settings.accountForInflation,
+    accountForInflation: effectiveAccountForInflation,
   );
 
   log.d(
