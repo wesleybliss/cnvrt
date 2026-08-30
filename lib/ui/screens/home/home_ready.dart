@@ -54,7 +54,7 @@ class _HomeReadyState extends ConsumerState<HomeReady> {
           Center(child: Text(AppLocalizations.of(context)!.noSelectedCurrencies)),
           const SizedBox(height: 24.0),
           TextButton(
-            onPressed: () => Application.router.navigateTo(context, Routes.currencies),
+            onPressed: () => Application.router.navigateTo(context, Routes.currencies, rootNavigator: true),
             child: Text(AppLocalizations.of(context)!.manageCurrencies),
           ),
         ],
